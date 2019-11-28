@@ -1,0 +1,85 @@
+<template>
+    <div class="page">
+
+        <div class="navbar">
+            <div class="navbar-inner">
+                <img class="theme-light-only" src="assets/custom/img/konbini-logo.svg" height="24" alt="" />
+                <div class="right">
+                    <a href="#" class="link back">
+                        <span>Back</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-content">
+
+            <div class="block-title">User profile</div>
+            <form name="profile" action="#" method="POST" enctype="multipart/form-data">
+                <div class="list no-hairlines no-hairlines-between no-margin-bottom">
+                    <ul>
+                        <li>
+                            <div class="item-content item-input item-input-with-info">
+                                <div class="item-media">
+                                    <i class="icon material-icons">phone</i>
+                                </div>
+                                <div class="item-inner">
+                                    <div class="item-input-wrap">
+                                        <input type="text" name="mobile" value="{{_mobile}}" placeholder="Mobile"
+                                            readonly />
+                                        <div class="item-input-info input-error-message"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-content item-input item-input-with-info">
+                                <div class="item-media">
+                                    <i class="icon material-icons">person</i>
+                                </div>
+                                <div class="item-inner">
+                                    <div class="item-input-wrap">
+                                        <input type="text" name="name" placeholder="Name" value="{{_name}}" required />
+                                        <div class="item-input-info input-error-message"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-content item-input item-input-with-info">
+                                <div class="item-media">
+                                    <i class="icon material-icons">email</i>
+                                </div>
+                                <div class="item-inner">
+                                    <div class="item-input-wrap">
+                                        <input type="email" name="email" value="{{_email}}" placeholder="Email" />
+                                        <div class="item-input-info input-error-message"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                    </ul>
+                    <div class="block text-align-center">
+                        <button type="submit" class="button button-big button-fill">Update</button>
+
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
+    </div>
+</template>
+
+<script>
+    return {
+        data: function () {
+            return {
+                _mobile: localStorage.getItem('WOKPPL_mobile'),
+                _name: localStorage.getItem('WOKPPL_name'),
+                _email: localStorage.getItem('WOKPPL_email'),
+            }
+        }
+    }
+</script>

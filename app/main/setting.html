@@ -1,0 +1,289 @@
+<template>
+    <div class="page">
+
+        <div class="navbar">
+            <div class="navbar-inner">
+                    <img class="theme-light-only" src="assets/custom/img/konbini-logo.svg" height="24" alt="" />
+                <div class="right">
+                    <a href="#" class="link back">
+                        <span>Back</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-content">
+            {{#if isApiSupported}}
+            <div class="block-title">Permission</div>
+            <div class="list inset">
+                <ul>
+                    <li class="permission-notifications">
+                        <div class="item-content">
+                            <div class="item-media">
+                                <i class="fa-stack">
+                                    <span class="fas fa-circle fa-stack-2x text-color-red"></span>
+                                    <span class="fas fa-bell fa-stack-1x fa-inverse"></span>
+                                </i>
+                            </div>
+                            <div class="item-inner">
+                                <div class="item-title">Notifications</div>
+                                <div class="item-after">
+                                    <label class="toggle toggle-init color-green tooltip-init" data-tooltip="Request">
+                                        <input type="checkbox" data-permission="notifications" />
+                                        <span class="toggle-icon"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="permission-camera">
+                        <div class="item-content">
+                            <div class="item-media">
+                                <i class="fa-stack">
+                                    <span class="fas fa-circle fa-stack-2x text-color-blue"></span>
+                                    <span class="fas fa-camera fa-stack-1x fa-inverse"></span>
+                                </i>
+                            </div>
+                            <div class="item-inner">
+                                <div class="item-title">Camera</div>
+                                <div class="item-after">
+                                    <label class="toggle toggle-init color-blue tooltip-init" data-tooltip="Request">
+                                        <input type="checkbox" data-permission="camera" />
+                                        <span class="toggle-icon"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="permission-geolocation">
+                        <div class="item-content">
+                            <div class="item-media">
+                                <i class="fa-stack">
+                                    <span class="fas fa-circle fa-stack-2x text-color-green"></span>
+                                    <span class="fas fa-map-marker-alt fa-stack-1x fa-inverse"></span>
+                                </i>
+                            </div>
+                            <div class="item-inner">
+                                <div class="item-title">Geolocation</div>
+                                <div class="item-after">
+                                    <label class="toggle toggle-init color-green tooltip-init" data-tooltip="Request">
+                                        <input type="checkbox" data-permission="geolocation" />
+                                        <span class="toggle-icon"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="permission-microphone">
+                        <div class="item-content">
+                            <div class="item-media">
+                                <i class="fa-stack">
+                                    <span class="fas fa-circle fa-stack-2x text-color-red"></span>
+                                    <span class="fas fa-microphone fa-stack-1x fa-inverse"></span>
+                                </i>
+                            </div>
+                            <div class="item-inner">
+                                <div class="item-title">Microphone</div>
+                                <div class="item-after">
+                                    <label class="toggle toggle-init color-red tooltip-init" data-tooltip="Request">
+                                        <input type="checkbox" data-permission="microphone" />
+                                        <span class="toggle-icon"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="permission-midi">
+                        <div class="item-content">
+                            <div class="item-media">
+                                <i class="fa-stack">
+                                    <span class="fas fa-circle fa-stack-2x text-color-pink"></span>
+                                    <span class="fas fa-music fa-stack-1x fa-inverse"></span>
+                                </i>
+                            </div>
+                            <div class="item-inner">
+                                <div class="item-title">MIDI</div>
+                                <div class="item-after">
+                                    <label class="toggle toggle-init color-pink tooltip-init" data-tooltip="Request">
+                                        <input type="checkbox" data-permission="midi" />
+                                        <span class="toggle-icon"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="note note-warning text-align-center">
+                <p>Once granted or denied, the permissions cannot be revoked in App. They must be
+                    explicitly revoked by the user from browser's settings.</p>
+            </div>            
+            {{else}}
+            <div class="empty-state">
+                <div class="empty-state-media">
+                    <img class="filter-grayscale" src="assets/custom/img/permission.svg" alt="" />
+                </div>
+                <div class="empty-state-title">Oops!</div>
+                <div class="empty-state-text">This browser does not support Permissions API.</div>
+                <div class="empty-state-actions">
+                    <a href="https://caniuse.com/permissions-api" target="_blank"
+                        class="button button-big button-fill button-round external"
+                        data-i18n="supported-browsers">Supported Browsers</a>
+                </div>
+            </div>
+            {{/if}}
+
+        </div>
+
+    </div>
+</template>
+
+<script>
+    return {
+        data: function () {
+            return {
+                swRegistration: null,
+                isApiSupported: (function () {
+                    return app.support.webApi.permissions;
+                })(),
+                endpoint: '',
+                auth: '',
+                p256dh: ''
+            }
+        },
+        methods: {
+            checkPermissionStatus: function (permissionName, permissionDescriptor) {
+                var self = this;
+                navigator.permissions.query(Object.assign({ name: permissionName }, permissionDescriptor))
+                    .then(function (permission) {
+                        self.updatePermissionStatus(permissionName, permission.state);
+                        permission.addEventListener('change', function () {
+                            self.updatePermissionStatus(permissionName, permission.state);
+                        });
+                    })
+                    .catch(function (error) {
+                        self.showErrorMessage(error.message);
+                    });
+            },
+            updatePermissionStatus: function (permissionName, permissionState) {
+                var self = this;
+                if (permissionState == 'granted') {
+                    self.$('[data-permission=' + permissionName + ']').prop('checked', true);
+                    self.$('[data-permission=' + permissionName + ']').prop('disabled', true);
+                    app.tooltip.get('.permission-' + permissionName + ' .toggle').setText('Granted');
+                }
+                else if (permissionState == 'denied') {
+                    self.$('[data-permission=' + permissionName + ']').prop('checked', false);
+                    self.$('[data-permission=' + permissionName + ']').prop('disabled', true);
+                    app.tooltip.get('.permission-' + permissionName + ' .toggle').setText('Denied');
+                }
+                else {
+                    self.$('[data-permission=' + permissionName + ']').prop('checked', false);
+                    self.$('[data-permission=' + permissionName + ']').prop('disabled', false);
+                    app.tooltip.get('.permission-' + permissionName + ' .toggle').setText('Request');
+                }
+            },
+            requestPermission: function (permissionName) {
+                var self = this;
+                switch (permissionName) {
+                    
+                    case 'notifications':
+                        Notification.requestPermission()
+                            .then(function (status) {
+                                if (status == 'granted') {
+
+                                    self.showSuccessMessage('Permission Granted');
+                                }
+                                else if (status == 'denied') {
+                                    self.showErrorMessage('Permission Denied');
+                                }
+                            })
+                            .catch(function (error) {
+                                self.showErrorMessage(error.message);
+                            });
+                        self.checkPermissionStatus('notifications');
+                        break;
+                }
+            },
+            showSuccessMessage: function (message) {
+                var self = this;
+                app.toast.show({
+                    text: message,
+                    position: 'bottom',
+                    cssClass: 'toast-round bg-color-green'
+                });
+            },
+            showErrorMessage: function (message) {
+                var self = this;
+                app.toast.show({
+                    text: message,
+                    position: 'bottom',
+                    cssClass: 'toast-round bg-color-red'
+                });
+            },
+            updateSubscriptionOnServer: function (subscription) {
+                var self = this;
+
+                if (subscription) {
+                    let sss = JSON.stringify(subscription);
+                    let output = JSON.parse(sss)                    
+                    console.log('endpoint', output.endpoint);
+                    console.log('p256dh', output.keys.p256dh)
+                    console.log('auth', output.keys.auth)
+                    // app.request.postJSON(window.config.url + 'api/services/app/Device/Create', {
+                    //     name: 'Name',
+                    //     pushEndPoint: output.endpoint,
+                    //     pushP256DH: output.keys.p256dh,
+                    //     pushAuth: output.keys.auth
+                    // },
+                    //     function (suc) {
+                    //         console.log(suc);
+                    //         app.toast.show({
+                    //             text: 'User subcription successful.',
+                    //             position: 'bottom',
+                    //             cssClass: 'toast-round bg-color-green'
+                    //         });
+                    //     },
+                    //     function (err) {
+                    //         let response = JSON.parse(err.response);
+                    //         console.log(response);
+                    //         var dialog = app.dialog.create({
+                    //             content: '<div class="block no-margin margin-top text-align-center"><i class="fa-stack fa-3x"><span class="fas fa-stack-2x fa-circle text-color-red"></span><span class="fas fa-stack-1x fa-inverse fa-times"></span></i><p>' + response.error.message + '.</p></div>',
+                    //             buttons: [
+                    //                 {
+                    //                     text: 'Retry',
+                    //                     bold: true,
+                    //                     color: 'red'
+                    //                 }
+                    //             ]
+                    //         });
+                    //         dialog.open();
+                    //     });
+                }
+            }
+        },
+        on: {
+            pageInit: function () {
+                var self = this;
+                
+                self.checkPermissionStatus('notifications');
+
+                self.$('[data-permission]').on('change', function () {
+                    console.log(swRegistration)
+                    const applicationServerKey = app.utils.custom.urlB64ToUint8Array(window.config.appServerPublicKey);
+                    swRegistration.pushManager.subscribe({
+                        userVisibleOnly: true,
+                        applicationServerKey: applicationServerKey
+                    })
+                        .then(function (subscription) {
+                            //console.log('User is subscribed');
+
+                            self.updateSubscriptionOnServer(subscription);
+                        })
+                });
+
+            }
+        }
+    }
+</script>

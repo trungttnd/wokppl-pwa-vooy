@@ -1,0 +1,127 @@
+<template>
+    <div class="page">
+
+        <div class="navbar">
+            <div class="navbar-inner">
+                <!-- <img class="theme-light-only" src="assets/custom/img/konbini-logo.svg" height="24" alt="" /> -->
+                <!-- <div class="left">
+                        <a href="#" class="link back" id="back-link">
+                            <i class="icon icon-back"></i>
+                            <span>Transaction Detail</span>
+                        </a>
+                    </div> -->
+                <div class="right">
+                    <a href="#" class="link back">
+                        <span>Back</span>
+                    </a>
+                </div>
+                <!-- <div class="subnavbar">
+                        <div class="subnavbar-inner">
+                            <div class="title">Transaction Detail</div>
+                        </div>
+                    </div> -->
+            </div>
+        </div>
+
+        <div class="page-content">
+            <div class="block-title display-flex justify-content-space-between text-color-black">
+                <span>Transactions Id: 100101</span>
+            </div>
+            <div class="data-table card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="label-cell">Your cart</th>
+                                <th class="numeric-cell">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="label-cell">Noodle</td>
+                                <td class="numeric-cell">$1.00</td>
+                            </tr>
+                            <tr>
+                                <td class="label-cell">Chicken Rice</td>
+                                <td class="numeric-cell">$1.00</td>
+                            </tr>
+                            <tr>
+                                <td class="label-cell">Sushi</td>
+                                <td class="numeric-cell">$1.00</td>
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            <div class="card">
+                <div class="card-content card-content-padding">
+                    <div class="list no-hairlines no-hairlines-between">
+                        <ul>
+                            <li>
+                                <div class="item-content">
+                                    <div class="item-inner">
+                                        <div class="item-title">Subtotal</div>
+                                        <div class="item-after">$3.00</div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="item-content">
+                                    <div class="item-inner">
+                                        <div class="item-title">Discount</div>
+                                        <div class="item-after">$0.00</div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="item-content">
+                                    <div class="item-inner">
+                                        <div class="item-title">GST</div>
+                                        <div class="item-after">$0.00</div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="item-content">
+                                    <div class="item-inner">
+                                        <div class="item-title"><b>Grand Total</b></div>
+                                        <div class="item-after"><b>$3.00</b></div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</template>
+
+<script>
+    return {
+        data: function () {
+            return {
+                detail: null
+            }
+        },
+        methods: {
+            loadData: function () {
+                var self = this;
+                let det = JSON.parse(localStorage.getItem('Konbini_cardDetail'));
+                //console.log('Konbini_cardDetail',det)
+                self.$setState({
+                    detail: det
+                });
+                // self.detail = JSON.parse(localStorage.getItem('Konbini_cardDetail'));
+
+            },
+            
+        },
+        on: {
+            pageInit: function () {
+                var self = this;
+                //self.loadData()
+            }
+        }
+    }
+</script>

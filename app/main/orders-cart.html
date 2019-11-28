@@ -1,0 +1,147 @@
+<template>
+    <div class="page">
+        <div class="navbar">
+            <div class="navbar-inner">
+                <img class="theme-light-only" src="assets/custom/img/konbini-logo.svg" height="24" alt="" />
+                <div class="right">
+                    <a href="/orders-cart" class="link icon-only">
+                        <i class="icon material-icons">shopping_cart<span
+                                class="badge color-red">{{quantity}}</span></i></a>
+                    <span class="text-color-red">${{total.toFixed(2)}}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-content">
+            <div class="block text-align-center">
+                <div class="cart-name">YOUR CART</div>
+                <div>(3 items)</div>
+            </div>
+            <div class="card">
+                <div class="list media-list no-hairlines no-hairlines-between margin-vertical descriptionFont">
+                    <ul>
+                        {{#if productList}}
+                        {{#each productList}}
+                        <li>
+                            <div class="item-content">
+                                <div class="item-media"><img
+                                        src="https://images.foody.vn/res/g79/785913/s570x570/8d125f53-e2eb-4d3c-a994-af251ae25c26.jpg"
+                                        width="80" /></div>
+                                <div class="item-inner">
+                                    <div class="item-title-row">
+                                        <div class="item-title">{{this.name}}</div>
+                                        <div class="item-title">
+                                            ${{this.price.toFixed(2)}} x 1</div>
+                                    </div>
+                                    <div class="item-text">Size: L
+                                        <div class="item-row">
+                                            <div class="item-text">Topping: Black Pearl
+                                            </div>
+                                            <div class="item-after" style="color: red;">
+                                                <a href="/orders-options" class="item-link tooltip-init"
+                                                    data-tooltip="Edit Your Cart">
+                                                    <i class="fas fa-fw fa-lg fa-edit text-color-red"></i></a>
+                                                <a href="#" class="item-link tooltip-init"
+                                                    data-tooltip="Remove from Cart">
+                                                    <i class="fas fa-fw fa-lg fa-trash text-color-red"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        </li>
+                        {{/each}}
+                        {{/if}}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-content card-content-padding">
+                    <div class="list no-hairlines no-hairlines-between">
+                        <ul>
+                            <li>
+                                <div class="item-content">
+                                    <div class="item-inner">
+                                        <div class="item-title">Subtotal</div>
+                                        <div class="item-after">$34.50</div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="item-content">
+                                    <div class="item-inner">
+                                        <div class="item-title">Discount</div>
+                                        <div class="item-after">$0.00</div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="item-content">
+                                    <div class="item-inner">
+                                        <div class="item-title">GST</div>
+                                        <div class="item-after">$0.00</div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="item-content">
+                                    <div class="item-inner">
+                                        <div class="item-title"><b>Grand Total</b></div>
+                                        <div class="item-after"><b>$34.50</b></div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="block">
+                &nbsp;
+            </div>
+        </div>
+        <div class="fab fab-right-top color-orange">
+            <a href="#" class="link back">
+                <i class="icon material-icons">close</i>
+            </a>
+        </div>
+        <div class="fab fab-extended fab-center-bottom color-red" style="width: 120px;">
+            <a href="/orders-checkout">
+                <span style="font-family: cabin regular;">CHECKOUT</span>
+            </a>
+        </div>
+    </div>
+</template>
+
+<style scoped>
+    .cart-name {
+        font-size: 20px;
+        font-weight: bold;
+        letter-spacing: 0.5px;
+        margin-top: 0px;
+    }
+</style>
+
+<script>
+    return {
+        data: function () {
+            return {
+                quantity: 3,
+                total: 34.5,
+                productList: [
+                    { id: 1, name: 'SUN PIZZA', description: 'Shrimp, zucchini, 2-color cheese, Mozza cheese, tomato, olive, parsley, Pesto sauce', price: 11.50 },
+                    { id: 2, name: 'MOON PIZZA', description: 'Shrimp, zucchini, 2-color cheese, Mozza cheese, tomato, olive, parsley, Pesto sauce', price: 11.50 },
+                    { id: 3, name: 'CHEESY BITES TRIO SHRIMP', description: 'Shrimp, zucchini, 2-color cheese, Mozza cheese, tomato, olive, parsley, Pesto sauce', price: 11.50 },
+
+                ],
+            }
+        },
+        methods: {
+
+        },
+        on: {
+            pageInit: function () {
+                var self = this;
+            }
+        }
+    }
+</script>

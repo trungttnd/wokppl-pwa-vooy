@@ -1,0 +1,225 @@
+<template>
+	<div class="page no-navbar no-toolbar no-swipeback">
+
+		<div class="page-content">
+
+			<div class="block text-align-center">
+				<img class="theme-light-only" src="assets/custom/img/konbini-logo.svg" width="128" alt="" />
+			</div>
+
+			<form name="signup" action="#" method="POST" enctype="multipart/form-data">
+				<div class="list no-hairlines no-hairlines-between no-margin-bottom">
+					<ul>
+						<li>
+							<div class="item-content item-input item-input-with-info">
+								<div class="item-media">
+									<i class="icon material-icons">person</i>
+								</div>
+								<div class="item-inner">
+									<div class="item-input-wrap">
+										<input type="text" name="name" placeholder="Name" required />
+										<div class="item-input-info input-error-message"></div>
+									</div>
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="item-content item-input item-input-with-info">
+								<div class="item-media">
+									<i class="icon material-icons">local_phone</i>
+								</div>
+
+								<div class="item-inner">
+									<div class="item-input-wrap input-dropdown-wrap">
+										<select name="code">
+											{{#if codes}}
+											{{#each codes}}
+											{{#if this.selected}}
+											<option value="{{this.dial_code}}" selected>{{this.name}}
+												(+{{this.dial_code}})</option>
+											{{else}}
+											<option value="{{this.dial_code}}">{{this.name}} (+{{this.dial_code}})
+											</option>
+											{{/if}}
+											{{/each}}
+											{{/if}}
+										</select>
+									</div>
+								</div>
+								<div class="item-inner">
+									<div class="item-input-wrap">
+										<input type="tel" name="mobile" placeholder="Mobile: 987654321" required
+											maxlength="9" />
+										<div class="item-input-info input-error-message"></div>
+									</div>
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="item-content item-input item-input-with-info">
+								<div class="item-media">
+									<i class="icon f7-icons">barcode</i>
+								</div>
+								<div class="item-inner">
+									<div class="item-input-wrap">
+										<input type="text" name="passcode" placeholder="Unique passcode" required
+											data-toggle="show-hide-password" />
+										<div class="item-input-info input-error-message"></div>
+									</div>
+								</div>
+							</div>
+						</li>
+
+					</ul>
+					<div class="block text-align-center">
+						<button type="submit" class="button button-big button-fill">Continue</button>
+						<p>By signing up, you agree to {{$root.config.app.title}}'s <a href="#">Terms of Use</a>, <a
+								href="#">Privacy Policy</a> and <a href="#">Cookie Policy</a>.</p>
+						<p>Already have an account? <a href="/signin" data-i18n="login">Log In</a></p>
+					</div>
+				</div>
+			</form>
+
+		</div>
+
+	</div>
+</template>
+
+<script>
+	return {
+		data: function () {
+			return {
+				formValidator: null,
+				isPasswordVisible: false,
+				codes: null
+			}
+		},
+		methods: {
+			initializeFormValidator: function () {
+				var self = this;
+				self.formValidator = jQuery('form[name=signup]').validate({
+					rules: {
+						name: {
+							required: true
+						},
+						mobile: {
+							required: true,
+							mobile: true
+						},
+						passcode: {
+							required: true
+						}
+					},
+					messages: {
+						name: {
+							required: 'Please enter name.'
+						},
+
+						mobile: {
+							required: 'Please enter phone number.',
+							mobile: 'Please enter a valid phone number.'
+						},
+						passcode: {
+							required: 'Please enter passcode.',
+						}
+					},
+					submitHandler: function (form) {
+						self.submitForm(form);
+					}
+
+				});
+			},
+			submitForm: function (form) {
+				var self = this;
+				//app.views.current.router.navigate('/signup/otp');
+				console.log('mobile', '+' + form.code.value + form.mobile.value)
+				console.log('name', form.name.value)
+				console.log('passcode', form.passcode.value)
+				//call api register
+				app.request.postJSON(window.config.url + 'api/services/app/Account/ValidateRegistrationInfo',
+					{
+						mobile: '+' + form.code.value + form.mobile.value,
+						name: form.name.value,
+						passcode: form.passcode.value
+					},
+					function (suc) {
+						console.log("code 200")
+						console.log(suc);
+						//let response = JSON.parse(suc.response);
+						if (suc.result) {
+							app.toast.show({
+								text: 'Thank you for signing up. OTP code will to send to your mobile number.',
+								position: 'bottom',
+								cssClass: 'toast-round bg-color-green'
+							});
+							//Send OTP
+							app.request.postJSON(window.config.url + 'api/services/app/Account/SendOtpCode',
+							{
+								mobile: '+' + form.code.value + form.mobile.value,
+								isResetPassword: false
+							},
+							function (s){
+							},
+							function (e){
+							});
+							localStorage.setItem("WOKPPL_mobile", '+' + form.code.value + form.mobile.value);
+							localStorage.setItem("WOKPPL_passcode", form.passcode.value);
+							localStorage.setItem('WOKPPL_name', form.name.value);
+
+							app.views.current.router.navigate('/signup/otp');
+						}
+						else {
+							var dialog = app.dialog.create({
+								content: '<div class="block no-margin margin-top text-align-center"><i class="fa-stack fa-3x"><span class="fas fa-stack-2x fa-circle text-color-orange"></span><span class="fas fa-stack-1x fa-inverse fa-exclamation"></span></i><p>' + suc.error.message + '.</p></div>',
+								buttons: [
+									{
+										text: 'Okay',
+										bold: true,
+										color: 'orange'
+									}
+								]
+							});
+							dialog.open();
+						}
+					},
+					function (err) {
+						console.log("code 500")
+						console.log(JSON.parse(err.response));
+						let response = JSON.parse(err.response);
+						var dialog = app.dialog.create({
+							content: '<div class="block no-margin margin-top text-align-center"><i class="fa-stack fa-3x"><span class="fas fa-stack-2x fa-circle text-color-red"></span><span class="fas fa-stack-1x fa-inverse fa-times"></span></i><p>' + response.error.message + '.</p></div>',
+							buttons: [
+								{
+									text: 'Retry',
+									bold: true,
+									color: 'red'
+								}
+							]
+						});
+						dialog.open();
+					});
+			},
+
+			getCountryCodes: function () {
+				var self = this;
+				app.request.json(
+					'assets/custom/dataset/countryCodes.json',
+					function (data) {
+						if (data) {
+							self.$setState({
+								codes: data
+							});
+						}
+					}
+				);
+			}
+		},
+		on: {
+			pageInit: function () {
+				var self = this;
+				self.initializeFormValidator();
+				self.getCountryCodes()
+			}
+		}
+	}
+</script>

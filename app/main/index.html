@@ -1,0 +1,70 @@
+<template>
+    <div class="page">
+
+        <!-- <div class="navbar">
+            <div class="navbar-inner">
+                <img class="theme-light-only" src="assets/custom/img/konbini-logo.svg" height="24" alt="" />
+            </div>
+        </div> -->
+
+        <div class="toolbar tabbar tabbar-labels">
+            <div class="toolbar-inner">
+                <a href="/" class="tab-link" data-route-tab-id="tab-home">
+                    <i class="icon material-icons">home</i>
+                    <span class="tabbar-label">Home</span>
+                </a>
+                <a href="/tab-order/" class="tab-link" data-route-tab-id="tab-order">
+                    <i class="icon material-icons">shopping_cart</i>
+                    <span class="tabbar-label">Order</span>
+                </a>
+                <a href="/tab-transaction/" class="tab-link" data-route-tab-id="tab-transaction">
+                    <i class="icon material-icons">history</i>
+                    <span class="tabbar-label">Transaction</span>
+                </a>
+                <a href="/tab-inbox/" class="tab-link" data-route-tab-id="tab-inbox">
+                    <i class="icon material-icons">email<span class="badge color-red">3</span></i>
+                    <span class="tabbar-label">Inbox</span>
+                </a>
+                <a href="/tab-more/" class="tab-link" data-route-tab-id="tab-more">
+                    <i class="icon material-icons">more_vert</i>
+                    <span class="tabbar-label">More</span>
+                </a>
+            </div>
+        </div>
+        <!-- Additional "tabs-routable" is required on tabs -->
+        <div class="tabs tabs-routable">
+            <div class="tab page-content" id="tab-home"></div>
+            <div class="tab page-content" id="tab-order"></div>
+            <div class="tab page-content" id="tab-transaction"></div>
+            <div class="tab page-content" id="tab-inbox"></div>
+            <div class="tab page-content" id="tab-more"></div>
+        </div>
+    </div>
+</template>
+<style scoped>
+</style>
+<script>
+    return {
+        data: function (){
+            return {
+
+            }
+        },
+        methods: {
+
+        },
+        on: {
+            pageInit: function (){
+                var self = this;
+                localStorage.removeItem('WOKPPL_password');
+                localStorage.removeItem('WOKPPL_registerSuccess');
+                setTimeout(function () {
+					if (!localStorage.getItem('WOKPPL_OldUser')) {
+                        console.log('main')
+						app.views.current.router.navigate('/signin');
+					};
+				}, 0);
+            }
+        }
+    }
+</script>

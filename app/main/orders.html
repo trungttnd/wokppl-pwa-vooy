@@ -1,0 +1,185 @@
+<template>
+	<div class="page no-swipeback">
+
+		<div class="navbar">
+			<div class="navbar-inner">
+				<img class="theme-light-only" src="assets/custom/img/konbini-logo.svg" height="24" alt="" />
+				<div class="right">
+					<a href="/orders/cart" class="link icon-only">
+						<i class="icon material-icons">shopping_cart<span
+								class="badge color-red">{{quantity}}</span></i></a>
+					<span class="text-color-red">${{total.toFixed(2)}}</span>
+				</div>
+				<div class="subnavbar">
+					<div class="subnavbar-inner" style="justify-content: center;">
+						<div class="row" style="align-content: center;">
+							<div class="col">
+								<div class="item-inner">
+									<div class="item-title item-label">Date</div>
+									<div class="item-input-wrap">
+										<input type="date" name="pickDate" value="2019-11-02" />
+									</div>
+								</div>
+							</div>
+							<div class="col">
+								<div class="item-inner">
+									<div class="item-title item-label">Session</div>
+									<div class="item-input-wrap input-dropdown-wrap">
+										<select>
+											<option value="1">Session 1</option>
+											<option value="2">Session 2</option>
+											<option value="3">Session 3</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="col" style="margin-top: 5px;">
+								<div class="item-inner">
+									<button type="button"
+										class="button button-small button-round button-fill">Search</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+		<div class="page-content">
+			<div class="toolbar tabbar tabbar-scrollable tabbar-sticky">
+				<div class="toolbar-inner categoriesFont">
+					<a href="#tab-pizza" class="tab-link tab-link-active">Pizzas</a>
+					<a href="#tab-drink" class="tab-link">Drinks</a>
+					<a href="#tab-cake" class="tab-link">Cakes</a>
+					<a href="#tab-food" class="tab-link">Foods</a>
+				</div>
+			</div>
+			<div class="tabs">
+				<div id="tab-pizza" class="tab tab-active">
+					<div class="list media-list no-hairlines no-hairlines-between margin-vertical descriptionFont">
+						<ul>
+							{{#if productList}}
+							{{#each productList}}
+							<li>
+								<div class="item-content">
+									<div class="item-media"><img
+											src="https://images.foody.vn/res/g79/785913/s570x570/8d125f53-e2eb-4d3c-a994-af251ae25c26.jpg"
+											width="80" /></div>
+									<div class="item-inner">
+										<div class="item-title-row">
+											<div class="item-title">{{this.name}}</div>
+											<div class="item-title" style="font-weight: bold;">
+												${{this.price.toFixed(2)}}</div>
+										</div>
+										<div class="item-subtitle">Pizzas</div>
+										<div class="item-row">
+											<div class="item-text">{{this.description}}
+											</div>
+											<div class="item-after" style="color: red; font-weight: bold;">
+												<a href="/orders/options" @click="selectOption({{this.id}})"
+													class="item-link tooltip-init"
+													data-tooltip="Add to Cart">
+													<i class="fas fa-fw fa-lg fa-cart-plus text-color-red"></i></a>
+											</div>
+										</div>
+									</div>
+								</div>
+							</li>
+							{{/each}}
+							{{/if}}
+						</ul>
+					</div>
+
+				</div>
+
+				<div id="tab-drink" class="tab">
+
+				</div>
+				<div id="tab-cake" class="tab">
+
+				</div>
+				<div id="tab-food" class="tab">
+
+				</div>
+			</div>
+
+
+		</div>
+
+	</div>
+</template>
+
+<style scoped>
+</style>
+
+<script>
+	return {
+		data: function () {
+			return {
+				quantity: 0,
+				total: 0.00,
+				tempQuantity: 0,
+				tempTotal: 0.00,
+				detQuantity: 0,
+				productList: [
+					{ id: 1, name: 'SUN PIZZA', description: 'Shrimp, zucchini, 2-color cheese, Mozza cheese, tomato, olive, parsley, Pesto sauce', price: 11.50 },
+					{ id: 2, name: 'MOON PIZZA', description: 'Shrimp, zucchini, 2-color cheese, Mozza cheese, tomato, olive, parsley, Pesto sauce', price: 11.50 },
+					{ id: 3, name: 'CHEESY BITES TRIO SHRIMP', description: 'Shrimp, zucchini, 2-color cheese, Mozza cheese, tomato, olive, parsley, Pesto sauce', price: 11.50 },
+					{ id: 4, name: 'SEAFOOD DELUXE', description: 'Shrimp, zucchini, 2-color cheese, Mozza cheese, tomato, olive, parsley, Pesto sauce', price: 11.50 },
+					{ id: 5, name: 'SUPER SUPREME', description: 'Shrimp, zucchini, 2-color cheese, Mozza cheese, tomato, olive, parsley, Pesto sauce', price: 11.50 },
+					{ id: 6, name: 'SEAFOOD PESTO', description: 'Shrimp, zucchini, 2-color cheese, Mozza cheese, tomato, olive, parsley, Pesto sauce', price: 11.50 },
+					{ id: 7, name: 'OCEAN DELIGHT', description: 'Shrimp, zucchini, 2-color cheese, Mozza cheese, tomato, olive, parsley, Pesto sauce', price: 11.50 },
+					{ id: 8, name: 'SUPREME', description: 'Shrimp, zucchini, 2-color cheese, Mozza cheese, tomato, olive, parsley, Pesto sauce', price: 11.50 },
+					{ id: 9, name: 'SEAFOOD BLACK PEPPER', description: 'Shrimp, zucchini, 2-color cheese, Mozza cheese, tomato, olive, parsley, Pesto sauce', price: 11.50 },
+					{ id: 10, name: 'SUPREME MEAT LOVER', description: 'Shrimp, zucchini, 2-color cheese, Mozza cheese, tomato, olive, parsley, Pesto sauce', price: 11.50 },
+				],
+				detail: null
+			}
+		},
+		methods: {
+			showToolbar: function () {
+				var self = this;
+				setTimeout(function () {
+					self.$('.toolbar').removeClass('toolbar-hidden');
+				});
+			},
+			selectOption: function (id) {
+				var self = this;
+				console.log(id);
+				let det = self.productList.find(function (el) {
+					return el.id == +id;
+				})
+				self.$setState({
+					detail: det,
+					tempQuantity: self.tempQuantity + 1,
+					tempTotal: self.tempTotal + det.price
+				})
+				console.log(self.detail)
+			},
+			
+			addToCart: function () {
+				var self = this;
+				app.toast.show({
+					icon: '<i class="fas fa-fw fa-lg fa-cart-plus"></i>',
+					text: 'Added to Cart',
+					position: 'bottom',
+					cssClass: 'toast-round bg-color-green'
+				});
+			}
+		},
+		on: {
+			pageInit: function () {
+				var self = this;
+				//self.showToolbar();
+			},
+			// pageBeforeIn: function () {
+			// 	var self = this;
+			// 	$('.swiper-container').each(function () {
+			// 		this.swiper.destroy();
+			// 	})
+			// 	console.log('pageBeforeIn')
+			// }
+		}
+	}
+</script>

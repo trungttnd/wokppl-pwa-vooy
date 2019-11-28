@@ -1,0 +1,175 @@
+<template>
+	<div class="page">
+
+		<div class="navbar">
+			<div class="navbar-inner">
+				<img class="theme-light-only" src="assets/custom/img/konbini-logo.svg" height="24" alt="" />
+				<div class="right">
+                    
+                </div>
+			</div>
+		</div>
+
+		<div class="page-content">
+			<div class="list">
+				<ul>
+					<li>
+						<a href="/more/loyalty" class="item-link">
+							<div class="item-content">
+								<div class="item-media">
+									<i class="fa-stack">
+										<span class="fas fa-circle fa-stack-2x color-pink-5"></span>
+										<span class="fas fa-gem fa-stack-1x fa-inverse"></span>
+									</i>
+								</div>
+								<div class="item-inner">
+									<div class="item-title">Loyalty Points</div>
+								</div>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="/more/feedback" class="item-link">
+							<div class="item-content">
+								<div class="item-media">
+									<i class="fa-stack">
+										<span class="fas fa-circle fa-stack-2x color-violet-5"></span>
+										<span class="fas fa-comment fa-stack-1x fa-inverse"></span>
+									</i>
+								</div>
+								<div class="item-inner">
+									<div class="item-title">Feedback</div>
+								</div>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="/more/account" class="item-link">
+							<div class="item-content">
+								<div class="item-media">
+									<i class="fa-stack">
+										<span class="fas fa-circle fa-stack-2x color-green-5"></span>
+										<span class="fas fa-user fa-stack-1x fa-inverse"></span>
+									</i>
+								</div>
+								<div class="item-inner">
+									<div class="item-title">Account Info</div>
+								</div>
+							</div>
+						</a>
+					</li>
+					<li>
+							<a href="/more/setting" class="item-link">
+								<div class="item-content">
+									<div class="item-media">
+										<i class="fa-stack">
+											<span class="fas fa-circle fa-stack-2x color-orange-5"></span>
+											<span class="fas fa-cog fa-stack-1x fa-inverse"></span>
+										</i>
+									</div>
+									<div class="item-inner">
+										<div class="item-title">Setting</div>
+									</div>
+								</div>
+							</a>
+						</li>
+					<li>
+						<a @click="logout" class="item-link">
+							<div class="item-content">
+								<div class="item-media">
+									<i class="fa-stack">
+										<span class="fas fa-circle fa-stack-2x color-red-5"></span>
+										<span class="fas fa-sign-out-alt fa-stack-1x fa-inverse"></span>
+									</i>
+								</div>
+								<div class="item-inner">
+									<div class="item-title">Logout</div>
+								</div>
+							</div>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+
+	</div>
+</template>
+
+<script>
+	return {
+		data: function () {
+			return {
+				formValidator: null,
+				_username: '',
+				_name: '',
+				_email: ''
+			}
+		},
+		methods: {
+			loadData: function () {
+				var self = this;
+
+				self.$setState({
+					_username: localStorage.getItem('WOKPPL_username'),
+					_name: localStorage.getItem('WOKPPL_name'),
+					_email: localStorage.getItem('WOKPPL_email')
+				});
+
+			},
+			
+			
+			hideToolbar: function () {
+				var self = this;
+				setTimeout(function () {
+					self.$('.toolbar').addClass('toolbar-hidden');
+					self.$('.toolbar').removeClass('tabbar');
+					self.$('.toolbar').removeClass('tabbar-labels');
+				});
+			},
+			refreshSearchbar: function () {
+				var self = this;
+				app.searchbar.clear('.searchbar');
+			},
+			logout: function () {
+				var self = this;
+				app.tab.show('#tab-home');
+
+				app.request.get(window.config.url + 'api/TokenAuth/LogOut',
+					function (suc) {
+						console.log('Logout success')
+						console.log(suc);
+					},
+					function (err) {
+						console.log('Logout error')
+						console.log(err);
+					});
+				self.removeCookie();
+				app.views.current.router.navigate('/signin');
+				self.hideToolbar();
+			},
+			exitApp: function () {
+				navigator.app.exitApp();
+			},
+			removeCookie: function () {
+				localStorage.removeItem('WOKPPL_OldUser');
+				localStorage.removeItem('WOKPPL_accessToken');
+				localStorage.removeItem('WOKPPL_expireInSeconds');
+				localStorage.removeItem('WOKPPL_expired');
+				localStorage.removeItem('WOKPPL_refreshToken');
+				localStorage.removeItem('WOKPPL_mobile');
+				localStorage.removeItem('WOKPPL_name');
+				localStorage.removeItem('WOKPPL_email');
+				localStorage.removeItem('WOKPPL_username');
+				localStorage.removeItem('WOKPPL_userId');
+				localStorage.removeItem('WOKPPL_passcode');
+			}
+		},
+		on: {
+			pageInit: function () {
+				var self = this;
+				self.loadData();
+			}
+		}
+	}
+</script>

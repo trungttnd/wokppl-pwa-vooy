@@ -1,0 +1,117 @@
+<template>
+    <div class="page">
+
+        <div class="navbar">
+            <div class="navbar-inner">
+                <img class="theme-light-only" src="assets/custom/img/konbini-logo.svg" height="24" alt="" />
+                <div class="right">
+                    <a href="#" class="link back">
+                        <span>Back</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-content">
+
+            <div class="block-title">Payment Methods</div>
+            <div class="list inset">
+                <ul>
+                    {{#if listCard}}
+                    {{#each listCard}}
+                    <li class="swipeout">
+
+                        <div class="swipeout-content">
+                            <a href="/more/payment-method-view" @click="getId({{this.id}})" class="item-link">
+                                    <div class="item-content">
+                                        <div class="item-media">
+                                            <i class="fa-stack">
+                                                    <span class="fas fa-circle fa-stack-2x brand-color-strava"></span>
+                                                    <span class="fa fa-university fa-stack-1x fa-inverse"></span>
+                                            </i>
+                                        </div>
+                                        <div class="item-inner">
+                                            <div class="item-title">
+                                                <span>{{this.cardHolderName}}</span>
+                                                <div class="item-header">{{this.cardNumber}}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                        </div>
+
+                        <div class="swipeout-actions swipeout-actions-left">
+                            <a @click="deleteCard({{this.id}}"
+                                class="swipeout-action swipeout-close swipeout-delete color-red">
+                                <div class="swipeout-action-icon">
+                                    <i class="icon far fa-trash-alt"></i>
+                                </div>
+                                <div class="swipeout-action-label">Delete</div>
+                            </a>
+                        </div>
+                    </li>
+                    {{/each}}
+                    {{/if}}
+                    <li>
+                        <a href="/more/payment-method-new" class="item-link">
+                            <div class="item-content">
+                                <div class="item-media">
+                                    <i class="fa-stack">
+                                        <span class="fas fa-circle fa-stack-2x brand-color-google"></span>
+                                        <span class="fa fa-plus fa-stack-1x fa-inverse"></span>
+                                    </i>
+                                </div>
+                                <div class="item-inner">
+                                    <div class="item-title">Add new credit card</div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+</template>
+
+<script>
+    return {
+        data: function () {
+            return {
+                listCard: [{
+                    id: 1,
+                    cardHolderName: "Trung Vooy",
+                    cardNumber: "123xxxxx456",
+                    isDefault: true
+                },
+                {
+                    id: 2,
+                    cardHolderName: "James Knox",
+                    cardNumber: "123xxxxx456",
+                    isDefault: false
+                },
+                {
+                    id: 3,
+                    cardHolderName: "Smith Alber",
+                    cardNumber: "123xxxxx456",
+                    isDefault: false
+                }
+                ],
+                detail: null,
+            }
+        },
+        methods: {
+            getId: function (id) {
+
+            },
+            deleteCard: function (id) {
+                var self = this;
+            },
+            
+        },
+        on: {
+
+        }
+    }
+</script>

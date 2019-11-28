@@ -1,0 +1,207 @@
+<template>
+    <div class="page">
+
+        <div class="navbar">
+            <div class="navbar-inner">
+                <img class="theme-light-only" src="assets/custom/img/konbini-logo.svg" height="24" alt="" />
+                <div class="right">
+                    <a href="#" class="link back">
+                        <span>Back</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-content">
+            <div class="block text-align-center">
+                <i class="fa-stack fa-2x tooltip-init" data-tooltip="Visa">
+                    <span class="fas fa-circle fa-stack-2x brand-color-visa"></span>
+                    <span class="fab fa-cc-visa fa-stack-1x fa-inverse"></span>
+                </i>
+                <i class="fa-stack fa-2x tooltip-init" data-tooltip="MasterCard">
+                    <span class="fas fa-circle fa-stack-2x brand-color-mastercard"></span>
+                    <span class="fab fa-cc-mastercard fa-stack-1x fa-inverse"></span>
+                </i>
+                <i class="fa-stack fa-2x tooltip-init" data-tooltip="JCB">
+                    <span class="fas fa-circle fa-stack-2x brand-color-jcb"></span>
+                    <span class="fab fa-cc-jcb fa-stack-1x fa-inverse"></span>
+                </i>
+            </div>
+
+            <form id="2c2p-payment-form" name="creditcard"
+                action="https://customercloud.azurewebsites.net/api/services/app/Gateway2C2PPayment/RegisterCard"
+                method="POST" enctype="application/json">
+                <div class="list no-hairlines no-hairlines-between">
+                    <ul>
+                        <li class="item-content item-input item-input-with-info">
+                            <div class="item-inner">
+                                <div class="item-title item-floating-label">Credit Card Number</div>
+                                <div class="item-input-wrap">
+                                    <input type="text" name="credit_card" data-encrypt="cardnumber" maxlength="16"
+                                        required />
+                                    <span class="input-clear-button"></span>
+                                    <div class="item-input-info input-error-message"></div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="item-content item-input">
+                            <div class="row">
+                                <div class="col-25">
+                                    <div class="item-inner">
+                                        <div class="item-title item-floating-label">MM</div>
+                                        <div class="item-input-wrap">
+                                            <input type="text" name="month" data-encrypt="month" maxlength="2"
+                                                required />
+                                            <div class="item-input-info input-error-message"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-25">
+                                    <div class="item-inner">
+                                        <div class="item-title item-floating-label">YYYY</div>
+                                        <div class="item-input-wrap">
+                                            <input type="text" name="year" data-encrypt="year" maxlength="4" required />
+                                            <div class="item-input-info input-error-message"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-50">
+                                    <div class="item-inner">
+                                        <div class="item-title item-floating-label">CVV2</div>
+                                        <div class="item-input-wrap">
+                                            <input type="password" name="cvv" data-encrypt="cvv" maxlength="4"
+                                                required />
+                                            <div class="item-input-info input-error-message"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="item-content item-input item-input-with-info">
+                            <div class="item-inner">
+                                <div class="item-title item-floating-label">Card Holder's Name</div>
+                                <div class="item-input-wrap">
+                                    <input type="text" name="name" />
+                                    <span class="input-clear-button"></span>
+                                    <div class="item-input-info input-error-message"></div>
+                                </div>
+                            </div>
+                        </li>
+                        <!-- {{#if countries}}
+                            <li class="item-content item-input">
+                                <div class="item-inner">
+                                    <div class="item-title item-label">Issuing Bank Country</div>
+                                    <div class="item-input-wrap input-dropdown-wrap">
+                                        <select name="country">
+                                            {{#each countries}}
+                                            <option value="this.id">{{this.name}}</option>
+                                            {{/each}}
+                                        </select>
+                                    </div>
+                                </div>
+                            </li>
+                            {{/if}}
+                            <li class="item-content item-input item-input-with-info">
+                                <div class="item-inner">
+                                    <div class="item-title item-floating-label">Card Holder's Email</div>
+                                    <div class="item-input-wrap">
+                                        <input type="email" name="email" />
+                                        <span class="input-clear-button"></span>
+                                        <div class="item-input-info input-error-message"></div>
+                                    </div>
+                                </div>
+                            </li> -->
+                    </ul>
+                </div>
+                <div class="block">
+                    <div class="row">
+                        <button type="submit" class="button button-big button-fill">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</template>
+
+<script>
+    return {
+        data: function () {
+            return {
+                listCard: [{
+                    id: 1,
+                    cardHolderName: "Trung Vooy",
+                    cardNumber: "123xxxxx456",
+                    isDefault: true
+                },
+                {
+                    id: 2,
+                    cardHolderName: "James Knox",
+                    cardNumber: "123xxxxx456",
+                    isDefault: false
+                },
+                {
+                    id: 3,
+                    cardHolderName: "Smith Alber",
+                    cardNumber: "123xxxxx456",
+                    isDefault: false
+                }
+                ],
+                detail: null,
+            }
+        },
+        methods: {
+            getId: function (id) {
+
+            },
+            deleteCard: function (id) {
+                var self = this;
+            },
+            clickHandle: function (id, isDefault) {
+                var self = this;
+                console.log(id, isDefault)
+                if (!isDefault) {
+                    //uncheck others checkbox
+                    $('input[type="checkbox"]').on('change', function () {
+                        $('input[type="checkbox"]').not(this).prop('checked', false);
+                    });
+                    //refresh listCard
+                    let list = self.listCard
+                    list.forEach(element => {
+                        if (element.id != id) element.isDefault = false;
+                        else element.isDefault = true;
+                    });
+
+                    self.$setState({
+                        listCard: list
+                    })
+                    //set Default card
+                    // app.request.post(window.config.url + 'api/services/app/Card/SetDefault?id=' + id,
+                    //     function (suc) {
+                    //         let response = JSON.parse(suc);
+                    //         console.log(response)
+                    //     },
+                    //     function (err) {
+                    //         let response = JSON.parse(err.response);
+                    //         console.log(response);
+                    //         var dialog = app.dialog.create({
+                    //             content: '<div class="block no-margin margin-top text-align-center"><i class="fa-stack fa-3x"><span class="fas fa-stack-2x fa-circle text-color-red"></span><span class="fas fa-stack-1x fa-inverse fa-times"></span></i><p>' + response.error.message + '.</p></div>',
+                    //             buttons: [
+                    //                 {
+                    //                     text: 'Retry',
+                    //                     bold: true,
+                    //                     color: 'red'
+                    //                 }
+                    //             ]
+                    //         });
+                    //         dialog.open();
+                    //     })
+                }
+
+            },
+        },
+        on: {
+
+        }
+    }
+</script>

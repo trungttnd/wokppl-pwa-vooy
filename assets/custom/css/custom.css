@@ -1,0 +1,86 @@
+@font-face {
+    font-family: 'BebasNeueRegular';		
+		src: url('../../vendor/bebasneuregular/BebasNeueRegular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+      }
+
+ /* The following rules are deprecated. */ 
+
+@font-face {
+    font-family: 'Bebas Neue';
+	src: url('../../vendor/bebasneuregular/BebasNeueRegular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+	  }
+
+@font-face{
+	font-family: 'cabin regular';
+	font-style:normal;
+	font-weight:400;
+	src:local('Cabin Regular'),local('Cabin-Regular'),url('../../vendor/Cabin/cabin-regular.woff') format('woff'),url('../../vendor/Cabin/cabin-regular.ttf') format('truetype')}
+
+.categoriesFont {
+	font-family: 'BebasNeueRegular';
+   font-weight: bold;
+   font-style: normal;
+   font-size: larger;
+}  
+
+.descriptionFont{
+	font-family: 'cabin regular';
+   font-weight: normal;
+   font-style: normal;
+}
+
+body {
+	/* Disables pull-to-refresh but allows overscroll glow effects. */
+	overscroll-behavior-y: contain;
+  }
+/*
+|------------------------------------------------------------------------------
+| Scroll Bar
+|------------------------------------------------------------------------------
+*/
+
+*::-webkit-scrollbar {
+	height: 2px;
+	width: 3px;
+}
+
+*::-webkit-scrollbar-button {
+	height: 0px;
+	width: 0px;
+}
+
+*::-webkit-scrollbar-thumb {
+	background: #868E96;
+	border: 0px none #FFFFFF;
+	border-radius: 0;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+	background: #495057;
+}
+
+*::-webkit-scrollbar-thumb:active {
+	background: #343A40;
+}
+
+*::-webkit-scrollbar-track {
+	background: #F1F3F5;
+	border: 0px none transparent;
+	border-radius: 50px;
+}
+
+*::-webkit-scrollbar-track:hover {
+	background: #EEEEEE;
+}
+
+*::-webkit-scrollbar-track:active {
+	background: #EEEEEE;
+}
+
+*::-webkit-scrollbar-corner {
+	background: transparent;
+}

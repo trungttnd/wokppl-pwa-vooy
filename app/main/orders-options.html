@@ -1,0 +1,177 @@
+<template>
+    <div class="page">
+        <div class="navbar">
+            <div class="navbar-inner">
+                <img class="theme-light-only" src="assets/custom/img/konbini-logo.svg" height="24" alt="" />
+                <div class="right">
+					<a href="/orders-cart" class="link icon-only">
+						<i class="icon material-icons">shopping_cart<span
+								class="badge color-red">{{quantity}}</span></i></a>
+                    <span class="text-color-red">${{total.toFixed(2)}}</span>
+				</div>
+            </div>
+        </div>
+
+        <div class="page-content">
+            {{#if detail}}
+            <div class="block">
+                <img class="img-center img-responsive" src="assets/custom/food/f1.jpg" alt="" />
+            </div>
+            <div class="block">
+                <div class="row">
+                    <div class="col" style="width: 70%;">
+                        <div style="font-size: 18px;">{{detail.name}}</div>
+                        <div class="item-text text-color-gray" style="font-size: 14px;">
+                            {{detail.description}}</div>
+                    </div>
+                    <div class="col" style="width: 30%; text-align: right;">
+                        <div style="font-size: 18px;">
+                            <span>Price: </span>
+                            <span class="text-color-red">${{detail.price.toFixed(2)}}</span>
+                        </div>
+                        <div class="stepper stepper-small stepper-round stepper-fill stepper-init">
+                            <div class="stepper-button-minus" @click="minusQuantity()"></div>
+                            <div class="stepper-input-wrap">
+                                <input type="number" name="detQuantity" value="1" min="1" max="100" readonly step="1" />
+                            </div>
+                            <div class="stepper-button-plus" @click="plusQuantity()"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="block-title text-color-black">Modification</div>
+            <div class="list">
+                <div class="list-group">
+                    <ul>
+                        <li class="list-group-title">Size (Require)</li>
+                        <li>
+                            <label class="item-radio item-content">
+                                <div class="item-inner">
+                                    <div class="item-title">Size S ($1.00)</div>
+                                </div>
+                                <input type="radio" name="size" value="1" />
+                                <i class="icon icon-radio"></i>
+                            </label>
+                        </li>
+                        <li>
+                            <label class="item-radio item-content">
+                                <div class="item-inner">
+                                    <div class="item-title">Size M ($2.00)</div>
+                                </div>
+                                <input type="radio" name="size" value="2" />
+                                <i class="icon icon-radio"></i>
+                            </label>
+                        </li>
+                        <li>
+                            <label class="item-radio item-content">
+                                <div class="item-inner">
+                                    <div class="item-title">Size L ($3.00)</div>
+                                </div>
+                                <input type="radio" name="size" value="3" />
+                                <i class="icon icon-radio"></i>
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+                <div class="list-group">
+                    <ul>
+                        <li class="list-group-title">Topping</li>
+                        <li>
+                            <label class="item-checkbox item-content color-red">
+                                <div class="item-inner">
+                                    <div class="item-title">White Pearl ($1.00)</div>
+                                </div>
+                                <input type="checkbox" name="topping" value="1" />
+                                <i class="icon icon-checkbox"></i>
+                            </label>
+                        </li>
+                        <li>
+                            <label class="item-checkbox item-content color-red">
+                                <div class="item-inner">
+                                    <div class="item-title">Black Pearl ($2.00)</div>
+                                </div>
+                                <input type="checkbox" name="topping" value="2" />
+                                <i class="icon icon-checkbox"></i>
+                            </label>
+                        </li>
+                        <li>
+                            <label class="item-checkbox item-content color-red">
+                                <div class="item-inner">
+                                    <div class="item-title">Pudding Egg ($3.00)</div>
+                                </div>
+                                <input type="checkbox" name="topping" value="3" />
+                                <i class="icon icon-checkbox"></i>
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="block">
+                &nbsp;
+            </div>
+            {{/if}}
+        </div>
+        <div class="fab fab-right-top color-orange">
+			<a href="#" class="link back">
+				<i class="icon material-icons">close</i>
+			</a>
+		</div>
+        <div class="fab fab-extended fab-center-bottom color-red" style="width: 120px;">
+            <a href="#">
+                <span style="font-family: cabin regular;">Add to cart</span>
+            </a>
+        </div>
+
+    </div>
+</template>
+
+<style scoped>
+
+</style>
+
+<script>
+    return {
+        data: function () {
+            return {
+                quantity: 0,
+                total: 0.00,
+                tempQuantity: 0,
+				tempTotal: 0.00,
+				detQuantity: 0,
+                detail: { id: 1, name: 'SUN PIZZA', description: 'Shrimp, zucchini, 2-color cheese, Mozza cheese, tomato, olive, parsley, Pesto sauce', price: 11.50 }
+            }
+        },
+        methods: {
+            minusQuantity: function () {
+				var self = this;
+				// if (self.tempQuantity > 1)
+				// 	self.$setState({
+				// 		tempQuantity: self.tempQuantity - 1,
+				// 		tempTotal: self.tempTotal - self.detail.price
+				// 	})
+			},
+			plusQuantity: function () {
+				var self = this;
+				self.$setState({
+					tempQuantity: self.tempQuantity + 1,
+					tempTotal: self.tempTotal + self.detail.price
+				})
+			},
+            addToCart: function () {
+                var self = this;
+                app.toast.show({
+                    icon: '<i class="fas fa-fw fa-lg fa-cart-plus"></i>',
+                    text: 'Added to Cart',
+                    position: 'bottom',
+                    cssClass: 'toast-round bg-color-green'
+                });
+            }
+        },
+        on: {
+            pageInit: function () {
+                var self = this;
+            }
+        }
+    }
+</script>

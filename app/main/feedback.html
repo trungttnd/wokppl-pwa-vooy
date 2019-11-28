@@ -1,0 +1,147 @@
+<template>
+    <div class="page">
+
+        <div class="navbar">
+            <div class="navbar-inner">
+                    <img class="theme-light-only" src="assets/custom/img/konbini-logo.svg" height="24" alt="" />
+                <div class="right">
+                    <a href="#" class="link back">
+                        <span>Back</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-content">
+            <div class="block text-align-center">
+                <p>Please send your feedback to us so we can provide the best service for you.</p>
+            </div>
+            <form name="feedback" action="#" method="POST" enctype="multipart/form-data">
+                
+                <div class="list no-hairlines no-hairlines-between">
+                    <ul>
+                        <li>
+                            <div class="item-content item-input item-input-with-info">
+                                <div class="item-inner">
+                                    <div class="item-title item-label">Your satisfaction level</div>
+                                    <div>
+                                        <input type="hidden" name="rating" required />
+                                        <div class="rating-full-star"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                                <div class="item-content item-input item-input-with-info">                                    
+                                    <div class="item-inner">
+                                        <div class="item-title item-label">Comment</div>
+                                        <div class="item-input-wrap">
+                                            <textarea name="comment" class="resizable"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                    </ul>
+                </div>
+                <div class="block">
+                    <button type="submit" class="button button-big button-fill" data-i18n="submit">Submit</button>
+                </div>
+            </form>
+
+            <div class="list no-hairlines no-hairlines-between margin-vertical">
+                    <ul>
+                        <li>
+                            <div class="item-content">
+                                <div class="item-media">
+                                    <i class="fa-stack">
+                                        <span class="fas fa-circle fa-stack-2x text-color-blue"></span>
+                                        <span class="fas fa-info fa-stack-1x fa-inverse"></span>
+                                    </i>
+                                </div>
+                                <div class="item-inner">
+                                    <div class="item-title">Konbini</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-content">
+                                <div class="item-media">
+                                    <i class="fa-stack">
+                                        <span class="fas fa-circle fa-stack-2x text-color-green"></span>
+                                        <span class="fas fa-map-marker-alt fa-stack-1x fa-inverse"></span>
+                                    </i>
+                                </div>
+                                <div class="item-inner">
+                                    <div class="item-title">xxx--xxx-Singapore</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-content">
+                                <div class="item-media">
+                                    <i class="fa-stack">
+                                        <span class="fas fa-circle fa-stack-2x text-color-black"></span>
+                                        <span class="fas fa-phone fa-stack-1x fa-inverse"></span>
+                                    </i>
+                                </div>
+                                <div class="item-inner">
+                                    <div class="item-title">+65-7654321</div>
+                                    <div class="item-after">
+                                        <a href="tel:+65-7654321" target="_blank" class="external">Call</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-content">
+                                <div class="item-media">
+                                    <i class="fa-stack">
+                                        <span class="fas fa-circle fa-stack-2x text-color-orange"></span>
+                                        <span class="fas fa-envelope fa-stack-1x fa-inverse"></span>
+                                    </i>
+                                </div>
+                                <div class="item-inner">
+                                    <div class="item-title">info@konbini.com</div>
+                                    <div class="item-after">
+                                        <a href="mailto:info@konbini.com" target="_blank" class="external">Send Mail</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        
+                    </ul>
+                </div>
+            
+
+        </div>
+
+    </div>
+</template>
+
+<script>
+    return {
+        data: function () {
+            return {
+            }
+        },
+        methods: {
+            initializeRatingFullStar: function () {
+                var self = this;
+                jQuery('.rating-full-star').rateYo({
+                    fullStar: true,
+                    normalFill: '#FFF9DB',
+                    ratedFill: '#FCC419',
+                    rating: 3,
+                    spacing: '10px',
+                    starWidth: '32px'
+                });
+            }
+        },
+        on: {
+            pageInit: function () {
+                var self = this;
+                self.initializeRatingFullStar();
+            }
+        }
+    }
+</script>

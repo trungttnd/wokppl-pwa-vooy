@@ -1,0 +1,201 @@
+<template>
+    <div class="page no-navbar no-toolbar no-swipeback">
+
+        <div class="page-content">
+
+            <div class="block text-align-center">
+                <img class="theme-light-only" src="{{$root.config.app.logo}}" width="128" alt="" />
+                <img class="theme-dark-only" src="assets/custom/img/konbini-logo-white.svg" width="128" alt="" />
+            </div>
+
+            <form name="login" action="#" method="POST" enctype="multipart/form-data">
+                <div class="list no-hairlines no-hairlines-between no-margin-bottom">
+                    <ul>
+                        <li>
+                            <div class="item-content item-input item-input-with-info">
+                                <div class="item-media">
+                                    <i class="icon material-icons">local_phone</i>
+                                </div>
+                                <div class="item-inner">
+                                    <div class="item-input-wrap">
+                                        <input type="tel" name="mobile" placeholder="65xxxxxxx, 84xxxxxxxxx, ..."
+                                            required />
+                                        <div class="item-input-info input-error-message"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-content item-input item-input-with-info">
+                                <div class="item-media">
+                                    <i class="icon material-icons">lock</i>
+                                </div>
+                                <div class="item-inner">
+                                    <div class="item-input-wrap">
+                                        <input type="password" name="password" placeholder="Password" required
+                                            data-toggle="show-hide-password" />
+                                        <div class="item-input-info input-error-message"></div>
+                                    </div>
+                                </div>
+                                <div class="item-media">
+                                    <a href="#" @click="showHidePassword">
+                                        {{#if isPasswordVisible}}
+                                        <i class="icon material-icons">visibility_off</i>
+                                        {{else}}
+                                        <i class="icon material-icons">visibility</i>
+                                        {{/if}}
+                                    </a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="block no-margin-top text-align-right">
+                        <a href="/forgot-password" data-i18n="forgot-password">Forgot Password?</a>
+                    </div>
+                    <div class="block text-align-center">
+                        <!-- <button type="submit" class="button button-big button-fill" data-i18n="login">Log In</button> -->
+                        <button type="submit" class="button button-big button-fill" data-i18n="login">Log
+                            In</button>
+                        <p>Don't have an account? <a href="/signup" data-i18n="signup">Sign Up</a></p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</template>
+
+<script>
+    return {
+        data: function () {
+            return {
+                nextScreen: '/',
+                formValidator: null,
+                isPasswordVisible: false
+            }
+        },
+        methods: {
+            showHidePassword: function (event) {
+                var self = this;
+                var input = self.$('input[data-toggle=show-hide-password]');
+                if (input.attr('type') == 'password') {
+                    input.attr('type', 'text');
+                    self.$setState({
+                        isPasswordVisible: true
+                    });
+                }
+                else {
+                    input.attr('type', 'password');
+                    self.$setState({
+                        isPasswordVisible: false
+                    });
+                }
+            },
+            initializeFormValidator: function () {
+                var self = this;
+                self.formValidator = jQuery('form[name=login]').validate({
+                    rules: {
+                        mobile: {
+                            required: true,
+                            mobile: true
+                        },
+                        password: {
+                            required: true
+                        }
+                    },
+                    messages: {
+                        mobile: {
+                            required: 'Please enter phone number (Dial code + phone number.)',
+                            mobile: 'Please enter a valid phone number.'
+                        },
+                        password: {
+                            required: 'Please enter password.'
+                        }
+                    },
+                    submitHandler: function (form) {
+                        self.submitForm(form);
+                        //console.log('tesst')
+                        //localStorage.setItem('WOKPPL_OldUser', 'true');
+                        //app.views.current.router.navigate('/');
+                        //self.displayToolbar();
+                    }
+                });
+            },
+            submitForm: function (form) {
+                var self = this;
+                //login
+                self.login('+' + form.mobile.value, form.password.value);
+
+            },
+
+            login: function (mobile, password) {
+                var self = this;
+                app.request.postJSON(window.config.url + 'api/TokenAuth/Authenticate',
+                    { userNameOrEmailAddress: mobile, password: password },
+                    function (suc) {
+                        console.log("login success")
+                        console.log(suc);
+                        localStorage.setItem('WOKPPL_OldUser', 'true');
+                        localStorage.setItem('WOKPPL_accessToken', suc.result.accessToken);
+                        localStorage.setItem('WOKPPL_expireInSeconds', suc.result.expireInSeconds);
+                        localStorage.setItem('WOKPPL_refreshToken', suc.result.refreshToken);
+                        localStorage.setItem('WOKPPL_userId', suc.result.userId);
+
+                        // var dt = new Date();
+                        // dt.setDate(dt.getDate() + 1);
+                        // localStorage.setItem('WOKPPL_expired', self.ISODateString(dt));
+                        app.views.current.router.navigate('/');
+                        //self.displayToolbar();
+                        // self.$('.toolbar').removeClass('toolbar-hidden');
+                        // self.$('.toolbar').addClass('tabbar');
+                        // self.$('.toolbar').addClass('tabbar-labels');
+                    },
+                    function (err) {
+                        console.log("login error")
+                        console.log(err);
+                        let response = JSON.parse(err.response);
+                        var dialog = app.dialog.create({
+                            content: '<div class="block no-margin margin-top text-align-center"><i class="fa-stack fa-3x"><span class="fas fa-stack-2x fa-circle text-color-red"></span><span class="fas fa-stack-1x fa-inverse fa-times"></span></i><p>' + response.error.details + '.</p></div>',
+                            buttons: [
+                                {
+                                    text: 'Retry',
+                                    bold: true,
+                                    color: 'red'
+                                }
+                            ]
+                        });
+                        dialog.open();
+                    });
+            },
+            displayToolbar: function () {
+                self.$('.toolbar').removeClass('toolbar-hidden');
+                self.$('.toolbar').addClass('tabbar');
+                self.$('.toolbar').addClass('tabbar-labels');
+            }
+        },
+        on: {
+            pageInit: function () {
+                var self = this;
+                // setTimeout(function () {
+                //     if (localStorage.getItem('WOKPPL_OldUser')) {
+                //         app.views.current.router.navigate(self.nextScreen);
+                //         console.log('signin')
+                //         //self.displayToolbar();
+                //     };
+                //     // if (localStorage.getItem('WOKPPL_registerSuccess')) {
+                //     //     let mo = localStorage.getItem('WOKPPL_mobile');
+                //     //     let pass = localStorage.getItem('WOKPPL_password');
+                //     //     self.login(mo, pass);
+                //     // };
+                // }, 0);
+                setTimeout(function () {
+                    if (localStorage.getItem('WOKPPL_registerSuccess')) {
+                        let mo = localStorage.getItem('WOKPPL_mobile');
+                        let pass = localStorage.getItem('WOKPPL_password');
+                        self.login(mo, pass);
+                    };
+                }, 0);
+                self.initializeFormValidator();
+            }
+        }
+    }
+</script>
