@@ -45,7 +45,7 @@
 </style>
 <script>
     return {
-        data: function (){
+        data: function () {
             return {
 
             }
@@ -54,17 +54,21 @@
 
         },
         on: {
-            pageInit: function (){
+            pageInit: function () {
                 var self = this;
                 localStorage.removeItem('WOKPPL_password');
                 localStorage.removeItem('WOKPPL_registerSuccess');
                 setTimeout(function () {
-					if (!localStorage.getItem('WOKPPL_OldUser')) {
+                    if (!localStorage.getItem('WOKPPL_OldUser')) {
                         console.log('main')
-						app.views.current.router.navigate('/signin');
-					};
-				}, 0);
-            }
+                        app.views.current.router.navigate('/signin');
+                    };
+                }, 0);
+            },
+            pageAfterIn() {
+                var self = this;
+                app.views.main.router.clearPreviousHistory();
+            },
         }
     }
 </script>

@@ -117,11 +117,25 @@ app.on('init', function() {
 	initializeI18n();
 	initializeA2HS();
 	initializeBackButton();
+	//document.addEventListener("backbutton", onBackKeyDown, false);
+
 	getInternetConnectionStatus();
 	setAJAXDefaults();
 	setFormValidatorDefaults();
-	initializeFacebookJsSdk();
+	// initializeFacebookJsSdk();
 });
+// function onBackKeyDown() {
+// 	// Handle the back button
+// 	// if(app.views.main.history.length == 1){
+// 	// 	exitApp();
+// 	// 	e.preventDefault();
+// 	// } else {
+// 	// 	app.dialog.close();
+// 	// 	app.views.main.router.back();
+// 	// 	return false;
+// 	// }
+// 	alert("Hello! I am an alert box!!");
+// }
 
 app.on('pageInit', function() {
 	localizeApp();
@@ -321,9 +335,9 @@ function initializeBackButton() {
 					}
 				);
 			}
-			else if (app.data.config.theme.navigation == 'tabbar' && (currentRoute == '/components' || currentRoute == '/screens' || currentRoute == '/more')) {
-				app.tab.show('#tab-home');
-			}
+			// else if (app.data.config.theme.navigation == 'tabbar' && (currentRoute == '/components' || currentRoute == '/screens' || currentRoute == '/more')) {
+			// 	app.tab.show('#tab-home');
+			// }
 			else {
 				if (app.$('.page.page-current .navbar .back').length) {
 					app.views.current.router.back();

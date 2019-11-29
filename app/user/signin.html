@@ -17,8 +17,29 @@
                                     <i class="icon material-icons">local_phone</i>
                                 </div>
                                 <div class="item-inner">
+									<div class="item-input-wrap input-dropdown-wrap">
+										<select name="code">
+											{{#if codes}}
+											{{#each codes}}
+											{{#if this.selected}}
+											<option value="{{this.dial_code}}" selected>{{this.name}}
+												(+{{this.dial_code}})</option>
+											{{else}}
+											<option value="{{this.dial_code}}">{{this.name}} (+{{this.dial_code}})
+											</option>
+											{{/if}}
+											{{/each}}
+											{{/if}}
+										</select>
+                                    </div>
+                                    <!-- <div class="item-input-wrap">
+                                        <input type="text" name="code" value="(+65)"
+                                            required />
+                                    </div> -->
+								</div>
+                                <div class="item-inner">
                                     <div class="item-input-wrap">
-                                        <input type="tel" name="mobile" placeholder="65xxxxxxx, 84xxxxxxxxx, ..."
+                                        <input type="tel" name="mobile" placeholder="Phone number"
                                             required />
                                         <div class="item-input-info input-error-message"></div>
                                     </div>
@@ -104,8 +125,8 @@
                     },
                     messages: {
                         mobile: {
-                            required: 'Please enter phone number (Dial code + phone number.)',
-                            mobile: 'Please enter a valid phone number.'
+                            required: 'Please enter phone number',
+                            mobile: 'Invalid phone number.'
                         },
                         password: {
                             required: 'Please enter password.'
@@ -113,17 +134,13 @@
                     },
                     submitHandler: function (form) {
                         self.submitForm(form);
-                        //console.log('tesst')
-                        //localStorage.setItem('WOKPPL_OldUser', 'true');
-                        //app.views.current.router.navigate('/');
-                        //self.displayToolbar();
                     }
                 });
             },
             submitForm: function (form) {
                 var self = this;
                 //login
-                self.login('+' + form.mobile.value, form.password.value);
+                self.login('+' + form.code.value + form.mobile.value, form.password.value);
 
             },
 
@@ -140,14 +157,7 @@
                         localStorage.setItem('WOKPPL_refreshToken', suc.result.refreshToken);
                         localStorage.setItem('WOKPPL_userId', suc.result.userId);
 
-                        // var dt = new Date();
-                        // dt.setDate(dt.getDate() + 1);
-                        // localStorage.setItem('WOKPPL_expired', self.ISODateString(dt));
                         app.views.current.router.navigate('/');
-                        //self.displayToolbar();
-                        // self.$('.toolbar').removeClass('toolbar-hidden');
-                        // self.$('.toolbar').addClass('tabbar');
-                        // self.$('.toolbar').addClass('tabbar-labels');
                     },
                     function (err) {
                         console.log("login error")
@@ -166,15 +176,24 @@
                         dialog.open();
                     });
             },
-            displayToolbar: function () {
-                self.$('.toolbar').removeClass('toolbar-hidden');
-                self.$('.toolbar').addClass('tabbar');
-                self.$('.toolbar').addClass('tabbar-labels');
-            }
+            getCountryCodes: function () {
+				var self = this;
+				app.request.json(
+					'assets/custom/dataset/countryCodes.json',
+					function (data) {
+						if (data) {
+							self.$setState({
+								codes: data
+							});
+						}
+					}
+				);
+			}
         },
         on: {
             pageInit: function () {
                 var self = this;
+                self.getCountryCodes();
                 // setTimeout(function () {
                 //     if (localStorage.getItem('WOKPPL_OldUser')) {
                 //         app.views.current.router.navigate(self.nextScreen);
@@ -195,7 +214,11 @@
                     };
                 }, 0);
                 self.initializeFormValidator();
-            }
+            },
+            pageAfterIn() {
+                var self = this;
+                app.views.main.router.clearPreviousHistory();
+            },
         }
     }
-</script>
+</script>`
