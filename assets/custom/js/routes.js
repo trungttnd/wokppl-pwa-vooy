@@ -328,7 +328,7 @@ window.routes = [
 											<div class="item-text">{{this.description}}
 											</div>
 											<div class="item-after" style="color: red; font-weight: bold;">
-												<a href="/orders-options" @click="selectOption({{this.id}})"
+												<a href="/orders-options" @click="selectOption('{{this.id}}')"
 													class="item-link tooltip-init"
 													data-tooltip="Add to Cart">
 													<i class="fas fa-fw fa-lg fa-cart-plus text-color-red"></i></a>
@@ -401,8 +401,9 @@ window.routes = [
 							var self = this;
 							console.log(id);
 							let det = self.productList.find(function (el) {
-								return el.id == +id;
+								return el.id == id;
 							})
+							localStorage.setItem('addProduct', JSON.stringify(det))
 							self.$setState({
 								detail: det,
 								tempQuantity: self.tempQuantity + 1,
@@ -410,7 +411,6 @@ window.routes = [
 							})
 							console.log(self.detail)
 						},
-
 						addToCart: function () {
 							var self = this;
 							app.toast.show({
@@ -422,11 +422,9 @@ window.routes = [
 						},
 						selectCat: function (selected) {
 							var self = this;
-							console.log(selected)
 							
 							$('a').attr('id', function (i, id) {
 								if (id == selected) {
-									console.log('diu hieu', selected, id)
 									$('a[id=' + id + ']').addClass('tab-link-active');
 								}
 								else
@@ -496,7 +494,7 @@ window.routes = [
 
 						self.loadSession();
 						self.loadCategory();
-						self.loadProduct('2019-12-09', '08d77bf4-5c61-2897-8d7d-c6daaec29f0a');
+						self.loadProduct();
 					}
 				}
 			},

@@ -15,7 +15,7 @@
         <div class="page-content">
             {{#if detail}}
             <div class="block">
-                <img class="img-center img-responsive" src="assets/custom/food/f1.jpg" alt="" />
+                <img class="img-center img-responsive" src="https://wokpplapi.konbi.cloud/uploads/{{detail.imageFileName}}" alt="" />
             </div>
             <div class="block">
                 <div class="row">
@@ -27,7 +27,7 @@
                     <div class="col" style="width: 30%; text-align: right;">
                         <div style="font-size: 18px;">
                             <span>Price: </span>
-                            <span class="text-color-red">${{detail.price.toFixed(2)}}</span>
+                            <span class="text-color-red">${{detail.price}}</span>
                         </div>
                         <div class="stepper stepper-small stepper-round stepper-fill stepper-init">
                             <div class="stepper-button-minus" @click="minusQuantity()"></div>
@@ -42,7 +42,7 @@
 
             <div class="block-title text-color-black">Modification</div>
             <div class="list">
-                <div class="list-group">
+                <!-- <div class="list-group">
                     <ul>
                         <li class="list-group-title">Size (Require)</li>
                         <li>
@@ -73,39 +73,25 @@
                             </label>
                         </li>
                     </ul>
-                </div>
+                </div> -->
+                {{#each detail.modifierGroups}}
                 <div class="list-group">
                     <ul>
-                        <li class="list-group-title">Topping</li>
+                        <li class="list-group-title">{{this.name}}</li>
+                        {{#each this.modifiers}}
                         <li>
                             <label class="item-checkbox item-content color-red">
                                 <div class="item-inner">
-                                    <div class="item-title">White Pearl ($1.00)</div>
+                                    <div class="item-title">{{this.name}} (${{this.price.toFixed(2)}})</div>
                                 </div>
-                                <input type="checkbox" name="topping" value="1" />
+                                <input type="checkbox" name="topping" value="{{this.id}}" />
                                 <i class="icon icon-checkbox"></i>
                             </label>
                         </li>
-                        <li>
-                            <label class="item-checkbox item-content color-red">
-                                <div class="item-inner">
-                                    <div class="item-title">Black Pearl ($2.00)</div>
-                                </div>
-                                <input type="checkbox" name="topping" value="2" />
-                                <i class="icon icon-checkbox"></i>
-                            </label>
-                        </li>
-                        <li>
-                            <label class="item-checkbox item-content color-red">
-                                <div class="item-inner">
-                                    <div class="item-title">Pudding Egg ($3.00)</div>
-                                </div>
-                                <input type="checkbox" name="topping" value="3" />
-                                <i class="icon icon-checkbox"></i>
-                            </label>
-                        </li>
+                        {{/each}}
                     </ul>
                 </div>
+                {{/each}}
             </div>
             <div class="block">
                 &nbsp;
@@ -139,7 +125,7 @@
                 tempQuantity: 0,
 				tempTotal: 0.00,
 				detQuantity: 0,
-                detail: { id: 1, name: 'SUN PIZZA', description: 'Shrimp, zucchini, 2-color cheese, Mozza cheese, tomato, olive, parsley, Pesto sauce', price: 11.50 }
+                detail: null
             }
         },
         methods: {
@@ -171,6 +157,10 @@
         on: {
             pageInit: function () {
                 var self = this;
+                self.$setState({
+                    detail: JSON.parse(localStorage.getItem('addProduct'))
+                })
+                console.log(self.detail)
             }
         }
     }
