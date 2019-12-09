@@ -268,21 +268,23 @@ window.routes = [
 									<span class="text-color-red">$ {{total.toFixed(2)}}</span>
 								</div>
 								<div class="subnavbar">
-									<div class="subnavbar-inner" style="justify-content: center; font-size: larger;">
+									<div class="subnavbar-inner" style="justify-content: center;">
 										<a href="#" @click="prev" class="item-link">
-											<i class="fas fa-caret-left" style="margin-right: 10px"></i>
+											<i class="fas fa-caret-left" style="margin-right: 8px"></i>
 										</a>
 										<div class="item-input-wrap" >
-											<input type="text" value="{{today}}" readonly="readonly" id="date" style="width: 6.5rem;"/>
+											<input type="text" value="{{today}}" readonly="readonly" id="date" style="width: 6rem;"/>
 										</div>
 										<a href="#" @click="next" class="item-link">
-											<i class="fas fa-caret-right" style="margin-left: 10px"></i>
+											<i class="fas fa-caret-right" style="margin-left: 8px"></i>
 										</a>
-										<div class="item-input-wrap input-dropdown-wrap" style="margin-left: 1.5rem">
-											<select>
-												<option value="1">Session 1</option>
-												<option value="2">Session 2</option>
-												<option value="3">Session 3</option>
+										<div class="item-input-wrap input-dropdown-wrap" style="margin-left: 0.5rem">
+											<select name="session">
+											{{#if session}}
+											{{#each session}}
+												<option value="{{this.id}}">{{this.name}}:</option>
+												{{/each}}
+												{{/if}}
 											</select>
 										</div>
 									</div>
@@ -291,32 +293,37 @@ window.routes = [
 						</div>
 
 						<div class="page-content">
-							<div class="toolbar tabbar tabbar-scrollable tabbar-sticky">
+						{{#if categories}}
+						
+							<div class="toolbar tabbar tabbar-scrollable tabbar-sticky" style="margin-top: 44px;">
 								<div class="toolbar-inner categoriesFont">
-					<a href="#tab-pizza" class="tab-link tab-link-active">Pizzas</a>
-					<a href="#tab-drink" class="tab-link">Drinks</a>
-					<a href="#tab-cake" class="tab-link">Cakes</a>
-					<a href="#tab-food" class="tab-link">Foods</a>
+								<a href="#" id="undefined" class="cat-link tab-link-active" style="margin-left: 10px" @click="selectCat(undefined)">ALL</a>
+								{{#each categories}}
+									<a href="#" id="{{this.id}}" class="cat-link" style="margin-left: 10px" @click="selectCat('{{this.id}}')">{{this.name}}</a>
+								
+					{{/each}}
 				</div>
 			</div>
-			<div class="tabs">
-				<div id="tab-pizza" class="tab tab-active">
+			
 					<div class="list media-list no-hairlines no-hairlines-between margin-vertical descriptionFont">
-						<ul>
-							{{#if productList}}
-							{{#each productList}}
+						<ul>	
+						{{#if productList}}
+						{{#each productList}}						
 							<li>
 								<div class="item-content">
 									<div class="item-media"><img
-											src="https://images.foody.vn/res/g79/785913/s570x570/8d125f53-e2eb-4d3c-a994-af251ae25c26.jpg"
+											src="https://wokpplapi.konbi.cloud/uploads/{{this.imageFileName}}"
 											width="80" /></div>
 									<div class="item-inner">
 										<div class="item-title-row">
 											<div class="item-title">{{this.name}}</div>
 											<div class="item-title" style="font-weight: bold;">
-												$ {{this.price.toFixed(2)}}</div>
+												$ {{this.price}}</div>
 										</div>
-										<div class="item-subtitle">Pizzas</div>
+										<div class="item-subtitle">{{#each this.categories}}
+										{{this.name}} 
+										{{/each}}
+										</div>
 										<div class="item-row">
 											<div class="item-text">{{this.description}}
 											</div>
@@ -333,27 +340,16 @@ window.routes = [
 							{{/each}}
 							{{/if}}
 						</ul>
-					</div>
-
-				</div>
-
-				<div id="tab-drink" class="tab">
-
-				</div>
-				<div id="tab-cake" class="tab">
-
-				</div>
-				<div id="tab-food" class="tab">
-
-				</div>
+					
 			</div>
-
+			{{/if}}
 
 		</div>
 
 	</div>
 					`,
 					style: `
+
 					`,
 					data: function () {
 						return {
@@ -363,19 +359,11 @@ window.routes = [
 							tempQuantity: 0,
 							tempTotal: 0.00,
 							detQuantity: 0,
-							productList: [
-								{ id: 1, name: 'SUN PIZZA', description: 'Shrimp, zucchini, 2-color cheese, Mozza cheese, tomato, olive, parsley, Pesto sauce', price: 11.50 },
-								{ id: 2, name: 'MOON PIZZA', description: 'Shrimp, zucchini, 2-color cheese, Mozza cheese, tomato, olive, parsley, Pesto sauce', price: 11.50 },
-								{ id: 3, name: 'CHEESY BITES TRIO SHRIMP', description: 'Shrimp, zucchini, 2-color cheese, Mozza cheese, tomato, olive, parsley, Pesto sauce', price: 11.50 },
-								{ id: 4, name: 'SEAFOOD DELUXE', description: 'Shrimp, zucchini, 2-color cheese, Mozza cheese, tomato, olive, parsley, Pesto sauce', price: 11.50 },
-								{ id: 5, name: 'SUPER SUPREME', description: 'Shrimp, zucchini, 2-color cheese, Mozza cheese, tomato, olive, parsley, Pesto sauce', price: 11.50 },
-								{ id: 6, name: 'SEAFOOD PESTO', description: 'Shrimp, zucchini, 2-color cheese, Mozza cheese, tomato, olive, parsley, Pesto sauce', price: 11.50 },
-								{ id: 7, name: 'OCEAN DELIGHT', description: 'Shrimp, zucchini, 2-color cheese, Mozza cheese, tomato, olive, parsley, Pesto sauce', price: 11.50 },
-								{ id: 8, name: 'SUPREME', description: 'Shrimp, zucchini, 2-color cheese, Mozza cheese, tomato, olive, parsley, Pesto sauce', price: 11.50 },
-								{ id: 9, name: 'SEAFOOD BLACK PEPPER', description: 'Shrimp, zucchini, 2-color cheese, Mozza cheese, tomato, olive, parsley, Pesto sauce', price: 11.50 },
-								{ id: 10, name: 'SUPREME MEAT LOVER', description: 'Shrimp, zucchini, 2-color cheese, Mozza cheese, tomato, olive, parsley, Pesto sauce', price: 11.50 },
-							],
-							detail: null
+							session: null,
+							categories: null,
+							productList: null,
+							detail: null,
+							selected: undefined
 						}
 					},
 					methods: {
@@ -431,6 +419,64 @@ window.routes = [
 								position: 'bottom',
 								cssClass: 'toast-round bg-color-green'
 							});
+						},
+						selectCat: function (selected) {
+							var self = this;
+							console.log(selected)
+							
+							$('a').attr('id', function (i, id) {
+								if (id == selected) {
+									console.log('diu hieu', selected, id)
+									$('a[id=' + id + ']').addClass('tab-link-active');
+								}
+								else
+									$('a[id=' + id + ']').removeClass('tab-link-active');
+							})
+						},
+						loadSession: function(){
+							var self= this;
+							app.request.get(window.config.url+'api/services/app/Preorder/GetSessions',
+							function (suc){
+								let response = JSON.parse(suc)
+								console.log('get session success', response)
+								self.$setState({
+									session: response.result.items
+								})
+							},
+							function (err){
+								console.log('get session error', err)
+							})
+						},
+						loadCategory: function(){
+							var self= this;
+							app.request.get(window.config.url+'api/services/app/Preorder/GetCategories',
+							function (suc){
+								let response = JSON.parse(suc)
+								console.log('get category success', response)
+								self.$setState({
+									categories: response.result.items
+								})
+							},
+							function (err){
+								console.log('get category error', err)
+							})
+						},
+						loadProduct(date, sessionId, categoryId){
+							var self = this;
+							app.request.get(window.config.url+'api/services/app/Preorder/GetProductMenuBrowsingList',
+							{
+								Date: date, SessionId: sessionId, CategoryId: categoryId
+							},
+							function (suc){
+								let response = JSON.parse(suc)
+								console.log('get product success', response)
+								self.$setState({
+									productList: response.result.items
+								})
+							},
+							function (err){
+								console.log('get product error', err)
+							})
 						}
 					},
 					mounted() {
@@ -440,13 +486,17 @@ window.routes = [
 						self.$setState({
 							today: date.toLocaleDateString()
 						});
-						console.log(self.today)
+						//console.log(self.today)
 						var calendarDateFormat = app.calendar.create({
 							inputEl: '#date',
-							dateFormat: 'd/m/yyyy',
+							dateFormat: 'dd/mm/yyyy',
 							minDate: new Date(),
 							closeOnSelect: true
 						});
+
+						self.loadSession();
+						self.loadCategory();
+						self.loadProduct('2019-12-09', '08d77bf4-5c61-2897-8d7d-c6daaec29f0a');
 					}
 				}
 			},
@@ -1144,16 +1194,7 @@ window.routes = [
 							});
 
 						},
-
-
-						hideToolbar: function () {
-							var self = this;
-							setTimeout(function () {
-								self.$('.toolbar').addClass('toolbar-hidden');
-								self.$('.toolbar').removeClass('tabbar');
-								self.$('.toolbar').removeClass('tabbar-labels');
-							});
-						},
+						
 						refreshSearchbar: function () {
 							var self = this;
 							app.searchbar.clear('.searchbar');
@@ -1172,7 +1213,6 @@ window.routes = [
 							// 	});
 							self.removeCookie();
 							app.views.current.router.navigate('/signin');
-							self.hideToolbar();
 						},
 						exitApp: function () {
 							navigator.app.exitApp();

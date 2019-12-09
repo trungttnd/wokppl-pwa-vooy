@@ -276,3 +276,5 @@ window.config.theme = {
 };
 
 window.config.url = 'https://wokpplapi.konbi.cloud/';
+
+window.config.upload = 'https://wokpplapi.konbi.cloud/uploads/'
