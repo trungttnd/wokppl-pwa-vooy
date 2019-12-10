@@ -4,18 +4,19 @@
             <div class="navbar-inner">
                 <img class="theme-light-only" src="assets/custom/img/konbini-logo.svg" height="24" alt="" />
                 <div class="right">
-					<a href="/orders-cart" class="link icon-only">
-						<i class="icon material-icons">shopping_cart<span
-								class="badge color-red">{{quantity}}</span></i></a>
-                    <span class="text-color-red">${{total.toFixed(2)}}</span>
-				</div>
+                    <a href="/orders-cart" class="link icon-only">
+                        <i class="icon material-icons">shopping_cart<span
+                                class="badge color-red">{{cartItems.quantity}}</span></i></a>
+                    <span class="text-color-red">${{cartItems.total.toFixed(2)}}</span>
+                </div>
             </div>
         </div>
 
         <div class="page-content">
             {{#if detail}}
             <div class="block">
-                <img class="img-center img-responsive" src="https://wokpplapi.konbi.cloud/uploads/{{detail.imageFileName}}" alt="" />
+                <img class="img-center img-responsive"
+                    src="https://wokpplapi.konbi.cloud/uploads/{{detail.imageFileName}}" alt="" />
             </div>
             <div class="block">
                 <div class="row">
@@ -32,7 +33,7 @@
                         <div class="stepper stepper-small stepper-round stepper-fill stepper-init">
                             <div class="stepper-button-minus" @click="minusQuantity()"></div>
                             <div class="stepper-input-wrap">
-                                <input type="number" name="detQuantity" value="1" min="1" max="100" readonly step="1" />
+                                <input type="number" name="addQuantity" value="1" min="1" max="100" readonly step="1" />
                             </div>
                             <div class="stepper-button-plus" @click="plusQuantity()"></div>
                         </div>
@@ -74,6 +75,7 @@
                         </li>
                     </ul>
                 </div> -->
+                {{#if detail.modifierGroups}}
                 {{#each detail.modifierGroups}}
                 <div class="list-group">
                     <ul>
@@ -92,6 +94,7 @@
                     </ul>
                 </div>
                 {{/each}}
+                {{/if}}
             </div>
             <div class="block">
                 &nbsp;
@@ -99,12 +102,12 @@
             {{/if}}
         </div>
         <div class="fab fab-right-top color-orange">
-			<a href="#" class="link back">
-				<i class="icon material-icons">close</i>
-			</a>
-		</div>
+            <a href="#" class="link back">
+                <i class="icon material-icons">close</i>
+            </a>
+        </div>
         <div class="fab fab-extended fab-center-bottom color-red" style="width: 120px;">
-            <a href="#">
+            <a href="/tab-order/" class="link back" @click="addToCart">
                 <span style="font-family: cabin regular;">Add to cart</span>
             </a>
         </div>
@@ -120,32 +123,39 @@
     return {
         data: function () {
             return {
-                quantity: 0,
-                total: 0.00,
-                tempQuantity: 0,
-				tempTotal: 0.00,
-				detQuantity: 0,
-                detail: null
+                detail: null,
+                cartItems: {
+                    quantity: 0,
+                    total: 0.00,
+                    items: []
+                },
             }
         },
         methods: {
             minusQuantity: function () {
-				var self = this;
-				// if (self.tempQuantity > 1)
-				// 	self.$setState({
-				// 		tempQuantity: self.tempQuantity - 1,
-				// 		tempTotal: self.tempTotal - self.detail.price
-				// 	})
-			},
-			plusQuantity: function () {
-				var self = this;
-				self.$setState({
-					tempQuantity: self.tempQuantity + 1,
-					tempTotal: self.tempTotal + self.detail.price
-				})
-			},
+                var self = this;
+                // if (self.tempQuantity > 1)
+                // 	self.$setState({
+                // 		tempQuantity: self.tempQuantity - 1,
+                // 		tempTotal: self.tempTotal - self.detail.price
+                // 	})
+            },
+            plusQuantity: function () {
+                var self = this;
+                self.$setState({
+                    tempQuantity: self.tempQuantity + 1,
+                    tempTotal: self.tempTotal + self.detail.price
+                })
+            },
             addToCart: function () {
                 var self = this;
+                let quan = +self.$('input[name=addQuantity]').val()
+                let selectItem = self.detail;
+                console.log(quan)
+                self.cartItems.quantity += quan;
+                self.cartItems.total += selectItem.price * quan;
+                self.cartItems.items.push(self.detail)
+                localStorage.setItem('cartItems', JSON.stringify(self.cartItems))
                 app.toast.show({
                     icon: '<i class="fas fa-fw fa-lg fa-cart-plus"></i>',
                     text: 'Added to Cart',
@@ -158,8 +168,11 @@
             pageInit: function () {
                 var self = this;
                 self.$setState({
-                    detail: JSON.parse(localStorage.getItem('addProduct'))
+                    detail: JSON.parse(localStorage.getItem('addProduct')),
+                    cartItems: JSON.parse(localStorage.getItem('cartItems')) == undefined ? { quantity: 0, total: 0.00, items: [] } : JSON.parse(localStorage.getItem('cartItems'))
                 })
+                self.detail.price = 3;
+                //if (self.cartItems == undefined) self.cartItems = [quantity = 0, total = 0.00, items = null]
                 console.log(self.detail)
             }
         }
