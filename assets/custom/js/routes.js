@@ -264,8 +264,8 @@ window.routes = [
 								<div class="right">
 									<a href="/orders-cart" class="link icon-only">
 									<i class="icon material-icons">shopping_cart<span
-										class="badge color-red">{{quantity}}</span></i></a>
-									<span class="text-color-red">$ {{total.toFixed(2)}}</span>
+										class="badge color-red">{{cartItems.quantity}}</span></i></a>
+									<span class="text-color-red">$ {{cartItems.total.toFixed(2)}}</span>
 								</div>
 								<div class="subnavbar">
 									<div class="subnavbar-inner" style="justify-content: center;">
@@ -363,7 +363,12 @@ window.routes = [
 							categories: null,
 							productList: null,
 							detail: null,
-							selected: undefined
+							selected: undefined,
+							cartItems: {
+								quantity: 0,
+								total: 0.00,
+								items: []
+							}
 						}
 					},
 					methods: {
@@ -422,7 +427,7 @@ window.routes = [
 						},
 						selectCat: function (selected) {
 							var self = this;
-							
+
 							$('a').attr('id', function (i, id) {
 								if (id == selected) {
 									$('a[id=' + id + ']').addClass('tab-link-active');
@@ -431,50 +436,50 @@ window.routes = [
 									$('a[id=' + id + ']').removeClass('tab-link-active');
 							})
 						},
-						loadSession: function(){
-							var self= this;
-							app.request.get(window.config.url+'api/services/app/Preorder/GetSessions',
-							function (suc){
-								let response = JSON.parse(suc)
-								console.log('get session success', response)
-								self.$setState({
-									session: response.result.items
-								})
-							},
-							function (err){
-								console.log('get session error', err)
-							})
-						},
-						loadCategory: function(){
-							var self= this;
-							app.request.get(window.config.url+'api/services/app/Preorder/GetCategories',
-							function (suc){
-								let response = JSON.parse(suc)
-								console.log('get category success', response)
-								self.$setState({
-									categories: response.result.items
-								})
-							},
-							function (err){
-								console.log('get category error', err)
-							})
-						},
-						loadProduct(date, sessionId, categoryId){
+						loadSession: function () {
 							var self = this;
-							app.request.get(window.config.url+'api/services/app/Preorder/GetProductMenuBrowsingList',
-							{
-								Date: date, SessionId: sessionId, CategoryId: categoryId
-							},
-							function (suc){
-								let response = JSON.parse(suc)
-								console.log('get product success', response)
-								self.$setState({
-									productList: response.result.items
+							app.request.get(window.config.url + 'api/services/app/Preorder/GetSessions',
+								function (suc) {
+									let response = JSON.parse(suc)
+									console.log('get session success', response)
+									self.$setState({
+										session: response.result.items
+									})
+								},
+								function (err) {
+									console.log('get session error', err)
 								})
-							},
-							function (err){
-								console.log('get product error', err)
-							})
+						},
+						loadCategory: function () {
+							var self = this;
+							app.request.get(window.config.url + 'api/services/app/Preorder/GetCategories',
+								function (suc) {
+									let response = JSON.parse(suc)
+									console.log('get category success', response)
+									self.$setState({
+										categories: response.result.items
+									})
+								},
+								function (err) {
+									console.log('get category error', err)
+								})
+						},
+						loadProduct(date, sessionId, categoryId) {
+							var self = this;
+							app.request.get(window.config.url + 'api/services/app/Preorder/GetProductMenuBrowsingList',
+								{
+									Date: date, SessionId: sessionId, CategoryId: categoryId
+								},
+								function (suc) {
+									let response = JSON.parse(suc)
+									console.log('get product success', response)
+									self.$setState({
+										productList: response.result.items
+									})
+								},
+								function (err) {
+									console.log('get product error', err)
+								})
 						}
 					},
 					mounted() {
@@ -482,9 +487,10 @@ window.routes = [
 						let date = new Date();
 
 						self.$setState({
-							today: date.toLocaleDateString()
+							today: date.toLocaleDateString(),
+							cartItems: JSON.parse(localStorage.getItem('cartItems')) == undefined ? { quantity: 0, total: 0.00, items: [] } : JSON.parse(localStorage.getItem('cartItems'))
 						});
-						//console.log(self.today)
+						console.log(self.cartItems)
 						var calendarDateFormat = app.calendar.create({
 							inputEl: '#date',
 							dateFormat: 'dd/mm/yyyy',
@@ -1192,7 +1198,7 @@ window.routes = [
 							});
 
 						},
-						
+
 						refreshSearchbar: function () {
 							var self = this;
 							app.searchbar.clear('.searchbar');
@@ -1227,6 +1233,8 @@ window.routes = [
 							localStorage.removeItem('WOKPPL_username');
 							localStorage.removeItem('WOKPPL_userId');
 							localStorage.removeItem('WOKPPL_passcode');
+							localStorage.removeItem('addProduct');
+							localStorage.removeItem('cartItems');
 						}
 					},
 					mounted() {
