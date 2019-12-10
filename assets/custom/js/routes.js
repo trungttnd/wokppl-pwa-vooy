@@ -256,6 +256,12 @@ window.routes = [
 				// Fill this tab content with Ajax request:
 				componentUrl: './app/main/orders.html',
 				// component: {
+				// 	template: `
+					
+				// 	`,
+				// 	style: `
+
+				// 	`,
 					
 				// }
 			},

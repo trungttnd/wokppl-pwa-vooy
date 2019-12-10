@@ -24,7 +24,7 @@
 							<select name="session">
 								{{#if session}}
 								{{#each session}}
-								<option value="{{this.id}}">{{this.name}}:</option>
+								<option value="{{this.id}}">{{this.name}}: {{this.startTime}}-{{this.endTime}}</option>
 								{{/each}}
 								{{/if}}
 							</select>
@@ -58,7 +58,7 @@
 								<div class="item-title-row">
 									<div class="item-title">{{this.name}}</div>
 									<div class="item-title" style="font-weight: bold;">
-										$ {{this.price}}</div>
+										$ {{this.price.toFixed(2)}}</div>
 								</div>
 								<div class="item-subtitle">{{#each this.categories}}
 									{{this.name}}
@@ -68,8 +68,8 @@
 									<div class="item-text">{{this.description}}
 									</div>
 									<div class="item-after" style="color: red; font-weight: bold;">
-										<a href="/orders-options" @click="selectOption('{{this.id}}')"
-											class="item-link tooltip-init" data-tooltip="Add to Cart">
+										<a href="#" @click="selectOption('{{this.id}}')" class="item-link tooltip-init"
+											data-tooltip="Add to Cart">
 											<i class="fas fa-fw fa-lg fa-cart-plus text-color-red"></i></a>
 									</div>
 								</div>
@@ -79,8 +79,10 @@
 					{{/each}}
 					{{/if}}
 				</ul>
+
 			</div>
 			{{/if}}
+
 		</div>
 </template>
 
@@ -146,6 +148,7 @@
 				self.$setState({
 					today: self.formatDate(date, 'en')
 				});
+				self.updateProducts();
 			},
 			selectOption: function (id) {
 				var self = this;
@@ -159,16 +162,8 @@
 					tempQuantity: self.tempQuantity + 1,
 					tempTotal: self.tempTotal + det.price
 				})
-				console.log(self.detail)
-			},
-			addToCart: function () {
-				var self = this;
-				app.toast.show({
-					icon: '<i class="fas fa-fw fa-lg fa-cart-plus"></i>',
-					text: 'Added to Cart',
-					position: 'bottom',
-					cssClass: 'toast-round bg-color-green'
-				});
+				//console.log(self.detail)
+				app.views.current.router.navigate('/orders-options');
 			},
 			selectCat: function (selected) {
 				var self = this;
@@ -180,6 +175,13 @@
 					else
 						$('a[id=' + id + ']').removeClass('tab-link-active');
 				})
+
+				let sess = self.$('select[name=session]').val();
+				let arr = $('#date').val().split('/');
+				let dateInput = arr[1] + '/' + arr[0] + '/' + arr[2]
+				if (selected == undefined) self.loadProduct(dateInput, sess,'')
+				else
+					self.loadProduct(dateInput, sess, selected);
 			},
 			loadSession: function () {
 				var self = this;
@@ -226,10 +228,26 @@
 						console.log('get product error', err)
 					})
 			},
+			updateProducts:function(){
+				var self = this;
+				let sess = self.$('select[name=session]').val();
+				let arr = $('#date').val().split('/');
+				let dt = arr[1] + '/' + arr[0] + '/' + arr[2]
+				$('a').attr('id', function (i, id) {
+					if (id == undefined) {
+						$('a[id=' + id + ']').addClass('tab-link-active');
+					}
+					else
+						$('a[id=' + id + ']').removeClass('tab-link-active');
+				})
+				self.loadProduct(dt,sess,'')
+			}
 		},
 		mounted() {
 			var self = this;
 			let date = new Date();
+			let dateInput = (date.getMonth()+1) + '/' + date.getDate() + '/' + date.getFullYear();
+			console.log(dateInput);
 
 			self.$setState({
 				today: self.formatDate(date, 'en'),
@@ -245,7 +263,16 @@
 
 			self.loadSession();
 			self.loadCategory();
-			self.loadProduct();
+			self.loadProduct(dateInput,'08d77bf4-5c61-2897-8d7d-c6daaec29f0a','');
+
+			self.$('select[name=session]').change(function(){
+				self.updateProducts();
+			})
+
+			self.$('#date').change(function(){
+				self.updateProducts();
+			})
+
 		}
 	}
 </script>
