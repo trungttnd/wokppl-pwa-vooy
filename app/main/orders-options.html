@@ -86,7 +86,7 @@
                                 <div class="item-inner">
                                     <div class="item-title">{{this.name}} (${{this.price.toFixed(2)}})</div>
                                 </div>
-                                <input type="checkbox" name="topping" value="{{this.id}}" />
+                                <input type="checkbox" name="{{this.name}}" value="{{this.id}}">
                                 <i class="icon icon-checkbox"></i>
                             </label>
                         </li>
@@ -107,7 +107,7 @@
             </a>
         </div>
         <div class="fab fab-extended fab-center-bottom color-red" style="width: 120px;">
-            <a href="/tab-order/" class="link back" @click="addToCart">
+            <a href="#" class="link back" @click="addToCart">
                 <span style="font-family: cabin regular;">Add to cart</span>
             </a>
         </div>
@@ -162,6 +162,7 @@
                     position: 'bottom',
                     cssClass: 'toast-round bg-color-green'
                 });
+                app.views.current.router.navigate('/tab-order/');
             }
         },
         on: {
@@ -171,9 +172,37 @@
                     detail: JSON.parse(localStorage.getItem('addProduct')),
                     cartItems: JSON.parse(localStorage.getItem('cartItems')) == undefined ? { quantity: 0, total: 0.00, items: [] } : JSON.parse(localStorage.getItem('cartItems'))
                 })
-                self.detail.price = 3;
-                //if (self.cartItems == undefined) self.cartItems = [quantity = 0, total = 0.00, items = null]
+                //self.detail.price = 3;
                 console.log(self.detail)
+
+                self.$('input[type=checkbox]').change(function(){
+                    let modId = $(this).val();
+                    console.log(modId)
+                    if ($(this).is(":checked")){
+                        console.log('checked')
+                        for (let i=0; i< self.detail.modifierGroups.length; i++){
+                            for (let j=0; j<self.detail.modifierGroups[i].modifiers.length;j++){
+                                if (self.detail.modifierGroups[i].modifiers[j].id == modId){
+                                    self.detail.modifierGroups[i].modifiers[j].isChoose = true;
+                                    self.cartItems.total += self.detail.modifierGroups[i].modifiers[j].price;
+                                }
+                                    
+                            }
+                        }
+                    } else {
+                        console.log('unchecked')
+                        for (let i=0; i< self.detail.modifierGroups.length; i++){
+                            for (let j=0; j<self.detail.modifierGroups[i].modifiers.length;j++){
+                                if (self.detail.modifierGroups[i].modifiers[j].id == modId){
+                                    self.detail.modifierGroups[i].modifiers[j].isChoose = false;
+                                    self.cartItems.total -= self.detail.modifierGroups[i].modifiers[j].price;
+                                }
+                                   
+                            }
+                        }
+                    }
+                    console.log(self.detail)
+                })
             }
         }
     }
