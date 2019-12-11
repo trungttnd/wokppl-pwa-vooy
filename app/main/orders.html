@@ -94,11 +94,7 @@
 		data: function () {
 			return {
 				today: null,
-				quantity: 0,
-				total: 0.00,
 				tempQuantity: 0,
-				tempTotal: 0.00,
-				detQuantity: 0,
 				session: null,
 				categories: null,
 				productList: null,
@@ -161,7 +157,6 @@
 				self.$setState({
 					detail: det,
 					tempQuantity: self.tempQuantity + 1,
-					tempTotal: self.tempTotal + det.price
 				})
 				//console.log(self.detail)
 				app.views.current.router.navigate('/orders-options');
@@ -252,7 +247,9 @@
 
 			self.$setState({
 				today: self.formatDate(date, 'en'),
-				cartItems: JSON.parse(localStorage.getItem('cartItems')) == undefined ? { quantity: 0, total: 0.00, items: [] } : JSON.parse(localStorage.getItem('cartItems'))
+				cartItems: JSON.parse(localStorage.getItem('cartItems')) == undefined ? { quantity: 0, total: 0.00, items: [] } : JSON.parse(localStorage.getItem('cartItems')),
+				session: JSON.parse(localStorage.getItem('sessions')),
+				categories: JSON.parse(localStorage.getItem('categories'))
 			});
 			console.log('test', self.cartItems)
 			var calendarDateFormat = app.calendar.create({
@@ -262,9 +259,9 @@
 				closeOnSelect: true
 			});
 
-			self.loadSession();
-			self.loadCategory();
-			self.loadProduct(dateInput,'08d77bf4-5c61-2897-8d7d-c6daaec29f0a','');
+			// self.loadSession();
+			// self.loadCategory();
+			self.loadProduct(dateInput,self.session[0].id,'');
 
 			self.$('select[name=session]').change(function(){
 				self.updateProducts();
@@ -274,6 +271,11 @@
 				self.updateProducts();
 			})
 
+		},
+		on: {
+			pageInit: function(){
+				console.log('pageInit')
+			}
 		}
 	}
 </script>

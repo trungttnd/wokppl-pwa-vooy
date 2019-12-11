@@ -241,11 +241,43 @@ window.routes = [
 								slidesPerView: 'auto'
 							});
 						},
+						loadSession: function () {
+							var self = this;
+							app.request.get(window.config.url + 'api/services/app/Preorder/GetSessions',
+								function (suc) {
+									let response = JSON.parse(suc)
+									console.log('get session success', response)
+									// self.$setState({
+									// 	session: response.result.items
+									// })
+									localStorage.setItem('sessions', JSON.stringify(response.result.items))
+								},
+								function (err) {
+									console.log('get session error', err)
+								})
+						},
+						loadCategory: function () {
+							var self = this;
+							app.request.get(window.config.url + 'api/services/app/Preorder/GetCategories',
+								function (suc) {
+									let response = JSON.parse(suc)
+									console.log('get category success', response)
+									// self.$setState({
+									// 	categories: response.result.items
+									// })
+									localStorage.setItem('categories', JSON.stringify(response.result.items))
+								},
+								function (err) {
+									console.log('get category error', err)
+								})
+						},
 					},
 					mounted() {
 						var self = this;
 						self.loadData();
 						self.initializeSliderHero();
+						self.loadSession();
+						self.loadCategory();
 					}
 				},
 				// componentUrl: './app/main/home.html',
@@ -257,12 +289,12 @@ window.routes = [
 				componentUrl: './app/main/orders.html',
 				// component: {
 				// 	template: `
-					
+
 				// 	`,
 				// 	style: `
 
 				// 	`,
-					
+
 				// }
 			},
 			{
