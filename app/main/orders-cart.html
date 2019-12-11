@@ -4,17 +4,20 @@
             <div class="navbar-inner">
                 <img class="theme-light-only" src="assets/custom/img/konbini-logo.svg" height="24" alt="" />
                 <div class="right">
+                    <a href="/orders-cart" class="link icon-only">
+                        <i class="icon material-icons">shopping_cart<span
+                                class="badge color-red">{{quantity}}</span></i></a>
+                    <span class="text-color-red">${{total.toFixed(2)}}</span>
                 </div>
             </div>
         </div>
 
         <div class="page-content">
             <div class="block text-align-center">
-                
+                <div class="cart-name">YOUR CART</div>
                 <div>(3 items)</div>
             </div>
             <div class="card">
-                    <div class="cart-name">YOUR CART</div>
                 <div class="list media-list no-hairlines no-hairlines-between margin-vertical descriptionFont">
                     <ul>
                         {{#if productList}}
@@ -115,7 +118,6 @@
         font-weight: bold;
         letter-spacing: 0.5px;
         margin-top: 0px;
-        margin-left: 1rem;
     }
 </style>
 
@@ -125,8 +127,12 @@
             return {
                 quantity: 3,
                 total: 34.5,
-                productList: [],
-                cartItems: JSON.parse(localStorage.getItem('cartItems')) == undefined ? { quantity: 0, total: 0.00, items: [] } : JSON.parse(localStorage.getItem('cartItems'))
+                productList: [
+                    { id: 1, name: 'SUN PIZZA', description: 'Shrimp, zucchini, 2-color cheese, Mozza cheese, tomato, olive, parsley, Pesto sauce', price: 11.50 },
+                    { id: 2, name: 'MOON PIZZA', description: 'Shrimp, zucchini, 2-color cheese, Mozza cheese, tomato, olive, parsley, Pesto sauce', price: 11.50 },
+                    { id: 3, name: 'CHEESY BITES TRIO SHRIMP', description: 'Shrimp, zucchini, 2-color cheese, Mozza cheese, tomato, olive, parsley, Pesto sauce', price: 11.50 },
+
+                ],
             }
         },
         methods: {
@@ -135,10 +141,6 @@
         on: {
             pageInit: function () {
                 var self = this;
-
-                self.$setState({
-                    productList: self.cartItems.items
-                })
             }
         }
     }

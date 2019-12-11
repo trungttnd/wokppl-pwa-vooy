@@ -86,7 +86,7 @@
                                 <div class="item-inner">
                                     <div class="item-title">{{this.name}} (${{this.price.toFixed(2)}})</div>
                                 </div>
-                                <input type="checkbox" name="{{this.name}}" value="{{this.id}}">
+                                <input type="checkbox" name="topping" value="{{this.id}}" />
                                 <i class="icon icon-checkbox"></i>
                             </label>
                         </li>
@@ -107,7 +107,7 @@
             </a>
         </div>
         <div class="fab fab-extended fab-center-bottom color-red" style="width: 120px;">
-            <a href="#" class="link back" @click="addToCart">
+            <a href="/tab-order/" class="link back" @click="addToCart">
                 <span style="font-family: cabin regular;">Add to cart</span>
             </a>
         </div>
@@ -169,7 +169,6 @@
                     position: 'bottom',
                     cssClass: 'toast-round bg-color-green'
                 });
-                app.views.current.router.navigate('/tab-order/');
             }
         },
         on: {
@@ -181,7 +180,8 @@
                     cartItems: JSON.parse(localStorage.getItem('cartItems')) == undefined ? { quantity: 0, total: 0.00, items: [] } : JSON.parse(localStorage.getItem('cartItems')),
                     price: det.price
                 })
-                //self.detail.price = 3;
+                self.detail.price = 3;
+                //if (self.cartItems == undefined) self.cartItems = [quantity = 0, total = 0.00, items = null]
                 console.log(self.detail)
 
                 self.$('input[type=checkbox]').change(function(){

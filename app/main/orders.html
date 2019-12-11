@@ -33,7 +33,6 @@
 				</div>
 			</div>
 		</div>
-
 		<div class="page-content">
 			{{#if categories}}
 			<div class="toolbar tabbar tabbar-scrollable tabbar-sticky" style="margin-top: 44px;">
@@ -43,7 +42,6 @@
 					{{#each categories}}
 					<a href="#" id="{{this.id}}" class="cat-link" style="margin-left: 10px"
 						@click="selectCat('{{this.id}}')">{{this.name}}</a>
-
 					{{/each}}
 				</div>
 			</div>
@@ -86,8 +84,6 @@
 			{{/if}}
 
 		</div>
-
-	</div>
 </template>
 
 <style scoped>
@@ -116,19 +112,26 @@
 			}
 		},
 		methods: {
+			formatDate: function (date, langCode) {
+				var day = date.toLocaleString(langCode, {day: '2-digit'});   // DD
+				var month = date.toLocaleString(langCode, {month: '2-digit'}); // MM
+				var year = date.toLocaleString(langCode, {year: 'numeric'}); // YYYY
+				console.log('year', year)
+				return `${day}/${month}/${year}`;
+			},
 			prev: function () {
 				var self = this;
 				let now = new Date();
 				let dt = $('#date').val();
 				console.log('now', now.toLocaleDateString())
 				console.log('dt', dt)
-				if (dt != now.toLocaleDateString()) {
+				if (dt != self.formatDate(now, 'en')) {
 					let arr = dt.split('/');
 					dt = arr[2] + '/' + arr[1] + '/' + arr[0]
 					let date = new Date(dt);
 					date.setTime(date.getTime() - (1000 * 60 * 60 * 24))
 					self.$setState({
-						today: date.toLocaleDateString()
+						today: self.formatDate(date, 'en')
 					});
 				}
 				self.updateProducts();
@@ -138,13 +141,13 @@
 				let dt = $('#date').val();
 				let arr = dt.split('/');
 				console.log('dt1', dt)
-				dt = arr[2] + '/' + arr[1] + '/' + arr[0]
+				dt = arr[2] + '/' + arr[1] + '/'  + arr[0]
 				console.log('dt2', dt)
 				let date = new Date(dt);
 				date.setTime(date.getTime() + (1000 * 60 * 60 * 24))
 				console.log('date', date)
 				self.$setState({
-					today: date.toLocaleDateString()
+					today: self.formatDate(date, 'en')
 				});
 				self.updateProducts();
 			},
@@ -245,12 +248,13 @@
 			var self = this;
 			let date = new Date();
 			let dateInput = (date.getMonth()+1) + '/' + date.getDate() + '/' + date.getFullYear();
-			console.log(dateInput)
+			console.log(dateInput);
+
 			self.$setState({
-				today: date.toLocaleDateString(),
+				today: self.formatDate(date, 'en'),
 				cartItems: JSON.parse(localStorage.getItem('cartItems')) == undefined ? { quantity: 0, total: 0.00, items: [] } : JSON.parse(localStorage.getItem('cartItems'))
 			});
-			console.log(self.cartItems)
+			console.log('test', self.cartItems)
 			var calendarDateFormat = app.calendar.create({
 				inputEl: '#date',
 				dateFormat: 'dd/mm/yyyy',
