@@ -28,7 +28,7 @@
                     <div class="col" style="width: 30%; text-align: right;">
                         <div style="font-size: 18px;">
                             <span>Price: </span>
-                            <span class="text-color-red">${{detail.price}}</span>
+                            <span class="text-color-red">${{price}}</span>
                         </div>
                         <div class="stepper stepper-small stepper-round stepper-fill stepper-init">
                             <div class="stepper-button-minus" @click="minusQuantity()"></div>
@@ -111,7 +111,6 @@
                 <span style="font-family: cabin regular;">Add to cart</span>
             </a>
         </div>
-
     </div>
 </template>
 
@@ -124,27 +123,35 @@
         data: function () {
             return {
                 detail: null,
+                price: 0,
+                tempQuantity: 1,
                 cartItems: {
                     quantity: 0,
                     total: 0.00,
                     items: []
                 },
+                modPrice: 0
             }
         },
         methods: {
             minusQuantity: function () {
                 var self = this;
-                // if (self.tempQuantity > 1)
-                // 	self.$setState({
-                // 		tempQuantity: self.tempQuantity - 1,
-                // 		tempTotal: self.tempTotal - self.detail.price
-                // 	})
+                
+                if (self.tempQuantity > 1)
+                {
+                    console.log('deu hiu')
+                    self.$setState({
+                		tempQuantity: self.tempQuantity - 1,
+                		price: self.price - self.detail.price
+                	})
+                }
+                	
             },
             plusQuantity: function () {
                 var self = this;
                 self.$setState({
                     tempQuantity: self.tempQuantity + 1,
-                    tempTotal: self.tempTotal + self.detail.price
+                    price: self.price + self.detail.price
                 })
             },
             addToCart: function () {
@@ -153,7 +160,7 @@
                 let selectItem = self.detail;
                 console.log(quan)
                 self.cartItems.quantity += quan;
-                self.cartItems.total += selectItem.price * quan;
+                self.cartItems.total += selectItem.price * quan + self.modPrice;
                 self.cartItems.items.push(self.detail)
                 localStorage.setItem('cartItems', JSON.stringify(self.cartItems))
                 app.toast.show({
@@ -168,9 +175,11 @@
         on: {
             pageInit: function () {
                 var self = this;
+                let det = JSON.parse(localStorage.getItem('addProduct'))
                 self.$setState({
-                    detail: JSON.parse(localStorage.getItem('addProduct')),
-                    cartItems: JSON.parse(localStorage.getItem('cartItems')) == undefined ? { quantity: 0, total: 0.00, items: [] } : JSON.parse(localStorage.getItem('cartItems'))
+                    detail: det,
+                    cartItems: JSON.parse(localStorage.getItem('cartItems')) == undefined ? { quantity: 0, total: 0.00, items: [] } : JSON.parse(localStorage.getItem('cartItems')),
+                    price: det.price
                 })
                 //self.detail.price = 3;
                 console.log(self.detail)
@@ -184,7 +193,10 @@
                             for (let j=0; j<self.detail.modifierGroups[i].modifiers.length;j++){
                                 if (self.detail.modifierGroups[i].modifiers[j].id == modId){
                                     self.detail.modifierGroups[i].modifiers[j].isChoose = true;
-                                    self.cartItems.total += self.detail.modifierGroups[i].modifiers[j].price;
+                                    self.modPrice += self.detail.modifierGroups[i].modifiers[j].price;
+                                    self.$setState({
+                                        price : self.price + self.detail.modifierGroups[i].modifiers[j].price
+                                    })
                                 }
                                     
                             }
@@ -193,9 +205,12 @@
                         console.log('unchecked')
                         for (let i=0; i< self.detail.modifierGroups.length; i++){
                             for (let j=0; j<self.detail.modifierGroups[i].modifiers.length;j++){
-                                if (self.detail.modifierGroups[i].modifiers[j].id == modId){
+                                if (self.detail.modifierGroups[i].modifiers[j].id == modId){                                    
                                     self.detail.modifierGroups[i].modifiers[j].isChoose = false;
-                                    self.cartItems.total -= self.detail.modifierGroups[i].modifiers[j].price;
+                                    self.modPrice -= self.detail.modifierGroups[i].modifiers[j].price;
+                                    self.$setState({
+                                        price : self.price - self.detail.modifierGroups[i].modifiers[j].price
+                                    })
                                 }
                                    
                             }
