@@ -104,7 +104,9 @@
 					quantity: 0,
 					total: 0.00,
 					items: []
-				}
+				},
+				listOrderDate: null,
+				listOrderSession: null,
 			}
 		},
 		methods: {
@@ -149,6 +151,8 @@
 			},
 			selectOption: function (id) {
 				var self = this;
+				let orderDate = $('#date').val();
+				let orderSession = self.$('select[name=session]').val();
 				console.log(id);
 				let det = self.productList.find(function (el) {
 					return el.id == id;
@@ -159,6 +163,14 @@
 					tempQuantity: self.tempQuantity + 1,
 				})
 				//console.log(self.detail)
+				self.listOrderDate = orderDate;
+				for (let i = 0; i < self.session.length; i++){
+					if (orderSession == self.session[i].id){
+						self.listOrderSession = self.session[i];
+					}
+				}
+				localStorage.setItem('listOrderDate', JSON.stringify(self.listOrderDate));
+				localStorage.setItem('listOrderSession', JSON.stringify(self.listOrderSession));
 				app.views.current.router.navigate('/orders-options');
 			},
 			selectCat: function (selected) {
@@ -219,6 +231,7 @@
 						self.$setState({
 							productList: response.result.items
 						})
+						console.log('ABC: ', self.productList)
 					},
 					function (err) {
 						console.log('get product error', err)
@@ -240,6 +253,7 @@
 			}
 		},
 		mounted() {
+			localStorage.removeItem('isEdit');
 			var self = this;
 			let date = new Date();
 			let dateInput = (date.getMonth()+1) + '/' + date.getDate() + '/' + date.getFullYear();
@@ -259,7 +273,7 @@
 				closeOnSelect: true
 			});
 
-			// self.loadSession();
+			self.loadSession();
 			// self.loadCategory();
 			self.loadProduct(dateInput,self.session[0].id,'');
 
@@ -270,7 +284,6 @@
 			self.$('#date').change(function(){
 				self.updateProducts();
 			})
-
 		},
 		on: {
 			pageInit: function(){

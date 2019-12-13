@@ -13,9 +13,22 @@
         </div>
 
         <div class="page-content">
-            <div class="block text-align-center">
-                <div class="cart-name">YOUR CART</div>
-                <div>(3 items)</div>
+            <div class="block text-align-left">
+                <div class="cart-name">Order Details:</div>
+                <div class="detail-box">
+                    <div class="order-date">
+                        Order Date: {{listOrderDate}} 
+                    </div>
+                    <div class="session">
+                        Session: {{orderSessionName}}
+                    </div>
+                    <div class="collection-time">
+                        Collection Time: {{orderSessionTime}}
+                    </div>
+                </div>
+            </div>
+            <div class="content-block block-card text-align-left">
+                <div class="your-cart">Your Cart:</div>
             </div>
             <div class="card">
                 <div class="list media-list no-hairlines no-hairlines-between margin-vertical descriptionFont">
@@ -25,25 +38,39 @@
                         <li>
                             <div class="item-content">
                                 <div class="item-media"><img
-                                        src="https://images.foody.vn/res/g79/785913/s570x570/8d125f53-e2eb-4d3c-a994-af251ae25c26.jpg"
+                                        src="https://wokpplapi.konbi.cloud/uploads/{{this.imageFileName}}"
                                         width="80" /></div>
                                 <div class="item-inner">
                                     <div class="item-title-row">
                                         <div class="item-title">{{this.name}}</div>
                                         <div class="item-title">
-                                            ${{this.price.toFixed(2)}} x 1</div>
+                                            ${{this.price}} x {{this.quantity}}</div>
                                     </div>
-                                    <div class="item-text">Size: L
-                                        <div class="item-row">
-                                            <div class="item-text">Topping: Black Pearl
+                                    <div class="item-text">
+                                        <div class="row">
+                                            <div class="col-75">
+                                                <div class="item-cell">
+                                                    {{#each this.modifierGroups}}
+                                                    <div class="item-row">
+                                                        {{this.name}}: {{#each this.modifiers}} {{#if this.isChoose}} {{this.name}} {{/if}} {{/each}}
+                                                    </div>
+                                                    {{/each}}
+                                                </div>
                                             </div>
-                                            <div class="item-after" style="color: red;">
-                                                <a href="/orders-options" class="item-link tooltip-init"
-                                                    data-tooltip="Edit Your Cart">
-                                                    <i class="fas fa-fw fa-lg fa-edit text-color-red"></i></a>
-                                                <a href="#" class="item-link tooltip-init"
-                                                    data-tooltip="Remove from Cart">
-                                                    <i class="fas fa-fw fa-lg fa-trash text-color-red"></i></a>
+                                            <div class="col-25">
+                                                <div class="item-cell">
+                                                    <div class="item-row">
+                                                        &nbsp;
+                                                    </div>
+                                                    <div class="item-row" style="color: red;">
+                                                        <a href="#" @click="editProduct('{{this.indexProduct}}')" class="item-link tooltip-init"
+                                                            data-tooltip="Edit Your Cart">
+                                                            <i class="fas fa-fw fa-lg fa-edit text-color-red"></i></a>
+                                                        <a href="#" @click="deleteProduct('{{this.indexProduct}}')" class="item-link tooltip-init"
+                                                            data-tooltip="Remove from Cart">
+                                                            <i class="fas fa-fw fa-lg fa-trash text-color-red"></i></a>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -63,7 +90,22 @@
                                 <div class="item-content">
                                     <div class="item-inner">
                                         <div class="item-title">Subtotal</div>
-                                        <div class="item-after">$34.50</div>
+                                        <div class="item-after">${{total}}</div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="item-content">
+                                    <div class="item-inner">
+                                        <div class="item-title">Reward points
+                                                <div class="item-text">You have 930 points (SGD $10) to redeem</div>
+                                        </div>
+                                        <div class="item-after">
+                                            <label class="toggle toggle-init color-pink tooltip-init" data-tooltip="Redeem">
+                                                <input type="checkbox" data-permission="redeem" />
+                                                <span class="toggle-icon"></span>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                             </li>
@@ -100,7 +142,7 @@
             </div>
         </div>
         <div class="fab fab-right-top color-orange">
-            <a href="#" class="link back">
+            <a href="/tab-order/" class="link item" @click="closeButton()">
                 <i class="icon material-icons">close</i>
             </a>
         </div>
@@ -114,10 +156,24 @@
 
 <style scoped>
     .cart-name {
-        font-size: 20px;
+        font-size: 28px;
         font-weight: bold;
         letter-spacing: 0.5px;
         margin-top: 0px;
+    }
+    .detail-box {
+        font-size: 18px;
+        margin-top: 10px;
+        background-color: lightgray;
+        border: 1px;
+        padding: 7px;
+    }
+    .your-cart {
+        font-size: 28px;
+        font-weight: bold;
+        letter-spacing: 0.5px;
+        margin-top: 0px;
+        padding-left: 15px;
     }
 </style>
 
@@ -125,22 +181,99 @@
     return {
         data: function () {
             return {
-                quantity: 3,
-                total: 34.5,
+                quantity: 0,
+                total: 0,
                 productList: [
-                    { id: 1, name: 'SUN PIZZA', description: 'Shrimp, zucchini, 2-color cheese, Mozza cheese, tomato, olive, parsley, Pesto sauce', price: 11.50 },
-                    { id: 2, name: 'MOON PIZZA', description: 'Shrimp, zucchini, 2-color cheese, Mozza cheese, tomato, olive, parsley, Pesto sauce', price: 11.50 },
-                    { id: 3, name: 'CHEESY BITES TRIO SHRIMP', description: 'Shrimp, zucchini, 2-color cheese, Mozza cheese, tomato, olive, parsley, Pesto sauce', price: 11.50 },
-
                 ],
+                listOrderDate: null,
+                listOrderSession: null,
+                orderSessionName: null,
+                orderSessionTime: null,
+                listOption: [],
+                updateCartList: [],
             }
         },
         methods: {
-
+            deleteProduct: function (indexProduct) {
+                var self = this;
+                console.log(self.updateCartList);
+                for (let i = 0; i < self.updateCartList.items.length; i++){
+                    if (self.updateCartList.items[i].indexProduct == indexProduct){
+                        self.updateCartList.quantity = self.updateCartList.quantity - self.updateCartList.items[i].quantity;
+                        self.updateCartList.total = self.updateCartList.total - self.updateCartList.items[i].price*self.updateCartList.items[i].quantity;
+                        self.updateCartList.items.splice(i, 1);
+                    }
+                }
+                console.log(self.updateCartList);
+                localStorage.setItem('cartItems', JSON.stringify(self.updateCartList));
+                let cartTemp = JSON.parse(localStorage.getItem('cartItems'));
+                self.$setState({
+                    updateCartList: cartTemp,
+                    productList: cartTemp.items,
+                    quantity: cartTemp.quantity,
+                    total: cartTemp.total,
+                })
+            },
+            editProduct: function (indexProduct) {
+				var self = this;
+                
+                var isEdit = true;
+				// //let orderDate = $('#date').val();
+				// //let orderSession = self.$('select[name=session]').val();
+				// //console.log(id);
+				let det = self.productList.find(function (el) {
+					return el.indexProduct == indexProduct;
+                })
+                // for (let i = 0; i < self.productList.length; i++){
+                //     if (self.productList[i].id == id && self.productList[i].indexProduct == i){
+                //         det = self.productList[i];
+                //     }
+                // }
+                console.log(det)
+                det.editornew = true;
+                localStorage.setItem('isEdit', isEdit);
+                localStorage.setItem('editProduct', JSON.stringify(det));
+                localStorage.setItem('cartItems', JSON.stringify(self.updateCartList));
+				// // self.$setState({
+				// // 	detail: det,
+				// // 	tempQuantity: self.tempQuantity + 1,
+				// // })
+				// //console.log(self.detail)
+				// // self.listOrderDate = orderDate;
+				// // for (let i = 0; i < self.session.length; i++){
+				// // 	if (orderSession == self.session[i].id){
+				// // 		self.listOrderSession = self.session[i];
+				// // 	}
+				// // }
+				// // localStorage.setItem('listOrderDate', JSON.stringify(self.listOrderDate));
+				// // localStorage.setItem('listOrderSession', JSON.stringify(self.listOrderSession));
+				app.views.current.router.navigate('/orders-options');
+            },
+            closeButton: function (){
+                localStorage.removeItem('isEdit');
+            },
         },
         on: {
             pageInit: function () {
                 var self = this;
+                let cartTemp = JSON.parse(localStorage.getItem('cartItems'));
+                let tempString = [];
+                for (let i = 0; i < cartTemp.items.length; i++){
+                    cartTemp.items[i].editornew = false;
+                    cartTemp.items[i].indexProduct = i + '-' + cartTemp.items[i].id;
+                }
+                if (cartTemp != null){
+                    self.$setState({
+                        updateCartList: cartTemp,
+                        productList: cartTemp.items,
+                        quantity: cartTemp.quantity,
+                        total: cartTemp.total,
+                        listOrderDate: cartTemp.listOrderDate,
+                        listOrderSession: cartTemp.listOrderSession,
+                        orderSessionName: cartTemp.listOrderSession.name,
+                        orderSessionTime: cartTemp.listOrderSession.startTime + " - " + cartTemp.listOrderSession.endTime,
+                    })
+                }
             }
         }
     }

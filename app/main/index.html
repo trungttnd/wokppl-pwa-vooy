@@ -58,6 +58,10 @@
                 var self = this;
                 localStorage.removeItem('WOKPPL_password');
                 localStorage.removeItem('WOKPPL_registerSuccess');
+                // $('#tab-order').on('tab:show', function () {
+				//     app.views.current.router.refreshPage();
+			    // });
+
                 setTimeout(function () {
                     if (!localStorage.getItem('WOKPPL_OldUser')) {
                         console.log('main')

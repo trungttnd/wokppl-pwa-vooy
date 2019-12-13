@@ -28,12 +28,12 @@
                     <div class="col" style="width: 30%; text-align: right;">
                         <div style="font-size: 18px;">
                             <span>Price: </span>
-                            <span class="text-color-red">${{price}}</span>
+                            <span class="text-color-red">${{price.toFixed(2)}}</span>
                         </div>
                         <div class="stepper stepper-small stepper-round stepper-fill stepper-init">
                             <div class="stepper-button-minus" @click="minusQuantity()"></div>
                             <div class="stepper-input-wrap">
-                                <input type="number" name="addQuantity" value="1" min="1" max="100" readonly step="1" />
+                                <input type="number" name="addQuantity" value="{{defaultQuan}}" min="1" max="100" readonly step="1" />
                             </div>
                             <div class="stepper-button-plus" @click="plusQuantity()"></div>
                         </div>
@@ -86,7 +86,11 @@
                                 <div class="item-inner">
                                     <div class="item-title">{{this.name}} (${{this.price.toFixed(2)}})</div>
                                 </div>
+                                {{#if this.isChoose}}
+                                <input type="checkbox" name="topping" value="{{this.id}}" checked="checked"/>
+                                {{else}}
                                 <input type="checkbox" name="topping" value="{{this.id}}" />
+                                {{/if}}
                                 <i class="icon icon-checkbox"></i>
                             </label>
                         </li>
@@ -102,15 +106,23 @@
             {{/if}}
         </div>
         <div class="fab fab-right-top color-orange">
-            <a href="#" class="link back">
+            <a href="/tab-order/" class="link back" @click="closeButton()">
                 <i class="icon material-icons">close</i>
             </a>
         </div>
+        {{#if editButton}}
+        <div class="fab fab-extended fab-center-bottom color-red" style="width: 120px;">
+            <a href="/tab-order/" class="link item" @click="updateCart">
+                <span style="font-family: cabin regular;">Update cart</span>
+            </a>
+        </div>
+        {{else}}
         <div class="fab fab-extended fab-center-bottom color-red" style="width: 120px;">
             <a href="/tab-order/" class="link back" @click="addToCart">
                 <span style="font-family: cabin regular;">Add to cart</span>
             </a>
         </div>
+        {{/if}}
     </div>
 </template>
 
@@ -128,9 +140,15 @@
                 cartItems: {
                     quantity: 0,
                     total: 0.00,
-                    items: []
+                    items: [],
                 },
-                modPrice: 0
+                modPrice: 0,
+                templistOrderDate: null,
+                templistOrderSession: null,
+                optionList: [],
+                tempOptionList: [],
+                editButton: false,
+                defaultQuan: 1,
             }
         },
         methods: {
@@ -139,7 +157,6 @@
                 
                 if (self.tempQuantity > 1)
                 {
-                    console.log('deu hiu')
                     self.$setState({
                 		tempQuantity: self.tempQuantity - 1,
                 		price: self.price - self.detail.price
@@ -154,68 +171,119 @@
                     price: self.price + self.detail.price
                 })
             },
+            closeButton: function (){
+                localStorage.removeItem('isEdit');
+                console.log('abc');
+            },
+            updateCart: function () {
+                var self = this;
+                let quan = +self.$('input[name=addQuantity]').val()
+                let selectItem = self.detail;
+                let increaseQuan = 0;
+                self.cartItems.listOrderDate = self.templistOrderDate;
+                self.cartItems.listOrderSession = self.templistOrderSession;
+                increaseQuan = quan - self.detail.quantity;
+                console.log(self.detail.quantity);
+                console.log(increaseQuan);
+                self.cartItems.quantity += increaseQuan;
+                self.cartItems.total += selectItem.price * increaseQuan + self.modPrice;
+                self.detail.price += self.modPrice;
+                self.detail.quantity = quan;
+                for (let i = 0; i < self.cartItems.items.length; i++){
+                    let tempIndexProduct = i + '-' + self.cartItems.items[i].id;
+                    if (self.cartItems.items[i].editornew == true && self.cartItems.items[i].indexProduct == tempIndexProduct){
+                        self.cartItems.items[i] = self.detail;
+                        self.cartItems.items[i].editornew = false;
+                        console.log(self.cartItems.items[i]);
+                        console.log('cap nhat gia tri cart');
+                    }
+                }
+                // self.cartItems.items.push(self.detail);
+
+                localStorage.setItem('cartItems', JSON.stringify(self.cartItems))
+                app.views.current.router.navigate('/orders-options');
+                // app.toast.show({
+                //     icon: '<i class="fas fa-fw fa-lg fa-cart-plus"></i>',
+                //     text: 'Update cart',
+                //     position: 'bottom',
+                //     cssClass: 'toast-round bg-color-green'
+                // });  
+            },
             addToCart: function () {
                 var self = this;
                 let quan = +self.$('input[name=addQuantity]').val()
                 let selectItem = self.detail;
-                console.log(quan)
+                self.cartItems.listOrderDate = self.templistOrderDate;
+                self.cartItems.listOrderSession = self.templistOrderSession;
+                self.detail.quantity = quan;
+                self.detail.price += self.modPrice;
                 self.cartItems.quantity += quan;
                 self.cartItems.total += selectItem.price * quan + self.modPrice;
-                self.cartItems.items.push(self.detail)
+                self.cartItems.items.push(self.detail);
                 localStorage.setItem('cartItems', JSON.stringify(self.cartItems))
                 app.toast.show({
                     icon: '<i class="fas fa-fw fa-lg fa-cart-plus"></i>',
                     text: 'Added to Cart',
                     position: 'bottom',
                     cssClass: 'toast-round bg-color-green'
-                });
+                });  
             }
         },
         on: {
             pageInit: function () {
                 var self = this;
-                let det = JSON.parse(localStorage.getItem('addProduct'))
+                let isEdit = localStorage.getItem('isEdit');
+                let det = JSON.parse(localStorage.getItem('addProduct'));
+                if (isEdit == 'true'){
+                    det = JSON.parse(localStorage.getItem('editProduct'));
+                    self.$setState({
+                        editButton: true, 
+                    })
+                }
+                // else let det = JSON.parse(localStorage.getItem('addProduct'));
+                let listOrderDate = JSON.parse(localStorage.getItem('listOrderDate'))
+                let listOrderSession = JSON.parse(localStorage.getItem('listOrderSession'))
                 self.$setState({
                     detail: det,
                     cartItems: JSON.parse(localStorage.getItem('cartItems')) == undefined ? { quantity: 0, total: 0.00, items: [] } : JSON.parse(localStorage.getItem('cartItems')),
-                    price: det.price
+                    price: det.price,
+                    defaultQuan: det.quantity,
+                    templistOrderDate: listOrderDate,
+                    templistOrderSession: listOrderSession,
                 })
-                self.detail.price = 3;
-                //if (self.cartItems == undefined) self.cartItems = [quantity = 0, total = 0.00, items = null]
-                console.log(self.detail)
-
+                console.log(self.cartItems);
+                
                 self.$('input[type=checkbox]').change(function(){
                     let modId = $(this).val();
+                    self.tempOptionList = [];
                     console.log(modId)
                     if ($(this).is(":checked")){
-                        console.log('checked')
                         for (let i=0; i< self.detail.modifierGroups.length; i++){
                             for (let j=0; j<self.detail.modifierGroups[i].modifiers.length;j++){
                                 if (self.detail.modifierGroups[i].modifiers[j].id == modId){
                                     self.detail.modifierGroups[i].modifiers[j].isChoose = true;
-                                    self.modPrice += self.detail.modifierGroups[i].modifiers[j].price;
+                                    self.modPrice += self.detail.modifierGroups[i].modifiers[j].price;  
                                     self.$setState({
-                                        price : self.price + self.detail.modifierGroups[i].modifiers[j].price
+                                        price : self.price + self.detail.modifierGroups[i].modifiers[j].price,
                                     })
-                                }                                    
+                                }                                   
                             }
                         }
+                        //self.tempOptionList.push(self.detail.modifierGroups);
                     } else {
-                        console.log('unchecked')
                         for (let i=0; i< self.detail.modifierGroups.length; i++){
                             for (let j=0; j<self.detail.modifierGroups[i].modifiers.length;j++){
                                 if (self.detail.modifierGroups[i].modifiers[j].id == modId){                                    
                                     self.detail.modifierGroups[i].modifiers[j].isChoose = false;
                                     self.modPrice -= self.detail.modifierGroups[i].modifiers[j].price;
                                     self.$setState({
-                                        price : self.price - self.detail.modifierGroups[i].modifiers[j].price
+                                        price : self.price - self.detail.modifierGroups[i].modifiers[j].price,
                                     })
-                                }
-                                   
+                                } 
                             }
                         }
+                        //self.tempOptionList.push(self.detail.modifierGroups);
                     }
-                    console.log(self.detail)
                 })
             }
         }
