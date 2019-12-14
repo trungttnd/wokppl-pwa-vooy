@@ -142,13 +142,18 @@
             </div>
         </div>
         <div class="fab fab-right-top color-orange">
-            <a href="/tab-order/" class="link item" @click="closeButton()">
+            <a href="/tab-order/" class="link back" @click="closeButton()">
                 <i class="icon material-icons">close</i>
             </a>
         </div>
         <div class="fab fab-extended fab-center-bottom color-red" style="width: 120px;">
             <a href="/orders-checkout">
                 <span style="font-family: cabin regular;">CHECKOUT</span>
+            </a>
+        </div>
+        <div class="fab fab-morph fab-right-bottom color-orange">
+            <a href="#" @click="clearProduct()">
+                <span style="font-family: cabin regular;">Clear</span>
             </a>
         </div>
     </div>
@@ -204,6 +209,22 @@
                         self.updateCartList.items.splice(i, 1);
                     }
                 }
+                console.log(self.updateCartList);
+                localStorage.setItem('cartItems', JSON.stringify(self.updateCartList));
+                let cartTemp = JSON.parse(localStorage.getItem('cartItems'));
+                self.$setState({
+                    updateCartList: cartTemp,
+                    productList: cartTemp.items,
+                    quantity: cartTemp.quantity,
+                    total: cartTemp.total,
+                })
+            },
+            clearProduct: function (indexProduct) {
+                var self = this;
+                console.log(self.updateCartList);
+                self.updateCartList.items.splice(0, self.updateCartList.items.length);
+                self.updateCartList.quantity = 0;
+                self.updateCartList.total = 0;
                 console.log(self.updateCartList);
                 localStorage.setItem('cartItems', JSON.stringify(self.updateCartList));
                 let cartTemp = JSON.parse(localStorage.getItem('cartItems'));

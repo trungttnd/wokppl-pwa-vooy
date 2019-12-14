@@ -149,6 +149,11 @@
                 tempOptionList: [],
                 editButton: false,
                 defaultQuan: 1,
+                updateCartList: [],
+                quantity: 0,
+                total: 0,
+                productList: [
+                ],
             }
         },
         methods: {
@@ -201,13 +206,27 @@
                 // self.cartItems.items.push(self.detail);
 
                 localStorage.setItem('cartItems', JSON.stringify(self.cartItems))
-                app.views.current.router.navigate('/orders-options');
-                // app.toast.show({
-                //     icon: '<i class="fas fa-fw fa-lg fa-cart-plus"></i>',
-                //     text: 'Update cart',
-                //     position: 'bottom',
-                //     cssClass: 'toast-round bg-color-green'
-                // });  
+                let cartTemp = JSON.parse(localStorage.getItem('cartItems'));
+                self.$setState({
+                    updateCartList: cartTemp,
+                    productList: cartTemp.items,
+                    quantity: cartTemp.quantity,
+                    total: cartTemp.total,
+                })
+                console.log('da update');
+                app.toast.show({
+                    icon: '<i class="fas fa-fw fa-lg fa-cart-plus"></i>',
+                    text: 'Update cart',
+                    position: 'bottom',
+                    cssClass: 'toast-round bg-color-green'
+                });  
+                // app.views.current.router.reloadPage('/orders-cart');
+                // app.views.current.router.navigate( '/orders-cart', {
+                //     ignoreCache: true,
+                //     reloadCurrent: true,
+                //     animate: false,
+                // } );
+                // console.log('abc')
             },
             addToCart: function () {
                 var self = this;
@@ -247,7 +266,7 @@
                     detail: det,
                     cartItems: JSON.parse(localStorage.getItem('cartItems')) == undefined ? { quantity: 0, total: 0.00, items: [] } : JSON.parse(localStorage.getItem('cartItems')),
                     price: det.price,
-                    defaultQuan: det.quantity,
+                    defaultQuan: det.quantity == null ? 1 : det.quantity,
                     templistOrderDate: listOrderDate,
                     templistOrderSession: listOrderSession,
                 })
