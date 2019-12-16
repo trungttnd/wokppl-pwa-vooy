@@ -20,26 +20,36 @@
                     {{#if listCard}}
                     {{#each listCard}}
                     <li class="swipeout">
-
                         <div class="swipeout-content">
-                            <a href="/more/payment-method-view" @click="getId({{this.id}})" class="item-link">
-                                    <div class="item-content">
-                                        <div class="item-media">
-                                            <i class="fa-stack">
-                                                    <span class="fas fa-circle fa-stack-2x brand-color-strava"></span>
-                                                    <span class="fa fa-university fa-stack-1x fa-inverse"></span>
-                                            </i>
+                            <div class="item-content">
+                                <div class="item-media">
+                                    <i class="fa-stack">
+                                        <span class="fas fa-square fa-stack-2x brand-color-dribbble ios-only"></span>
+                                        <span class="fas fa-circle fa-stack-2x brand-color-dribbble md-only"></span>
+                                        <span class="fa fa-university fa-stack-1x fa-inverse"></span>
+                                    </i>
+                                </div>
+                                <div class="item-inner">
+                                    <a href="/creditcard/view" @click="getId({{this.id}})" class="item-link">
+                                        <div class="item-title-row">
+                                            <div class="item-title">{{this.cardHolderName}}</div>
                                         </div>
-                                        <div class="item-inner">
-                                            <div class="item-title">
-                                                <span>{{this.cardHolderName}}</span>
-                                                <div class="item-header">{{this.cardNumber}}</div>
-                                            </div>
-                                        </div>
+                                        <div class="item-text">{{this.cardNumber}}</div>
+                                    </a>
+                                    <div class="item-after">
+                                        <label class="toggle toggle-init" id="toggle1"
+                                            @click="clickHandle({{this.id}}, {{this.isDefault}})">
+                                            {{#if this.isDefault}}
+                                            <input type="checkbox" checked disabled />
+                                            {{else}}
+                                            <input type="checkbox" />
+                                            {{/if}}
+                                            <span class="toggle-icon"></span>
+                                        </label>
                                     </div>
-                                </a>
+                                </div>
+                            </div>
                         </div>
-
                         <div class="swipeout-actions swipeout-actions-left">
                             <a @click="deleteCard({{this.id}}"
                                 class="swipeout-action swipeout-close swipeout-delete color-red">
@@ -79,39 +89,156 @@
     return {
         data: function () {
             return {
-                listCard: [{
-                    id: 1,
-                    cardHolderName: "Trung Vooy",
-                    cardNumber: "123xxxxx456",
-                    isDefault: true
-                },
-                {
-                    id: 2,
-                    cardHolderName: "James Knox",
-                    cardNumber: "123xxxxx456",
-                    isDefault: false
-                },
-                {
-                    id: 3,
-                    cardHolderName: "Smith Alber",
-                    cardNumber: "123xxxxx456",
-                    isDefault: false
-                }
-                ],
+                listCard: null,
                 detail: null,
             }
         },
         methods: {
-            getId: function (id) {
+            loadCreditCards: function () {
+							var self = this;
+							//loaf list card
+							app.request.get(window.config.url + 'api/services/app/Card/GetAllCards',
+								function (suc) {
+									console.log('list card success');
+									if (suc) {
+										let response = JSON.parse(suc);
+										console.log(response);
+										if (response.result.items) {
+											self.$setState({
+												listCard: response.result.items
+											});
+										}
+									}
+								},
+								function (err) {
+									let response = JSON.parse(err);
+									console.log('info error');
+									console.log(response);
+								});
+						},
+            clickHandle: function (id, isDefault) {
+                var self = this;
+                console.log(id, isDefault)
+                if (!isDefault) {
+                    //uncheck others checkbox
+                    $('input[type="checkbox"]').on('change', function () {
+                        $('input[type="checkbox"]').not(this).prop('checked', false);
+                    });
+                    //refresh listCard
+                    let list = self.listCard
+                    list.forEach(element => {
+                        if (element.id != id) element.isDefault = false;
+                        else element.isDefault = true;
+                    });
 
+                    self.$setState({
+                        listCard: list
+                    })
+                    //set Default card
+                    app.request.post(window.config.url + 'api/services/app/Card/SetDefault?id=' + id,
+                        function (suc) {
+                            let response = JSON.parse(suc);
+                            console.log(response)
+                        },
+                        function (err) {
+                            let response = JSON.parse(err.response);
+                            console.log(response);
+                            var dialog = app.dialog.create({
+                                content: '<div class="block no-margin margin-top text-align-center"><i class="fa-stack fa-3x"><span class="fas fa-stack-2x fa-circle text-color-red"></span><span class="fas fa-stack-1x fa-inverse fa-times"></span></i><p>' + response.error.message + '.</p></div>',
+                                buttons: [
+                                    {
+                                        text: 'Retry',
+                                        bold: true,
+                                        color: 'red'
+                                    }
+                                ]
+                            });
+                            dialog.open();
+                        })
+                }
+
+            },
+            //get Id of card for View Detail
+            getId: function (id) {
+                var self = this;
+                console.log(id)
+                //console.log(self.listCard);
+                let det = self.listCard.find(function (el) {
+                    return el.id == +id;
+                })
+                //console.log('det', det)
+                localStorage.setItem('WOKPPL_cardDetail', JSON.stringify(det));
+            },
+            //delete card
+            unlink: function (id) {
+                var self = this;
+                self.deleteCard(id)
+
+                app.views.current.router.navigate('/creditcard');
             },
             deleteCard: function (id) {
                 var self = this;
+                app.request({
+                    url: window.config.url + 'api/services/app/Card/DeleteCard',
+                    dataType: 'json',
+                    contentType: "application/json",
+                    method: 'DELETE',
+                    data: { id: id },
+                    statusCode: {
+                        404: function (xhr) {
+                            console.log("URL not found");
+                        },
+                        400: function (xhr) {
+                            console.log("Bad request. Some of the inputs provided to the request aren't valid.");
+                        },
+                        401: function (xhr) {
+                            console.log("Not authenticated. The user session isn't valid.");
+                        },
+                        403: function (xhr) {
+                            console.log("The user isn't authorized to perform the specified request.");
+                        },
+                        500: function (xhr) {
+                            console.log("Internal server error. Additional details will be contained on the server logs.");
+                        },
+                        201: function (xhr) {
+                            console.log("The requested resource has been created.");
+                        }
+                    },
+                    success: function (data, status, xhr) {
+                        console.log(data);
+                        if (data.success) {
+                            app.toast.show({
+                                text: 'Delete Credit Card successful.',
+                                position: 'bottom',
+                                cssClass: 'toast-round bg-color-green'
+                            });
+                            app.popup.close('.popup-cardDetail', false);
+                        }
+                    },
+                    error: function (xhr, status) {
+                        let response = JSON.parse(xhr.response);
+                        console.log(response);
+                        var dialog = app.dialog.create({
+                            content: '<div class="block no-margin margin-top text-align-center"><i class="fa-stack fa-3x"><span class="fas fa-stack-2x fa-circle text-color-red"></span><span class="fas fa-stack-1x fa-inverse fa-times"></span></i><p>' + response.error.message + '.</p></div>',
+                            buttons: [
+                                {
+                                    text: 'Retry',
+                                    bold: true,
+                                    color: 'red'
+                                }
+                            ]
+                        });
+                        dialog.open();
+                    }
+                });
             },
-            
+
         },
         on: {
-
+            pageInit: function(){
+                var self = this;
+                self.loadCreditCards();
+            }
         }
     }
 </script>
