@@ -13,20 +13,40 @@
         </div>
 
         <div class="page-content">
-            <div class="block text-align-left">
-                <div class="cart-name">Order Details:</div>
-                <div class="detail-box">
-                    <div class="order-date">
-                        Order Date: {{listOrderDate}} 
-                    </div>
-                    <div class="session">
-                        Session: {{orderSessionName}}
-                    </div>
-                    <div class="collection-time">
-                        Collection Time: {{orderSessionTime}}
+            <div class="block text-align-left"></div>
+            <div class="content-block block-card text-align-left">
+                <div class="your-cart">Order Details:</div>
+            </div>
+            <div class="card">
+                <div class="card-content card-content-padding">
+                    <div class="list no-hairlines no-hairlines-between">
+                        <ul>
+                            <li>
+                                <div class="item-content">
+                                    <div class="item-inner">
+                                        <div class="item-title">Order Date: {{listOrderDate}}</div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="item-content">
+                                    <div class="item-inner">
+                                        <div class="item-title">Session: {{orderSessionName}}</div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="item-content">
+                                    <div class="item-inner">
+                                        <div class="item-title">Collection Time: {{orderSessionTime}}</div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
+            <div class="block text-align-left"></div>
             <div class="content-block block-card text-align-left">
                 <div class="your-cart">Your Cart:</div>
             </div>
@@ -276,6 +296,7 @@
         },
         on: {
             pageInit: function () {
+                console.log('abc');
                 var self = this;
                 let cartTemp = JSON.parse(localStorage.getItem('cartItems'));
                 let tempString = [];

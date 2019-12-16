@@ -233,13 +233,33 @@
                 var self = this;
                 let quan = +self.$('input[name=addQuantity]').val()
                 let selectItem = self.detail;
+                let increaseQuan = 0;
                 self.cartItems.listOrderDate = self.templistOrderDate;
                 self.cartItems.listOrderSession = self.templistOrderSession;
+                increaseQuan = quan - self.detail.quantity;
                 self.detail.quantity = quan;
                 self.detail.price += self.modPrice;
                 self.cartItems.quantity += quan;
-                self.cartItems.total += selectItem.price * quan + self.modPrice;
-                self.cartItems.items.push(self.detail);
+                self.cartItems.quantity += increaseQuan;
+                self.cartItems.total += selectItem.price * increaseQuan + self.modPrice;
+                console.log(self.detail.quantity);
+                console.log(quan);
+                console.log(increaseQuan);
+                console.log(self.cartItems.total);
+                // var self = this;
+                // let quan = +self.$('input[name=addQuantity]').val()
+                // let selectItem = self.detail;
+                // let increaseQuan = 0;
+                // self.cartItems.listOrderDate = self.templistOrderDate;
+                // self.cartItems.listOrderSession = self.templistOrderSession;
+                // increaseQuan = quan - self.detail.quantity;
+                // console.log(self.detail.quantity);
+                // console.log(increaseQuan);
+                // self.cartItems.quantity += increaseQuan;
+                // self.cartItems.total += selectItem.price * increaseQuan + self.modPrice;
+                // self.detail.price += self.modPrice;
+                // self.detail.quantity = quan;
+                // self.cartItems.items.push(self.detail);
                 localStorage.setItem('cartItems', JSON.stringify(self.cartItems))
                 app.toast.show({
                     icon: '<i class="fas fa-fw fa-lg fa-cart-plus"></i>',
