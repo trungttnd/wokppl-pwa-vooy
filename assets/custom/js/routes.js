@@ -16,7 +16,7 @@ window.routes = [
 						<img class="theme-light-only" src="assets/custom/img/konbini-logo.svg" height="24" alt="" />
 					</div>
 				</div>	
-					<div class="page-content">
+					<div class="page-content" style="padding-top: 44px;">
 
 			<div class="slider-hero">
 				<div class="swiper-container">
@@ -308,7 +308,7 @@ window.routes = [
 				<img class="theme-light-only" src="assets/custom/img/konbini-logo.svg" height="24" alt="" />
 			</div>
 		</div>
-					<div class="page-content">
+					<div class="page-content" style="padding-top: 44px;">
 					<div class="block">
 						<div class="row">
 							<div class="col-25">
@@ -681,7 +681,7 @@ window.routes = [
 			</div>
 		</div>
 
-		<div class="page-content">
+		<div class="page-content" style="padding-top: 44px;">
 			<div class="block-title text-color-black">Inbox</div>
 			<div class="list">
 				<ul>
@@ -887,7 +887,7 @@ window.routes = [
 			</div>
 		</div>
 
-		<div class="page-content">
+		<div class="page-content" style="padding-top: 44px;">
 			<div class="list">
 				<ul>
 					<li>
