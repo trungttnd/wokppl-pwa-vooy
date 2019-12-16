@@ -110,7 +110,9 @@
                                 <div class="item-content">
                                     <div class="item-inner">
                                         <div class="item-title">Subtotal</div>
-                                        <div class="item-after">${{total}}</div>
+                                        <div class="item-after text-color-black">
+                                            <input type="text" value="${{total.toFixed(2)}}" readonly="readonly" id="discount" style="width: 3.4rem;" />
+                                        </div>
                                     </div>
                                 </div>
                             </li>
@@ -118,11 +120,11 @@
                                 <div class="item-content">
                                     <div class="item-inner">
                                         <div class="item-title">Reward points
-                                                <div class="item-text">You have 930 points (SGD $10) to redeem</div>
+                                                <div class="item-text">You have 930 points (SGD $5) to redeem</div>
                                         </div>
                                         <div class="item-after">
                                             <label class="toggle toggle-init color-pink tooltip-init" data-tooltip="Redeem">
-                                                <input type="checkbox" data-permission="redeem" />
+                                                <input type="checkbox" value="5" data-permission="redeem" />
                                                 <span class="toggle-icon"></span>
                                             </label>
                                         </div>
@@ -133,7 +135,9 @@
                                 <div class="item-content">
                                     <div class="item-inner">
                                         <div class="item-title">Discount</div>
-                                        <div class="item-after">$0.00</div>
+                                        <div class="item-after">
+                                            <input type="text" value="$3.50" readonly="readonly" id="discountValue" style="width: 3.4rem;" />
+                                        </div>
                                     </div>
                                 </div>
                             </li>
@@ -141,7 +145,9 @@
                                 <div class="item-content">
                                     <div class="item-inner">
                                         <div class="item-title">GST</div>
-                                        <div class="item-after">$0.00</div>
+                                        <div class="item-after">
+                                            <input type="text" value="$5.50" readonly="readonly" id="gstValue" style="width: 3.4rem;" />
+                                        </div>
                                     </div>
                                 </div>
                             </li>
@@ -149,7 +155,7 @@
                                 <div class="item-content">
                                     <div class="item-inner">
                                         <div class="item-title"><b>Grand Total</b></div>
-                                        <div class="item-after"><b>$34.50</b></div>
+                                        <div class="item-after text-color-red"><input type="text" value="${{grandTotal.toFixed(2)}}" readonly="readonly" id="gst" style="width: 3.4rem;" /></div>
                                     </div>
                                 </div>
                             </li>
@@ -162,7 +168,7 @@
             </div>
         </div>
         <div class="fab fab-right-top color-orange">
-            <a href="/tab-order/" class="link back" @click="closeButton()">
+            <a href="/tab-order/" class="link item" @click="closeButton()">
                 <i class="icon material-icons">close</i>
             </a>
         </div>
@@ -171,11 +177,11 @@
                 <span style="font-family: cabin regular;">CHECKOUT</span>
             </a>
         </div>
-        <div class="fab fab-morph fab-right-bottom color-orange">
+        <!-- <div class="fab fab-morph fab-right-bottom color-orange">
             <a href="#" @click="clearProduct()">
                 <span style="font-family: cabin regular;">Clear</span>
             </a>
-        </div>
+        </div> -->
     </div>
 </template>
 
@@ -216,6 +222,10 @@
                 orderSessionTime: null,
                 listOption: [],
                 updateCartList: [],
+                discount: 0,
+                gst: 0,
+                grandTotal: 0,
+                redeem: 0,
             }
         },
         methods: {
@@ -228,6 +238,17 @@
                         self.updateCartList.total = self.updateCartList.total - self.updateCartList.items[i].price*self.updateCartList.items[i].quantity;
                         self.updateCartList.items.splice(i, 1);
                     }
+                }
+                if (self.updateCartList.items.length == 0){
+                    self.updateCartList.listOrderDate = null;
+                    self.updateCartList.listOrderSession.name = null;
+                    self.updateCartList.listOrderSession.startTime = '';
+                    self.updateCartList.listOrderSession.endTime = '';
+                    self.$setState({
+                        listOrderDate: null,
+                        orderSessionName: null,
+                        orderSessionTime: null,
+                    })
                 }
                 console.log(self.updateCartList);
                 localStorage.setItem('cartItems', JSON.stringify(self.updateCartList));
@@ -246,6 +267,10 @@
                 self.updateCartList.quantity = 0;
                 self.updateCartList.total = 0;
                 console.log(self.updateCartList);
+                self.updateCartList.listOrderDate = null;
+                self.updateCartList.listOrderSession.name = null;
+                self.updateCartList.listOrderSession.startTime = '';
+                self.updateCartList.listOrderSession.endTime = '';
                 localStorage.setItem('cartItems', JSON.stringify(self.updateCartList));
                 let cartTemp = JSON.parse(localStorage.getItem('cartItems'));
                 self.$setState({
@@ -253,6 +278,9 @@
                     productList: cartTemp.items,
                     quantity: cartTemp.quantity,
                     total: cartTemp.total,
+                    listOrderDate: null,
+                    orderSessionName: null,
+                    orderSessionTime: null,
                 })
             },
             editProduct: function (indexProduct) {
@@ -293,6 +321,27 @@
             closeButton: function (){
                 localStorage.removeItem('isEdit');
             },
+            getDicount: function () {
+				var self = this;
+				let tempdiscount = $('#discountValue').val();
+				let arr = tempdiscount.split('$');
+                console.log('tempdiscount', tempdiscount)
+				tempdiscount = arr[1];
+				console.log('tempdiscount', tempdiscount)
+				self.$setState({
+					discount: tempdiscount,
+				});
+			},
+            getGST: function () {
+				var self = this;
+				let tempGST = $('#gstValue').val();
+				let arr = tempGST.split('$');
+				tempGST = arr[1];
+				console.log('tempGST', tempGST)
+				self.$setState({
+					gst: tempGST,
+				});
+			},
         },
         on: {
             pageInit: function () {
@@ -304,6 +353,21 @@
                     cartTemp.items[i].editornew = false;
                     cartTemp.items[i].indexProduct = i + '-' + cartTemp.items[i].id;
                 }
+                self.getDicount();
+                self.getGST();
+                self.$('input[type=checkbox]').change(function(){
+                    let tempRedeem = $(this).val();
+                    if ($(this).is(":checked")){
+                        self.$setState({
+                            grandTotal: cartTemp.total - Number(tempRedeem) - Number(self.discount) + Number(self.gst),
+                        })
+                    }
+                    else{
+                        self.$setState({
+                            grandTotal: cartTemp.total - 0 - Number(self.discount) + Number(self.gst),
+                        })
+                    }
+                })
                 if (cartTemp != null){
                     self.$setState({
                         updateCartList: cartTemp,
@@ -314,8 +378,10 @@
                         listOrderSession: cartTemp.listOrderSession,
                         orderSessionName: cartTemp.listOrderSession.name,
                         orderSessionTime: cartTemp.listOrderSession.startTime + " - " + cartTemp.listOrderSession.endTime,
+                        grandTotal: cartTemp.total - Number(self.discount) + Number(self.gst),
                     })
                 }
+                console.log('grandTotal', self.grandTotal)
             }
         }
     }
