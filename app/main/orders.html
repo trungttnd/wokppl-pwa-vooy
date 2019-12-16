@@ -276,12 +276,21 @@
 			let date = new Date();
 			let dateInput = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
 			console.log(dateInput);
-
+			
 			self.$setState({
 				today: self.formatDate(date, 'en'),
-				cartItems: JSON.parse(localStorage.getItem('cartItems')) == undefined ? { quantity: 0, total: 0.00, items: [] } : JSON.parse(localStorage.getItem('cartItems')),
+				//cartItems: JSON.parse(localStorage.getItem('cartItems')) == undefined ? { quantity: 0, total: 0.00, items: [] } : JSON.parse(localStorage.getItem('cartItems')),
 				session: JSON.parse(localStorage.getItem('sessions')),
 				categories: JSON.parse(localStorage.getItem('categories'))
+			});
+			setTimeout(function () {
+				console.log('timeout')
+				self.$setState({
+					//today: self.formatDate(date, 'en'),
+					cartItems: JSON.parse(localStorage.getItem('cartItems')) == undefined ? { quantity: 0, total: 0.00, items: [] } : JSON.parse(localStorage.getItem('cartItems')),
+					//session: JSON.parse(localStorage.getItem('sessions')),
+					//categories: JSON.parse(localStorage.getItem('categories'))
+				});
 			});
 			console.log('test', self.cartItems)
 			var calendarDateFormat = app.calendar.create({
