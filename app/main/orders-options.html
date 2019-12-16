@@ -106,19 +106,19 @@
             {{/if}}
         </div>
         <div class="fab fab-right-top color-orange">
-            <a href="/tab-order/" class="link back" @click="closeButton()">
+            <a href="#" class="link back" @click="closeButton()">
                 <i class="icon material-icons">close</i>
             </a>
         </div>
         {{#if editButton}}
         <div class="fab fab-extended fab-center-bottom color-red" style="width: 120px;">
-            <a href="/tab-order/" class="link back" @click="updateCart">
+            <a href="#" class="link item" @click="updateCart">
                 <span style="font-family: cabin regular;">Update cart</span>
             </a>
         </div>
         {{else}}
         <div class="fab fab-extended fab-center-bottom color-red" style="width: 120px;">
-            <a href="/tab-order/" class="link back" @click="addToCart">
+            <a href="#" class="link item" @click="addToCart">
                 <span style="font-family: cabin regular;">Add to cart</span>
             </a>
         </div>
@@ -227,6 +227,7 @@
                 //     animate: false,
                 // } );
                 // console.log('abc')
+                app.views.current.router.navigate('/orders-cart');  
             },
             addToCart: function () {
                 var self = this;
@@ -245,7 +246,9 @@
                     text: 'Added to Cart',
                     position: 'bottom',
                     cssClass: 'toast-round bg-color-green'
-                });  
+                });
+                app.views.current.router.navigate('/tab-order/');  
+
             }
         },
         on: {

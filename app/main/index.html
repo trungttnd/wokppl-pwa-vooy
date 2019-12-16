@@ -52,6 +52,22 @@
         },
         methods: {
 
+            logout: function () {
+                var self=this;
+                localStorage.removeItem('WOKPPL_OldUser');
+                localStorage.removeItem('WOKPPL_accessToken');
+                localStorage.removeItem('WOKPPL_expireInSeconds');
+                localStorage.removeItem('WOKPPL_expired');
+                localStorage.removeItem('WOKPPL_refreshToken');
+                localStorage.removeItem('WOKPPL_mobile');
+                localStorage.removeItem('WOKPPL_name');
+                localStorage.removeItem('WOKPPL_email');
+                localStorage.removeItem('WOKPPL_username');
+                localStorage.removeItem('WOKPPL_userId');
+                localStorage.removeItem('WOKPPL_passcode');
+                localStorage.removeItem('addProduct');
+                localStorage.removeItem('cartItems');
+            }
         },
         on: {
             pageInit: function () {
@@ -59,9 +75,16 @@
                 localStorage.removeItem('WOKPPL_password');
                 localStorage.removeItem('WOKPPL_registerSuccess');
                 // $('#tab-order').on('tab:show', function () {
-				//     app.views.current.router.refreshPage();
-			    // });
-
+                //     app.views.current.router.refreshPage();
+                // });
+                app.request.get(window.config.url + 'api/services/app/Session/GetCurrentLoginInformations',
+                    function (suc) {
+                        let response = JSON.parse(suc)
+                        if (response.result.user == null) self.logout();
+                    },
+                    function (err) {
+                        console.log(err)
+                    })
                 setTimeout(function () {
                     if (!localStorage.getItem('WOKPPL_OldUser')) {
                         console.log('main')
