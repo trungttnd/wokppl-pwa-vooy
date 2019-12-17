@@ -4,10 +4,10 @@
             <div class="navbar-inner">
                 <img class="theme-light-only" src="assets/custom/img/konbini-logo.svg" height="24" alt="" />
                 <div class="right">
-                    <a href="/orders-cart" class="link icon-only">
+                    <!-- <a href="/orders-cart" class="link icon-only">
                         <i class="icon material-icons">shopping_cart<span
                                 class="badge color-red">{{quantity}}</span></i></a>
-                    <span class="text-color-red">${{total.toFixed(2)}}</span>
+                    <span class="text-color-red">${{total.toFixed(2)}}</span> -->
                 </div>
             </div>
         </div>
@@ -58,8 +58,8 @@
                         <li>
                             <div class="item-content">
                                 <div class="item-media"><img
-                                        src="https://wokpplapi.konbi.cloud/uploads/{{this.imageFileName}}"
-                                        width="80" /></div>
+                                        src="https://wokpplapi.konbi.cloud/uploads/{{this.imageFileName}}" width="80" />
+                                </div>
                                 <div class="item-inner">
                                     <div class="item-title-row">
                                         <div class="item-title">{{this.name}}</div>
@@ -72,7 +72,8 @@
                                                 <div class="item-cell">
                                                     {{#each this.modifierGroups}}
                                                     <div class="item-row">
-                                                        {{this.name}}: {{#each this.modifiers}} {{#if this.isChoose}} {{this.name}} {{/if}} {{/each}}
+                                                        {{this.name}}: {{#each this.modifiers}} {{#if this.isChoose}}
+                                                        {{this.name}} {{/if}} {{/each}}
                                                     </div>
                                                     {{/each}}
                                                 </div>
@@ -83,10 +84,12 @@
                                                         &nbsp;
                                                     </div>
                                                     <div class="item-row" style="color: red;">
-                                                        <a href="#" @click="editProduct('{{this.indexProduct}}')" class="item-link tooltip-init"
+                                                        <a href="#" @click="editProduct('{{this.indexProduct}}')"
+                                                            class="item-link tooltip-init"
                                                             data-tooltip="Edit Your Cart">
                                                             <i class="fas fa-fw fa-lg fa-edit text-color-red"></i></a>
-                                                        <a href="#" @click="deleteProduct('{{this.indexProduct}}')" class="item-link tooltip-init"
+                                                        <a href="#" @click="deleteProduct('{{this.indexProduct}}')"
+                                                            class="item-link tooltip-init"
                                                             data-tooltip="Remove from Cart">
                                                             <i class="fas fa-fw fa-lg fa-trash text-color-red"></i></a>
                                                     </div>
@@ -111,7 +114,8 @@
                                     <div class="item-inner">
                                         <div class="item-title">Subtotal</div>
                                         <div class="item-after text-color-black">
-                                            <input type="text" value="${{total.toFixed(2)}}" readonly="readonly" id="discount" style="width: 3.4rem;" />
+                                            <input type="text" value="${{total.toFixed(2)}}" readonly="readonly"
+                                                id="discount" style="width: 3.4rem;" />
                                         </div>
                                     </div>
                                 </div>
@@ -120,11 +124,12 @@
                                 <div class="item-content">
                                     <div class="item-inner">
                                         <div class="item-title">Reward points
-                                                <div class="item-text">You have $5 redeem to use</div>
+                                            <div class="item-text">You have $0 redeem to use</div>
                                         </div>
                                         <div class="item-after">
-                                            <label class="toggle toggle-init color-pink tooltip-init" data-tooltip="Redeem">
-                                                <input type="checkbox" value="5" data-permission="redeem" />
+                                            <label class="toggle toggle-init color-pink tooltip-init"
+                                                data-tooltip="Redeem">
+                                                <input type="checkbox" value="0" data-permission="redeem" />
                                                 <span class="toggle-icon"></span>
                                             </label>
                                         </div>
@@ -136,7 +141,8 @@
                                     <div class="item-inner">
                                         <div class="item-title">Discount</div>
                                         <div class="item-after">
-                                            <input type="text" value="$3.50" readonly="readonly" id="discountValue" style="width: 3.4rem;" />
+                                            <input type="text" value="$0.00" readonly="readonly" id="discountValue"
+                                                style="width: 3.4rem;" />
                                         </div>
                                     </div>
                                 </div>
@@ -146,7 +152,8 @@
                                     <div class="item-inner">
                                         <div class="item-title">GST</div>
                                         <div class="item-after">
-                                            <input type="text" value="$5.50" readonly="readonly" id="gstValue" style="width: 3.4rem;" />
+                                            <input type="text" value="$0.00" readonly="readonly" id="gstValue"
+                                                style="width: 3.4rem;" />
                                         </div>
                                     </div>
                                 </div>
@@ -155,7 +162,9 @@
                                 <div class="item-content">
                                     <div class="item-inner">
                                         <div class="item-title"><b>Grand Total</b></div>
-                                        <div class="item-after text-color-red"><input type="text" value="${{grandTotal.toFixed(2)}}" readonly="readonly" id="gst" style="width: 3.4rem;" /></div>
+                                        <div class="item-after text-color-red"><input type="text"
+                                                value="${{grandTotal.toFixed(2)}}" readonly="readonly" id="gst"
+                                                style="width: 3.4rem;" /></div>
                                     </div>
                                 </div>
                             </li>
@@ -173,7 +182,7 @@
             </a>
         </div>
         <div class="fab fab-extended fab-center-bottom color-red" style="width: 120px;">
-            <a href="/orders-checkout">
+            <a href="#" class="link item" @click="checkout">
                 <span style="font-family: cabin regular;">CHECKOUT</span>
             </a>
         </div>
@@ -192,6 +201,7 @@
         letter-spacing: 0.5px;
         margin-top: 0px;
     }
+
     .detail-box {
         font-size: 18px;
         margin-top: 10px;
@@ -199,6 +209,7 @@
         border: 1px;
         padding: 7px;
     }
+
     .your-cart {
         font-size: 28px;
         font-weight: bold;
@@ -226,20 +237,21 @@
                 gst: 0,
                 grandTotal: 0,
                 redeem: 0,
+                newOrder: []
             }
         },
         methods: {
             deleteProduct: function (indexProduct) {
                 var self = this;
                 console.log(self.updateCartList);
-                for (let i = 0; i < self.updateCartList.items.length; i++){
-                    if (self.updateCartList.items[i].indexProduct == indexProduct){
+                for (let i = 0; i < self.updateCartList.items.length; i++) {
+                    if (self.updateCartList.items[i].indexProduct == indexProduct) {
                         self.updateCartList.quantity = self.updateCartList.quantity - self.updateCartList.items[i].quantity;
-                        self.updateCartList.total = self.updateCartList.total - self.updateCartList.items[i].price*self.updateCartList.items[i].quantity;
+                        self.updateCartList.total = self.updateCartList.total - self.updateCartList.items[i].price * self.updateCartList.items[i].quantity;
                         self.updateCartList.items.splice(i, 1);
                     }
                 }
-                if (self.updateCartList.items.length == 0){
+                if (self.updateCartList.items.length == 0) {
                     self.updateCartList.listOrderDate = null;
                     self.updateCartList.listOrderSession.name = null;
                     self.updateCartList.listOrderSession.startTime = '';
@@ -284,14 +296,14 @@
                 })
             },
             editProduct: function (indexProduct) {
-				var self = this;
-                
+                var self = this;
+
                 var isEdit = true;
-				// //let orderDate = $('#date').val();
-				// //let orderSession = self.$('select[name=session]').val();
-				// //console.log(id);
-				let det = self.productList.find(function (el) {
-					return el.indexProduct == indexProduct;
+                // //let orderDate = $('#date').val();
+                // //let orderSession = self.$('select[name=session]').val();
+                // //console.log(id);
+                let det = self.productList.find(function (el) {
+                    return el.indexProduct == indexProduct;
                 })
                 // for (let i = 0; i < self.productList.length; i++){
                 //     if (self.productList[i].id == id && self.productList[i].indexProduct == i){
@@ -303,45 +315,100 @@
                 localStorage.setItem('isEdit', isEdit);
                 localStorage.setItem('editProduct', JSON.stringify(det));
                 localStorage.setItem('cartItems', JSON.stringify(self.updateCartList));
-				// // self.$setState({
-				// // 	detail: det,
-				// // 	tempQuantity: self.tempQuantity + 1,
-				// // })
-				// //console.log(self.detail)
-				// // self.listOrderDate = orderDate;
-				// // for (let i = 0; i < self.session.length; i++){
-				// // 	if (orderSession == self.session[i].id){
-				// // 		self.listOrderSession = self.session[i];
-				// // 	}
-				// // }
-				// // localStorage.setItem('listOrderDate', JSON.stringify(self.listOrderDate));
-				// // localStorage.setItem('listOrderSession', JSON.stringify(self.listOrderSession));
-				app.views.current.router.navigate('/orders-options');
+                // // self.$setState({
+                // // 	detail: det,
+                // // 	tempQuantity: self.tempQuantity + 1,
+                // // })
+                // //console.log(self.detail)
+                // // self.listOrderDate = orderDate;
+                // // for (let i = 0; i < self.session.length; i++){
+                // // 	if (orderSession == self.session[i].id){
+                // // 		self.listOrderSession = self.session[i];
+                // // 	}
+                // // }
+                // // localStorage.setItem('listOrderDate', JSON.stringify(self.listOrderDate));
+                // // localStorage.setItem('listOrderSession', JSON.stringify(self.listOrderSession));
+                app.views.current.router.navigate('/orders-options');
             },
-            closeButton: function (){
+            closeButton: function () {
                 localStorage.removeItem('isEdit');
             },
             getDicount: function () {
-				var self = this;
-				let tempdiscount = $('#discountValue').val();
-				let arr = tempdiscount.split('$');
+                var self = this;
+                let tempdiscount = $('#discountValue').val();
+                let arr = tempdiscount.split('$');
                 console.log('tempdiscount', tempdiscount)
-				tempdiscount = arr[1];
-				console.log('tempdiscount', tempdiscount)
-				self.$setState({
-					discount: tempdiscount,
-				});
-			},
+                tempdiscount = arr[1];
+                console.log('tempdiscount', tempdiscount)
+                self.$setState({
+                    discount: tempdiscount,
+                });
+            },
             getGST: function () {
-				var self = this;
-				let tempGST = $('#gstValue').val();
-				let arr = tempGST.split('$');
-				tempGST = arr[1];
-				console.log('tempGST', tempGST)
-				self.$setState({
-					gst: tempGST,
-				});
-			},
+                var self = this;
+                let tempGST = $('#gstValue').val();
+                let arr = tempGST.split('$');
+                tempGST = arr[1];
+                console.log('tempGST', tempGST)
+                self.$setState({
+                    gst: tempGST,
+                });
+            },
+            checkout: function () {
+                var self = this;
+                let cartTemp = JSON.parse(localStorage.getItem('cartItems'));
+                if (cartTemp != null) {
+                    console.log(self.listOrderSession, self.listOrderDate)
+                    console.log(cartTemp)
+                    let today = new Date();
+                    today.setTime(today.getTime() + (1000 * 60 * (self.listOrderSession.preparationTime + self.listOrderSession.bufferTime)))
+                    console.log(today)
+                    let dt = today.getDate() + '/' + (today.getMonth() + 1) + '/' + today.getFullYear();
+                    console.log(dt)
+                    if (dt == self.listOrderDate) {
+                        console.log(today.toISOString())
+                        self.newOrder.collectionTime = today.toISOString();
+                        self.newOrder.orderDate = today.toISOString();
+                    }
+                    else {
+                        let arr = self.listOrderDate.split('/');
+                        let time = self.listOrderSession.startTime.split(':');
+                        console.log(arr)
+                        let dat = new Date(arr[2], arr[1] - 1, arr[0], time[0], time[1])
+                        dat.setTime(dat.getTime() + (1000 * 60 * (self.listOrderSession.preparationTime + self.listOrderSession.bufferTime)))
+                        console.log(dat)
+                        self.newOrder.collectionTime = dat.toISOString();
+                        self.newOrder.orderDate = dat.toISOString();
+                    }
+
+                    self.newOrder.type = 1;
+                    self.newOrder.mobile = localStorage.getItem('WOKPPL_mobile');
+                    self.newOrder.orderItems = []
+                    //add items
+                    cartTemp.items.forEach(function (el) {
+                        let temp = [];
+                        temp.productId = el.id;
+                        temp.productName = el.name;
+                        temp.quantity = el.quantity;
+                        temp.price = el.price;
+                        temp.id = el.id;
+                        self.newOrder.orderItems.push(temp)
+                    })
+
+                    console.log(self.newOrder)
+                    //create new order
+                    app.request.post(window.config.url + 'api/services/app/Preorder/CreateOrder', self.newOrder,
+                        function (suc) {
+                            console.log('suc', suc)
+                            //app.views.current.router.navigate('/orders-finish');  
+                        },
+                        function (err) {
+                            console.log('err', err)
+                        })
+
+                    
+                }
+            }
         },
         on: {
             pageInit: function () {
@@ -349,26 +416,27 @@
                 var self = this;
                 let cartTemp = JSON.parse(localStorage.getItem('cartItems'));
                 let tempString = [];
-                for (let i = 0; i < cartTemp.items.length; i++){
-                    cartTemp.items[i].editornew = false;
-                    cartTemp.items[i].indexProduct = i + '-' + cartTemp.items[i].id;
-                }
+                if (cartTemp != null)
+                    for (let i = 0; i < cartTemp.items.length; i++) {
+                        cartTemp.items[i].editornew = false;
+                        cartTemp.items[i].indexProduct = i + '-' + cartTemp.items[i].id;
+                    }
                 self.getDicount();
                 self.getGST();
-                self.$('input[type=checkbox]').change(function(){
+                self.$('input[type=checkbox]').change(function () {
                     let tempRedeem = $(this).val();
-                    if ($(this).is(":checked")){
+                    if ($(this).is(":checked")) {
                         self.$setState({
                             grandTotal: cartTemp.total - Number(tempRedeem) - Number(self.discount) + Number(self.gst),
                         })
                     }
-                    else{
+                    else {
                         self.$setState({
                             grandTotal: cartTemp.total - 0 - Number(self.discount) + Number(self.gst),
                         })
                     }
                 })
-                if (cartTemp != null){
+                if (cartTemp != null) {
                     self.$setState({
                         updateCartList: cartTemp,
                         productList: cartTemp.items,

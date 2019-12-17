@@ -24,16 +24,16 @@
                 </p>
                 <p class="row">
                     <span></span>
-                    <a class="back col button button-big button-fill color-red" style="width: 200px;" href="#">Finish</a>
+                    <a class="col button button-big button-fill color-red" style="width: 200px;" href="#" @click="closeApp">Finish</a>
                     <span></span>
                 </p>
             </div>
         </div>    
-        <div class="fab fab-right-top color-orange">
+        <!-- <div class="fab fab-right-top color-orange">
             <a href="#" class="link back">
                 <i class="icon material-icons">close</i>
             </a>
-        </div>
+        </div> -->
 
     </div>
 </template>
@@ -55,7 +55,11 @@
             }
         },
         methods: {
-            
+            closeApp: function(){
+                var self = this;
+                //app.exitApp();
+                app.views.current.router.navigate('/tab-order/');
+            }
         },
         on: {
             pageInit: function () {
