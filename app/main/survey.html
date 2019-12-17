@@ -11,8 +11,7 @@
             <div class="block text-align-center">
                 <p>Thank you for completing this survey. We value your opinion and will take on board any suggestions you make that are cost effective and comply with our healthy eating policy.</p>
             </div>
-            <form name="feedback" action="#" method="POST" enctype="multipart/form-data">
-                
+            <form name="survey" action="#" method="POST" enctype="multipart/form-data">
                 <div class="list no-hairlines no-hairlines-between">
                     <ul>
                         <li>
@@ -43,11 +42,10 @@
                     </ul>
                 </div>
                 <div class="block">
-                    <button type="submit" class="button button-big button-fill" data-i18n="submit">Submit</button>
+                    <button type="submit" class="button button-big button-fill" data-i18n="survey">Submit</button>
                 </div>
             </form>
         </div>
-
     </div>
 </template>
 
@@ -55,6 +53,7 @@
     return {
         data: function () {
             return {
+                formValidator: null,
             }
         },
         methods: {
@@ -68,12 +67,36 @@
                     spacing: '10px',
                     starWidth: '32px'
                 });
-            }
+            },
+            initializeFormValidator: function () {
+				var self = this;
+				self.formValidator = jQuery('form[name=survey]').validate({
+					submitHandler: function (form) {
+                        self.submitForm(form);
+					}
+
+				});
+			},
+            submitForm: function (form) {
+				var self = this;
+                var dialog = app.dialog.create({
+                    content: '<div class="block no-margin margin-top text-align-center"><i class="fa-stack fa-3x"><span class="fas fa-stack-2x fa-circle text-color-orange"></span><span class="fas fa-stack-1x fa-inverse fa-exclamation"></span></i><p>Thanks for your rating.<br /> Transaction ID: 12345678</p></div>',
+                    buttons: [
+                        {
+                            text: 'OK',
+                            bold: true,
+                            color: 'orange'
+                        }
+                    ]
+                });
+                dialog.open();
+			},
         },
         on: {
             pageInit: function () {
                 var self = this;
                 self.initializeRatingFullStar();
+                self.initializeFormValidator();
             }
         }
     }
