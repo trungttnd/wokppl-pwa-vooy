@@ -1079,6 +1079,10 @@ window.routes = [
 		componentUrl: './app/main/orders-checkout.html'
 	},
 	{
+		path: '/orders-finish',
+		componentUrl: './app/main/orders-finish.html'
+	},
+	{
 		path: '/orders-cart',
 		componentUrl: './app/main/orders-cart.html'
 	},
@@ -1089,6 +1093,10 @@ window.routes = [
 	{
 		path: '/transactions-detail',
 		componentUrl: './app/main/transactions-detail.html',
+	},
+	{
+		path: '/survey',
+		componentUrl: './app/main/survey.html',
 	},
 	{
 		path: '/more',
