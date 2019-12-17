@@ -180,7 +180,12 @@ window.routes = [
 					methods: {
 						loadData: function () {
 							var self = this;
-
+							app.request.setup({
+								headers: {
+									'Authorization': 'bearer ' + localStorage.getItem('WOKPPL_accessToken'),
+									'Content-Type': 'application/json'
+								}
+							});
 							app.request.json(
 								'assets/custom/dataset/business.json',
 								function (data) {
@@ -243,6 +248,7 @@ window.routes = [
 						},
 						loadSession: function () {
 							var self = this;
+
 							app.request.get(window.config.url + 'api/services/app/Preorder/GetSessions',
 								function (suc) {
 									let response = JSON.parse(suc)
