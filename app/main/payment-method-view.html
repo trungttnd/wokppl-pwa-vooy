@@ -28,16 +28,14 @@
                 </i>
             </div>
 
-            <form id="2c2p-payment-form" name="creditcard"
-                action="https://customercloud.azurewebsites.net/api/services/app/Gateway2C2PPayment/RegisterCard"
-                method="POST" enctype="application/json">
+            <form id="2c2p-payment-form" name="creditcard" action="#" method="POST" enctype="application/json">
                 <div class="list no-hairlines no-hairlines-between">
                     <ul>
                         <li class="item-content item-input item-input-with-info">
                             <div class="item-inner">
                                 <div class="item-title item-floating-label">Credit Card Number</div>
                                 <div class="item-input-wrap">
-                                    <input type="text" name="credit_card" data-encrypt="cardnumber" maxlength="16"
+                                    <input type="text" name="credit_card" data-encrypt="cardnumber" maxlength="16" value="{{cardNumber}}"
                                         required />
                                     <span class="input-clear-button"></span>
                                     <div class="item-input-info input-error-message"></div>
@@ -81,7 +79,7 @@
                             <div class="item-inner">
                                 <div class="item-title item-floating-label">Card Holder's Name</div>
                                 <div class="item-input-wrap">
-                                    <input type="text" name="name" />
+                                    <input type="text" name="name" value="{{cardHolderName}}" />
                                     <span class="input-clear-button"></span>
                                     <div class="item-input-info input-error-message"></div>
                                 </div>
@@ -115,7 +113,7 @@
                 </div>
                 <div class="block">
                     <div class="row">
-                        <button type="submit" class="button button-big button-fill">Save</button>
+                        <button type="submit" class="button button-big button-fill" @click="unlink({{cardID}})">Unlink</button>
                     </div>
                 </div>
             </form>
@@ -128,80 +126,86 @@
     return {
         data: function () {
             return {
-                listCard: [{
-                    id: 1,
-                    cardHolderName: "Trung Vooy",
-                    cardNumber: "123xxxxx456",
-                    isDefault: true
-                },
-                {
-                    id: 2,
-                    cardHolderName: "James Knox",
-                    cardNumber: "123xxxxx456",
-                    isDefault: false
-                },
-                {
-                    id: 3,
-                    cardHolderName: "Smith Alber",
-                    cardNumber: "123xxxxx456",
-                    isDefault: false
-                }
-                ],
-                detail: null,
+                cardNumber: null,
+                cardHolderName: null,
+                cardID: null,
             }
         },
         methods: {
-            getId: function (id) {
+            unlink: function (id) {
+                var self = this;
+                self.deleteCard(id)
 
+                app.views.current.router.navigate('/more/payment-method');
             },
             deleteCard: function (id) {
                 var self = this;
-            },
-            clickHandle: function (id, isDefault) {
-                var self = this;
-                console.log(id, isDefault)
-                if (!isDefault) {
-                    //uncheck others checkbox
-                    $('input[type="checkbox"]').on('change', function () {
-                        $('input[type="checkbox"]').not(this).prop('checked', false);
-                    });
-                    //refresh listCard
-                    let list = self.listCard
-                    list.forEach(element => {
-                        if (element.id != id) element.isDefault = false;
-                        else element.isDefault = true;
-                    });
-
-                    self.$setState({
-                        listCard: list
-                    })
-                    //set Default card
-                    // app.request.post(window.config.url + 'api/services/app/Card/SetDefault?id=' + id,
-                    //     function (suc) {
-                    //         let response = JSON.parse(suc);
-                    //         console.log(response)
-                    //     },
-                    //     function (err) {
-                    //         let response = JSON.parse(err.response);
-                    //         console.log(response);
-                    //         var dialog = app.dialog.create({
-                    //             content: '<div class="block no-margin margin-top text-align-center"><i class="fa-stack fa-3x"><span class="fas fa-stack-2x fa-circle text-color-red"></span><span class="fas fa-stack-1x fa-inverse fa-times"></span></i><p>' + response.error.message + '.</p></div>',
-                    //             buttons: [
-                    //                 {
-                    //                     text: 'Retry',
-                    //                     bold: true,
-                    //                     color: 'red'
-                    //                 }
-                    //             ]
-                    //         });
-                    //         dialog.open();
-                    //     })
-                }
-
+                app.request({
+                    url: window.config.url + 'api/services/app/Card/DeleteCard',
+                    dataType: 'json',
+                    contentType: "application/json",
+                    method: 'DELETE',
+                    data: { id: id },
+                    statusCode: {
+                        404: function (xhr) {
+                            console.log("URL not found");
+                        },
+                        400: function (xhr) {
+                            console.log("Bad request. Some of the inputs provided to the request aren't valid.");
+                        },
+                        401: function (xhr) {
+                            console.log("Not authenticated. The user session isn't valid.");
+                        },
+                        403: function (xhr) {
+                            console.log("The user isn't authorized to perform the specified request.");
+                        },
+                        500: function (xhr) {
+                            console.log("Internal server error. Additional details will be contained on the server logs.");
+                        },
+                        201: function (xhr) {
+                            console.log("The requested resource has been created.");
+                        }
+                    },
+                    success: function (data, status, xhr) {
+                        console.log(data);
+                        if (data.success) {
+                            app.toast.show({
+                                text: 'Delete Credit Card successful.',
+                                position: 'bottom',
+                                cssClass: 'toast-round bg-color-green'
+                            });
+                            app.popup.close('.popup-cardDetail', false);
+                        }
+                    },
+                    error: function (xhr, status) {
+                        let response = JSON.parse(xhr.response);
+                        console.log(response);
+                        var dialog = app.dialog.create({
+                            content: '<div class="block no-margin margin-top text-align-center"><i class="fa-stack fa-3x"><span class="fas fa-stack-2x fa-circle text-color-red"></span><span class="fas fa-stack-1x fa-inverse fa-times"></span></i><p>' + response.error.message + '.</p></div>',
+                            buttons: [
+                                {
+                                    text: 'Retry',
+                                    bold: true,
+                                    color: 'red'
+                                }
+                            ]
+                        });
+                        dialog.open();
+                    }
+                });
             },
         },
         on: {
-
+            pageInit: function () {
+                var self = this;
+                let det = JSON.parse(localStorage.getItem('WOKPPL_cardDetail'));
+                console.log(det);
+                self.$setState({
+                    cardNumber: det.cardNumber,
+                    cardHolderName: det.cardHolderName,
+                    cardID: det.id,
+                })
+            }
         }
     }
 </script>

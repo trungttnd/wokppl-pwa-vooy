@@ -27,26 +27,23 @@
                     <span class="fab fa-cc-jcb fa-stack-1x fa-inverse"></span>
                 </i>
             </div>
-
-            <form id="2c2p-payment-form" name="creditcard"
-                action="https://customercloud.azurewebsites.net/api/services/app/Gateway2C2PPayment/RegisterCard"
-                method="POST" enctype="application/json">
+            <form id="2c2p-payment-form" name="creditcard" action="#" method="POST" enctype="application/json">
                 <div class="list no-hairlines no-hairlines-between">
                     <ul>
                         <li class="item-content item-input item-input-with-info">
                             <div class="item-inner">
                                 <div class="item-title item-floating-label">Credit Card Number</div>
                                 <div class="item-input-wrap">
-                                    <input type="text" name="credit_card" data-encrypt="cardnumber" maxlength="16"
+                                    <input type="text" name="credit_card" data-encrypt="cardnumber" maxlength="19"
                                         required />
                                     <span class="input-clear-button"></span>
                                     <div class="item-input-info input-error-message"></div>
                                 </div>
                             </div>
                         </li>
-                        <li class="item-content item-input">
+                        <li class="item-content item-input item-input-with-info">
                             <div class="row">
-                                <div class="col-25">
+                                <div class="col-30">
                                     <div class="item-inner">
                                         <div class="item-title item-floating-label">MM</div>
                                         <div class="item-input-wrap">
@@ -56,20 +53,21 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-25">
+                                <div class="col-30">
                                     <div class="item-inner">
                                         <div class="item-title item-floating-label">YYYY</div>
                                         <div class="item-input-wrap">
-                                            <input type="text" name="year" data-encrypt="year" maxlength="4" required />
+                                            <input type="text" name="year" data-encrypt="year" maxlength="4" 
+                                                required />
                                             <div class="item-input-info input-error-message"></div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-50">
+                                <div class="col-40">
                                     <div class="item-inner">
                                         <div class="item-title item-floating-label">CVV2</div>
                                         <div class="item-input-wrap">
-                                            <input type="password" name="cvv" data-encrypt="cvv" maxlength="4"
+                                            <input type="password" name="cvv" data-encrypt="cvv" maxlength="3"
                                                 required />
                                             <div class="item-input-info input-error-message"></div>
                                         </div>
@@ -81,36 +79,12 @@
                             <div class="item-inner">
                                 <div class="item-title item-floating-label">Card Holder's Name</div>
                                 <div class="item-input-wrap">
-                                    <input type="text" name="name" />
+                                    <input type="text" name="name" required />
                                     <span class="input-clear-button"></span>
                                     <div class="item-input-info input-error-message"></div>
                                 </div>
                             </div>
                         </li>
-                        <!-- {{#if countries}}
-                            <li class="item-content item-input">
-                                <div class="item-inner">
-                                    <div class="item-title item-label">Issuing Bank Country</div>
-                                    <div class="item-input-wrap input-dropdown-wrap">
-                                        <select name="country">
-                                            {{#each countries}}
-                                            <option value="this.id">{{this.name}}</option>
-                                            {{/each}}
-                                        </select>
-                                    </div>
-                                </div>
-                            </li>
-                            {{/if}}
-                            <li class="item-content item-input item-input-with-info">
-                                <div class="item-inner">
-                                    <div class="item-title item-floating-label">Card Holder's Email</div>
-                                    <div class="item-input-wrap">
-                                        <input type="email" name="email" />
-                                        <span class="input-clear-button"></span>
-                                        <div class="item-input-info input-error-message"></div>
-                                    </div>
-                                </div>
-                            </li> -->
                     </ul>
                 </div>
                 <div class="block">
@@ -123,85 +97,154 @@
 
     </div>
 </template>
-
 <script>
     return {
         data: function () {
             return {
-                listCard: [{
-                    id: 1,
-                    cardHolderName: "Trung Vooy",
-                    cardNumber: "123xxxxx456",
-                    isDefault: true
-                },
-                {
-                    id: 2,
-                    cardHolderName: "James Knox",
-                    cardNumber: "123xxxxx456",
-                    isDefault: false
-                },
-                {
-                    id: 3,
-                    cardHolderName: "Smith Alber",
-                    cardNumber: "123xxxxx456",
-                    isDefault: false
-                }
-                ],
-                detail: null,
             }
         },
         methods: {
-            getId: function (id) {
+            initializeFormValidator: function () {
+				var self = this;
+				self.formValidator = jQuery('form[name=creditcard]').validate({
+					rules: {						
+						credit_card: {
+                            required: true,
+                            minlength: 16,
+						},
+						month: {
+							required: true,
+                            minlength: 2,
+                            digits: true
+                        },
+                        year: {
+							required: true,
+                            minlength: 4,
+                            digits: true
+                        },
+                        cvv: {
+							required: true,
+                            minlength: 3,
+                            digits: true
+                        },
+                        name: {
+							required: true,
+                        },
+					},
+					messages: {						
+						credit_card: {
+							required: 'Please enter credit card number.',
+							minlength: 'Incorrect credit card number.',
+						},
+						month: {
+							required: 'Incorrect month',
+                            minlength: 'Incorrect month',
+                            digits: 'Incorrect month',
+                        },
+                        year: {
+							required: 'Incorrect year',
+                            minlength: 'Incorrect year',
+                            digits: 'Incorrect year',
+                        },
+                        cvv: {
+							required: 'Incorrect CVV2',
+                            minlength: 'Incorrect CVV2',
+                            digits: 'Incorrect CVV2',
+                        },
+                        name: {
+							required: 'Please enter name.',
+                        },
+					},
+					submitHandler: function () {
+						self.submitForm();
+					}
 
+				});
             },
-            deleteCard: function (id) {
+            submitForm: function () {
                 var self = this;
-            },
-            clickHandle: function (id, isDefault) {
-                var self = this;
-                console.log(id, isDefault)
-                if (!isDefault) {
-                    //uncheck others checkbox
-                    $('input[type="checkbox"]').on('change', function () {
-                        $('input[type="checkbox"]').not(this).prop('checked', false);
-                    });
-                    //refresh listCard
-                    let list = self.listCard
-                    list.forEach(element => {
-                        if (element.id != id) element.isDefault = false;
-                        else element.isDefault = true;
-                    });
-
-                    self.$setState({
-                        listCard: list
-                    })
-                    //set Default card
-                    // app.request.post(window.config.url + 'api/services/app/Card/SetDefault?id=' + id,
-                    //     function (suc) {
-                    //         let response = JSON.parse(suc);
-                    //         console.log(response)
-                    //     },
-                    //     function (err) {
-                    //         let response = JSON.parse(err.response);
-                    //         console.log(response);
-                    //         var dialog = app.dialog.create({
-                    //             content: '<div class="block no-margin margin-top text-align-center"><i class="fa-stack fa-3x"><span class="fas fa-stack-2x fa-circle text-color-red"></span><span class="fas fa-stack-1x fa-inverse fa-times"></span></i><p>' + response.error.message + '.</p></div>',
-                    //             buttons: [
-                    //                 {
-                    //                     text: 'Retry',
-                    //                     bold: true,
-                    //                     color: 'red'
-                    //                 }
-                    //             ]
-                    //         });
-                    //         dialog.open();
-                    //     })
-                }
-
-            },
+                My2c2p.getEncrypted("2c2p-payment-form", function (encryptedData, errCode, errDesc) {
+                    if (errCode != 0) {
+                        console.log('errCode <> 0: ', errCode);
+                        //alert(errDesc + " (" + errCode + ")"); 
+                        var dialog = app.dialog.create({
+                            content: '<div class="block no-margin margin-top text-align-center"><i class="fa-stack fa-3x"><span class="fas fa-stack-2x fa-circle text-color-red"></span><span class="fas fa-stack-1x fa-inverse fa-times"></span></i><p>' + errDesc + " (" + errCode + ")" + '.</p></div>',
+                            buttons: [
+                                {
+                                    text: 'Retry',
+                                    bold: true,
+                                    color: 'red'
+                                }
+                            ]
+                        });
+                        dialog.open();
+                    }
+                    else {
+                        console.log('else of errCode <> 0: ', errCode);
+                        console.log('encryptedData.encryptedCardInfo: ', encryptedData.encryptedCardInfo);
+                        var form = document.getElementById("2c2p-payment-form");
+                        app.request.postJSON(window.config.url + 'api/services/app/Gateway2C2PPayment/RegisterCard',
+                            {
+                                encryptedCardInfo: encryptedData.encryptedCardInfo,
+                                maskedCardInfo: encryptedData.maskedCardInfo,
+                                expMonthCardInfo: encryptedData.expMonthCardInfo,
+                                expYearCardInfo: encryptedData.expYearCardInfo,
+                                cardHolderName: form.name.value
+                            },
+                            function (suc) {
+                                if (suc.result) {
+                                    console.log(suc);
+                                    app.toast.show({
+                                        text: 'Create Credit Card successful.',
+                                        position: 'bottom',
+                                        cssClass: 'toast-round bg-color-green'
+                                    });
+                                    app.views.current.router.navigate('/more/payment-method');
+                                }
+                                else {
+                                    var dialog = app.dialog.create({
+                                        content: '<div class="block no-margin margin-top text-align-center"><i class="fa-stack fa-3x"><span class="fas fa-stack-2x fa-circle text-color-orange"></span><span class="fas fa-stack-1x fa-inverse fa-exclamation"></span></i><p>' + suc.error.message + '.</p></div>',
+                                        buttons: [
+                                            {
+                                                text: 'Okay',
+                                                bold: true,
+                                                color: 'orange'
+                                            }
+                                        ]
+                                    });
+                                    dialog.open();
+                                }
+                            },
+                            function (err) {
+                                console.log("code 500")
+                                console.log(JSON.parse(err.response));
+                                let response = JSON.parse(err.response);
+                                var dialog = app.dialog.create({
+                                    content: '<div class="block no-margin margin-top text-align-center"><i class="fa-stack fa-3x"><span class="fas fa-stack-2x fa-circle text-color-red"></span><span class="fas fa-stack-1x fa-inverse fa-times"></span></i><p>' + response.error.message + '.</p></div>',
+                                    buttons: [
+                                        {
+                                            text: 'Retry',
+                                            bold: true,
+                                            color: 'red'
+                                        }
+                                    ]
+                                });
+                                dialog.open();
+                            }
+                        )
+                    }
+                });
+			},
         },
         on: {
-
+            pageInit: function () {
+                var self = this;
+                self.initializeFormValidator();
+                // self.$('input[name="credit_card"]').keyup(function(e){
+                //     if(this.value.length==16)
+                //         $(this).val($(this).val().match(/(\d{4})/g).join(' '));  
+                // });
+			}
         }
     }
 </script>
