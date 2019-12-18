@@ -60,10 +60,11 @@
 									<div class="item-title" style="font-weight: bold;">
 										$ {{this.price.toFixed(2)}}</div>
 								</div>
-								<div class="item-subtitle">{{#each this.categories}}
+								<!-- <div class="item-subtitle">{{#each this.categories}}
 									{{this.name}}
 									{{/each}}
-								</div>
+								</div> -->
+								<div class="item-subtitle">Available numbers: {{this.quantity}}</div>
 								<div class="item-row">
 									<div class="item-text">{{this.description}}
 									</div>
@@ -160,6 +161,9 @@
 				let orderDate = $('#date').val();
 				let orderSession = self.$('select[name=session]').val();
 				console.log(id);
+				for (let i = 0; i < self.productList.length; i++){
+					self.productList[i].orderQuantity = null;
+				}
 				let det = self.productList.find(function (el) {
 					return el.id == id;
 				})

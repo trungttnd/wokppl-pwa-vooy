@@ -33,7 +33,7 @@
                         <div class="stepper stepper-small stepper-round stepper-fill stepper-init">
                             <div class="stepper-button-minus" @click="minusQuantity()"></div>
                             <div class="stepper-input-wrap">
-                                <input type="number" name="addQuantity" value="{{defaultQuan}}" min="1" max="100" readonly step="1" />
+                                <input type="number" name="addQuantity" value="{{defaultQuan}}" min="1" max="{{detail.quantity}}" readonly step="1" />
                             </div>
                             <div class="stepper-button-plus" @click="plusQuantity()"></div>
                         </div>
@@ -188,6 +188,8 @@
                 var self = this;
                 console.log(self.price);
                 console.log(self.detail.price);
+                console.log(self.detail.quantity);
+                console.log(self.tempQuantity);
                 self.$setState({
                     tempQuantity: self.tempQuantity + 1,
                     price: self.price
@@ -204,7 +206,7 @@
                 let increaseQuan = 0;
                 self.cartItems.listOrderDate = self.templistOrderDate;
                 self.cartItems.listOrderSession = self.templistOrderSession;
-                increaseQuan = quan - self.detail.quantity;
+                increaseQuan = quan - self.detail.orderQuantity;
                 self.cartItems.quantity += increaseQuan;
                 console.log('self.cartItems.total truoc: ',self.cartItems.total);
                 self.cartItems.total += selectItem.price * increaseQuan + self.modPrice * quan;
@@ -214,7 +216,7 @@
                 console.log('selectItem.price: ',selectItem.price);
                 console.log('self.modPrice: ',self.modPrice);
                 self.detail.price += self.modPrice;
-                self.detail.quantity = quan;
+                self.detail.orderQuantity = quan;
                 for (let i = 0; i < self.cartItems.items.length; i++){
                     let tempIndexProduct = i + '-' + self.cartItems.items[i].id;
                     if (self.cartItems.items[i].editornew == true && self.cartItems.items[i].indexProduct == tempIndexProduct){
@@ -263,8 +265,8 @@
                 console.log('self.modPrice: ',self.modPrice);
                 console.log('self.cartItems.quantity: ',self.cartItems.quantity);
                 self.detail.price += self.modPrice;
-                self.detail.quantity = quan;
-                console.log('self.detail.quantity: ',self.detail.quantity);
+                self.detail.orderQuantity = quan;
+                console.log('self.detail.orderQuantity: ',self.detail.orderQuantity);
                 console.log('self.detail.price: ',self.detail.price);
                 // var self = this;
                 // let quan = +self.$('input[name=addQuantity]').val()
@@ -309,11 +311,11 @@
                     detail: det,
                     cartItems: JSON.parse(localStorage.getItem('cartItems')) == undefined ? { quantity: 0, total: 0.00, items: [] } : JSON.parse(localStorage.getItem('cartItems')),
                     price: det.price,
-                    defaultQuan: det.quantity == null ? 1 : det.quantity,
+                    defaultQuan: det.orderQuantity == null ? 1 : det.orderQuantity,
                     templistOrderDate: listOrderDate,
                     templistOrderSession: listOrderSession,
                 })
-                console.log(self.cartItems);
+                console.log('det', det);
                 
                 self.$('input[type=checkbox]').change(function(){
                     let modId = $(this).val();
