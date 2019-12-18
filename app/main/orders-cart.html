@@ -38,7 +38,12 @@
                             <li>
                                 <div class="item-content">
                                     <div class="item-inner">
-                                        <div class="item-title">Collection Time: {{orderSessionTime}}</div>
+                                        <div class="item-title">Collection Time:
+                                            <!-- <input type="text" id="timepicker-24" placeholder="Select" readonly /> -->
+                                        </div>
+                                        <div class="item-input">
+                                            <input type="text" id="timepicker-24" placeholder="Select" readonly />
+                                        </div>
                                     </div>
                                 </div>
                             </li>
@@ -237,10 +242,25 @@
                 gst: 0,
                 grandTotal: 0,
                 redeem: 0,
-                newOrder: []
+                newOrder: {
+                    collectionTime: '',
+                    type: 2,
+                    orderItems: [],
+                    sessionId: ''
+                }
             }
         },
         methods: {
+            initializeTimepicker24: function () {
+                var self = this;
+                jQuery('#timepicker-24').timeDropper({
+                    autoswitch: true,
+                    format: 'HH:mm',
+                    init_animation: 'dropDown',
+                    meridians: false,
+                    setCurrentTime: true
+                });
+            },
             deleteProduct: function (indexProduct) {
                 var self = this;
                 console.log(self.updateCartList);
@@ -360,53 +380,77 @@
                 if (cartTemp != null) {
                     console.log(self.listOrderSession, self.listOrderDate)
                     console.log(cartTemp)
-                    let today = new Date();
-                    today.setTime(today.getTime() + (1000 * 60 * (self.listOrderSession.preparationTime + self.listOrderSession.bufferTime)))
-                    console.log(today)
-                    let dt = today.getDate() + '/' + (today.getMonth() + 1) + '/' + today.getFullYear();
-                    console.log(dt)
-                    if (dt == self.listOrderDate) {
-                        console.log(today.toISOString())
-                        self.newOrder.collectionTime = today.toISOString();
-                        self.newOrder.orderDate = today.toISOString();
-                    }
-                    else {
-                        let arr = self.listOrderDate.split('/');
-                        let time = self.listOrderSession.startTime.split(':');
-                        console.log(arr)
-                        let dat = new Date(arr[2], arr[1] - 1, arr[0], time[0], time[1])
-                        dat.setTime(dat.getTime() + (1000 * 60 * (self.listOrderSession.preparationTime + self.listOrderSession.bufferTime)))
-                        console.log(dat)
-                        self.newOrder.collectionTime = dat.toISOString();
-                        self.newOrder.orderDate = dat.toISOString();
-                    }
+                    //let today = new Date();
+                    // today.setTime(today.getTime() + (1000 * 60 * (self.listOrderSession.preparationTime + self.listOrderSession.bufferTime)))
+                    // console.log(today)
+                    // let dt = today.getDate() + '/' + (today.getMonth() + 1) + '/' + today.getFullYear();
+                    // console.log(dt)
+                    // if (dt == self.listOrderDate) {
+                    //     console.log(today.toISOString())
+                    //     self.newOrder.collectionTime = today.toISOString();
+                    //     //self.newOrder.orderDate = today.toISOString();
+                    // }
+                    // else {
+                    //     let arr = self.listOrderDate.split('/');
+                    //     let time = self.listOrderSession.startTime.split(':');
+                    //     console.log(arr)
+                    //     let dat = new Date(arr[2], arr[1] - 1, arr[0], time[0], time[1])
+                    //     dat.setTime(dat.getTime() + (1000 * 60 * (self.listOrderSession.preparationTime + self.listOrderSession.bufferTime)))
+                    //     console.log(dat)
+                    //     self.newOrder.collectionTime = dat.toISOString();
+                    //     //self.newOrder.orderDate = dat.toISOString();
+                    // }
+                    console.log(self.$('input[id=timepicker-24]').val())
+                    let arr = self.listOrderDate.split('/');
+                    let time = self.$('input[id=timepicker-24]').val().split(':');
+                    let dat = new Date(arr[2], arr[1] - 1, arr[0], time[0], time[1]);
 
-                    self.newOrder.type = 1;
-                    self.newOrder.mobile = localStorage.getItem('WOKPPL_mobile');
+                    self.newOrder.collectionTime = dat.toISOString();
+                    self.newOrder.type = 2;
+                    self.newOrder.sessionId = self.listOrderSession.id;
                     self.newOrder.orderItems = []
                     //add items
                     cartTemp.items.forEach(function (el) {
-                        let temp = [];
-                        temp.productId = el.id;
-                        temp.productName = el.name;
-                        temp.quantity = el.quantity;
-                        temp.price = el.price;
-                        temp.id = el.id;
+                        let temp = {
+                            productId: el.id,
+                            productName: el.name,
+                            quantity: el.quantity,
+                            price: el.price,
+                            modifiers: []
+                        };
+
+                        for (let i = 0; i < el.modifierGroups.length; i++) {
+                            for (let j = 0; j < el.modifierGroups[i].modifiers.length; j++) {
+                                if (el.modifierGroups[i].modifiers[j].isChoose == true) {
+                                    let mod = {
+                                        modifierId: el.modifierGroups[i].modifiers[j].id,
+                                        modifierName: el.modifierGroups[i].modifiers[j].name,
+                                        quantity: 1
+                                    }
+                                    temp.modifiers.push(mod)
+                                }
+                            }
+                        }
                         self.newOrder.orderItems.push(temp)
                     })
-
-                    console.log(self.newOrder)
+                    
+                    // app.views.current.router.navigate('/orders-finish'); 
                     //create new order
-                    app.request.post(window.config.url + 'api/services/app/Preorder/CreateOrder', self.newOrder,
+                    app.request.postJSON(window.config.url + 'api/services/app/Preorder/CreateOrder',
+                        {
+                            collectionTime: self.newOrder.collectionTime,
+                            type: self.newOrder.type,
+                            orderItems: self.newOrder.orderItems,
+                            sessionId: self.newOrder.sessionId
+                        },
                         function (suc) {
                             console.log('suc', suc)
-                            //app.views.current.router.navigate('/orders-finish');  
+                            localStorage.removeItem('cartItems')
+                            app.views.current.router.navigate('/orders-finish');  
                         },
                         function (err) {
                             console.log('err', err)
                         })
-
-                    
                 }
             }
         },
@@ -414,6 +458,7 @@
             pageInit: function () {
                 console.log('abc');
                 var self = this;
+                self.initializeTimepicker24()
                 let cartTemp = JSON.parse(localStorage.getItem('cartItems'));
                 let tempString = [];
                 if (cartTemp != null)
@@ -450,6 +495,7 @@
                     })
                 }
                 console.log('grandTotal', self.grandTotal)
+
             }
         }
     }

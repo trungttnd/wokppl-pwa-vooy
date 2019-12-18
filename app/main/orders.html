@@ -4,7 +4,7 @@
 			<div class="navbar-inner">
 				<img class="theme-light-only" src="assets/custom/img/konbini-logo.svg" height="24" alt="" />
 				<div class="right">
-					<a href="/orders-cart" class="link icon-only">
+					<a href="#" @click="goCart" class="link icon-only">
 						<i class="icon material-icons">shopping_cart<span
 								class="badge color-red">{{cartItems.quantity}}</span></i></a>
 					<span class="text-color-red">$ {{cartItems.total.toFixed(2)}}</span>
@@ -111,6 +111,11 @@
 			}
 		},
 		methods: {
+			goCart: function(){
+				var self = this;
+				if (self.cartItems.quantity>0)
+					app.view.current.router.navigate('/orders-cart');				
+			},
 			formatDate: function (date, langCode) {
 				var day = date.toLocaleString(langCode, { day: '2-digit' });   // DD
 				var month = date.toLocaleString(langCode, { month: '2-digit' }); // MM
