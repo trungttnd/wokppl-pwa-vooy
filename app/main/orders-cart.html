@@ -408,6 +408,12 @@
                     self.newOrder.collectionTime = dat.toISOString();
                     self.newOrder.type = 2;
                     self.newOrder.sessionId = self.listOrderSession.id;
+                    self.newOrder.payments = [{
+                        amount: self.grandTotal,
+                        type: 1,
+                        cardType: 1,
+                        status: 1
+                    }]
                     self.newOrder.orderItems = []
                     //add items
                     cartTemp.items.forEach(function (el) {
