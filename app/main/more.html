@@ -5,8 +5,8 @@
 			<div class="navbar-inner">
 				<img class="theme-light-only" src="assets/custom/img/konbini-logo.svg" height="24" alt="" />
 				<div class="right">
-                    
-                </div>
+
+				</div>
 			</div>
 		</div>
 
@@ -59,20 +59,20 @@
 						</a>
 					</li>
 					<li>
-							<a href="/more/setting" class="item-link">
-								<div class="item-content">
-									<div class="item-media">
-										<i class="fa-stack">
-											<span class="fas fa-circle fa-stack-2x color-orange-5"></span>
-											<span class="fas fa-cog fa-stack-1x fa-inverse"></span>
-										</i>
-									</div>
-									<div class="item-inner">
-										<div class="item-title">Setting</div>
-									</div>
+						<a href="/more/setting" class="item-link">
+							<div class="item-content">
+								<div class="item-media">
+									<i class="fa-stack">
+										<span class="fas fa-circle fa-stack-2x color-orange-5"></span>
+										<span class="fas fa-cog fa-stack-1x fa-inverse"></span>
+									</i>
 								</div>
-							</a>
-						</li>
+								<div class="item-inner">
+									<div class="item-title">Setting</div>
+								</div>
+							</div>
+						</a>
+					</li>
 					<li>
 						<a @click="logout" class="item-link">
 							<div class="item-content">
@@ -117,8 +117,8 @@
 				});
 
 			},
-			
-			
+
+
 			hideToolbar: function () {
 				var self = this;
 				setTimeout(function () {
@@ -163,6 +163,13 @@
 				localStorage.removeItem('WOKPPL_username');
 				localStorage.removeItem('WOKPPL_userId');
 				localStorage.removeItem('WOKPPL_passcode');
+				localStorage.removeItem('addProduct');
+				localStorage.removeItem('cartItems');
+				localStorage.removeItem('listOrderSession');
+				localStorage.removeItem('listOrderDate');
+				localStorage.removeItem('categories');
+				localStorage.removeItem('editProduct');
+				localStorage.removeItem('sessions');
 			}
 		},
 		on: {

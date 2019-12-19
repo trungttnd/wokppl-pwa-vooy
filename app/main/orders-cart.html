@@ -439,7 +439,7 @@
                         }
                         self.newOrder.orderItems.push(temp)
                     })
-                    
+                    console.log(self.newOrder)
                     // app.views.current.router.navigate('/orders-finish'); 
                     //create new order
                     app.request.postJSON(window.config.url + 'api/services/app/Preorder/CreateOrder',
@@ -447,6 +447,7 @@
                             collectionTime: self.newOrder.collectionTime,
                             type: self.newOrder.type,
                             orderItems: self.newOrder.orderItems,
+                            payments: self.newOrder.payments,
                             sessionId: self.newOrder.sessionId
                         },
                         function (suc) {

@@ -109,6 +109,7 @@
 				},
 				listOrderDate: null,
 				listOrderSession: null,
+				sessChoose: null
 			}
 		},
 		methods: {
@@ -308,7 +309,11 @@
 
 			//self.loadSession();
 			// self.loadCategory();
-			self.loadProduct(dateInput, self.session[0].id, '');
+			// self.loadProduct(dateInput, self.session[0].id, '');
+			let sessionTemp = JSON.parse(localStorage.getItem('listOrderSession'))
+			console.log(sessionTemp)
+			if (sessionTemp!=null) self.$('select[name=session]').val(sessionTemp.id)
+			self.loadProduct(dateInput, self.$('select[name=session]').val(), '')
 			self.$("#menuCats").css("margin-top", "44px")
 			self.$('select[name=session]').change(function () {
 				self.updateProducts();
