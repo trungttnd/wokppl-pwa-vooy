@@ -12,46 +12,40 @@
         </div>
         <div class="page-content">
             <div class="block-title display-flex justify-content-space-between text-color-black">
-                <span style="font-size: 18px;">Transactions ID 100101: Your order is ready</span>
+                <span class="time-input">Order collection time:</span><input type="text" id="timepicker-24" placeholder="Select" readonly /><span></span>
             </div>
             <div class="content-block block-card text-align-left">
-                <div class="your-cart">Your Cart:</div>
+                <span class="trans-id" style="font-size: 17px;">Transactions ID: 100101</span>
             </div>
             <div class="data-table card">
                 <table>
+                    <thead>
+                        <tr>
+                            <th class="label-cell">Product</th>
+                            <th class="numeric-cell">Amount</th>
+                        </tr>
+                    </thead>
                     <tbody>
                         <tr>
-                            <td class="label-cell" colspan="2">Chicken Rice</td>
+                            <td class="label-cell">Noodle</td>
+                            <td class="numeric-cell">$1.00</td>
                         </tr>
                         <tr>
-                            <td class="numeric-cell"width="3%"></td>
-                            <td class="label-cell" >+ Hot dog</td>
+                            <td class="label-cell">Chicken Rice</td>
+                            <td class="numeric-cell">$1.00</td>
                         </tr>
                         <tr>
-                            <td class="numeric-cell"width="3%"></td>
-                            <td class="label-cell" >+ Pepper</td>
-                        </tr>
-                        <tr>
-                            <td class="label-cell" colspan="2">Noodle</td>
-                        </tr>
-                        <tr>
-                            <td class="label-cell" colspan="2">Coca-cola</td>
-                        </tr>
+                            <td class="label-cell">Sushi</td>
+                            <td class="numeric-cell">$1.00</td>
+                        </tr>                           
                     </tbody>
                 </table>
             </div> 
-            <div class="content-block block-card justify-content-space-between text-align-right">
-                <span class="time-order">Time order: 12:30</span>
-            </div>   
         </div>
     </div>
 </template>
 <style>
-.your-cart {
-    font-size: 24px;
-    font-weight: bold;
-    letter-spacing: 0.5px;
-    margin-top: 0px;
+.trans-id {
     padding-left: 15px;
 }
 .time-order {
@@ -82,6 +76,13 @@
             pageInit: function () {
                 var self = this;
                 //self.loadData()
+                jQuery('#timepicker-24').timeDropper({
+                    autoswitch: true,
+                    format: 'HH:mm',
+                    init_animation: 'dropDown',
+                    meridians: false,
+                    setCurrentTime: true
+                });
             }
         }
     }

@@ -1,28 +1,15 @@
 <template>
     <div class="page">
-
         <div class="navbar">
-            <div class="navbar-inner">
-                <!-- <img class="theme-light-only" src="assets/custom/img/konbini-logo.svg" height="24" alt="" /> -->
-                <!-- <div class="left">
-                        <a href="#" class="link back" id="back-link">
-                            <i class="icon icon-back"></i>
-                            <span>Transaction Detail</span>
-                        </a>
-                    </div> -->
+            <div class="navbar-inner">               
+                <img class="theme-light-only" src="assets/custom/img/konbini-logo.svg" height="24" alt="" />
                 <div class="right">
                     <a href="#" class="link back">
                         <span>Back</span>
                     </a>
                 </div>
-                <!-- <div class="subnavbar">
-                        <div class="subnavbar-inner">
-                            <div class="title">Transaction Detail</div>
-                        </div>
-                    </div> -->
             </div>
         </div>
-
         <div class="page-content">
             <div class="block-title display-flex justify-content-space-between text-color-black">
                 <span>Transactions Id: 100101</span>
@@ -47,8 +34,7 @@
                             <tr>
                                 <td class="label-cell">Sushi</td>
                                 <td class="numeric-cell">$1.00</td>
-                            </tr>
-                            
+                            </tr>                           
                         </tbody>
                     </table>
                 </div>
@@ -93,10 +79,11 @@
                 </div>
             </div>
         </div>
-
     </div>
 </template>
+<style>
 
+</style>
 <script>
     return {
         data: function () {
@@ -113,9 +100,7 @@
                     detail: det
                 });
                 // self.detail = JSON.parse(localStorage.getItem('Konbini_cardDetail'));
-
             },
-            
         },
         on: {
             pageInit: function () {
