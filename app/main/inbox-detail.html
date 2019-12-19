@@ -1,88 +1,88 @@
 <template>
-        <div class="page">
-    
-            <div class="navbar">
-                <div class="navbar-inner">
-                    <!-- <img class="theme-light-only" src="assets/custom/img/konbini-logo.svg" height="24" alt="" /> -->
-                    <!-- <div class="left">
-                            <a href="#" class="link back" id="back-link">
-                                <i class="icon icon-back"></i>
-                                <span>Transaction Detail</span>
-                            </a>
-                        </div> -->
-                    <div class="right">
-                        <a href="#" class="link back">
-                            <span>Back</span>
-                        </a>
-                    </div>
-                    <!-- <div class="subnavbar">
-                            <div class="subnavbar-inner">
-                                <div class="title">Transaction Detail</div>
-                            </div>
-                        </div> -->
+    <div class="page">
+        <div class="navbar">
+            <div class="navbar-inner">               
+                <img class="theme-light-only" src="assets/custom/img/konbini-logo.svg" height="24" alt="" />
+                <div class="right">
+                    <a href="#" class="link back">
+                        <span>Back</span>
+                    </a>
                 </div>
             </div>
-    
-            <div class="page-content">
-                <div class="block-title display-flex justify-content-space-between text-color-black">
-                    <span>Transactions Id: 100101</span>
-                </div>
-                <div class="data-table card">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th class="label-cell">Product</th>
-                                    <th class="numeric-cell">Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="label-cell">Noodle</td>
-                                    <td class="numeric-cell">$1.00</td>
-                                </tr>
-                                <tr>
-                                    <td class="label-cell">Chicken Rice</td>
-                                    <td class="numeric-cell">$1.00</td>
-                                </tr>
-                                <tr>
-                                    <td class="label-cell">Sushi</td>
-                                    <td class="numeric-cell">$1.00</td>
-                                </tr>
-                                
-                            </tbody>
-                        </table>
-                    </div>
-                
-            </div>
-    
         </div>
-    </template>
-    
-    <script>
-        return {
-            data: function () {
-                return {
-                    detail: null
-                }
+        <div class="page-content">
+            <div class="block-title display-flex justify-content-space-between text-color-black">
+                <span style="font-size: 18px;">Transactions ID 100101: Your order is ready</span>
+            </div>
+            <div class="content-block block-card text-align-left">
+                <div class="your-cart">Your Cart:</div>
+            </div>
+            <div class="data-table card">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td class="label-cell" colspan="2">Chicken Rice</td>
+                        </tr>
+                        <tr>
+                            <td class="numeric-cell"width="3%"></td>
+                            <td class="label-cell" >+ Hot dog</td>
+                        </tr>
+                        <tr>
+                            <td class="numeric-cell"width="3%"></td>
+                            <td class="label-cell" >+ Pepper</td>
+                        </tr>
+                        <tr>
+                            <td class="label-cell" colspan="2">Noodle</td>
+                        </tr>
+                        <tr>
+                            <td class="label-cell" colspan="2">Coca-cola</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div> 
+            <div class="content-block block-card justify-content-space-between text-align-right">
+                <span class="time-order">Time order: 12:30</span>
+            </div>   
+        </div>
+    </div>
+</template>
+<style>
+.your-cart {
+    font-size: 24px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    margin-top: 0px;
+    padding-left: 15px;
+}
+.time-order {
+    padding-right: 10px;
+}
+</style>
+<script>
+    return {
+        data: function () {
+            return {
+                detail: null
+            }
+        },
+        methods: {
+            loadData: function () {
+                var self = this;
+                let det = JSON.parse(localStorage.getItem('Konbini_cardDetail'));
+                //console.log('Konbini_cardDetail',det)
+                self.$setState({
+                    detail: det
+                });
+                // self.detail = JSON.parse(localStorage.getItem('Konbini_cardDetail'));
+
             },
-            methods: {
-                loadData: function () {
-                    var self = this;
-                    let det = JSON.parse(localStorage.getItem('Konbini_cardDetail'));
-                    //console.log('Konbini_cardDetail',det)
-                    self.$setState({
-                        detail: det
-                    });
-                    // self.detail = JSON.parse(localStorage.getItem('Konbini_cardDetail'));
-    
-                },
-                
-            },
-            on: {
-                pageInit: function () {
-                    var self = this;
-                    //self.loadData()
-                }
+            
+        },
+        on: {
+            pageInit: function () {
+                var self = this;
+                //self.loadData()
             }
         }
-    </script>
+    }
+</script>

@@ -1,0 +1,203 @@
+<template>
+    <div class="page">
+		<div class="navbar">
+			<div class="navbar-inner">
+				<img class="theme-light-only" src="assets/custom/img/konbini-logo.svg" height="24" alt="" />
+				<div class="right">
+					<a href="#" class="link icon-only" title="Read All">
+						<i class="fas fa-check-double"></i>
+					</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="page-content" style="padding-top: 44px;">
+			<div class="block-title text-color-black">Inbox</div>
+			<div class="list">
+				<ul>
+					<li class="swipeout" style="background: #9e9e9e40;">
+						<a href="/inbox-detail" @click="getId(1)" class="item-link item-content swipeout-content">
+							<div class="item-content">
+								<div class="item-media text-color-red">
+									<i class="fa-stack">
+										<span class="far fa-bell fa-stack-1x"></span>
+									</i>
+								</div>
+								<div class="item-inner">
+									<div class="item-text text-color-black" style="-webkit-line-clamp: 1;">Transaction
+										Id 100101:
+										Description Description Description Description </div>
+									<div class="item-after">13/11</div>
+								</div>
+							</div>
+						</a>
+						<div class="swipeout-actions swipeout-actions-left">
+							<a href="#" @click="deleteNoti(1)"
+								class="swipeout-action swipeout-close swipeout-delete color-red">
+								<div class="swipeout-action-icon">
+									<i class="icon far fa-trash-alt"></i>
+								</div>
+								<div class="swipeout-action-label">Delete</div>
+							</a>
+						</div>
+					</li>
+					<li class="swipeout">
+						<a href="/inbox-detail" @click="getId(1)" class="item-link item-content swipeout-content">
+							<div class="item-content">
+								<div class="item-media text-color-red">
+									<i class="fa-stack">
+										<span class="fas fa-bell fa-stack-1x"></span>
+									</i>
+								</div>
+								<div class="item-inner">
+									<div class="item-text text-color-black" style="-webkit-line-clamp: 1;">Transaction
+										Id 100101:
+										Description Description Description Description </div>
+									<div class="item-after">12/11</div>
+								</div>
+							</div>
+						</a>
+						<div class="swipeout-actions swipeout-actions-left">
+							<a href="#" @click="deleteNoti(1)"
+								class="swipeout-action swipeout-close swipeout-delete color-red">
+								<div class="swipeout-action-icon">
+									<i class="icon far fa-trash-alt"></i>
+								</div>
+								<div class="swipeout-action-label">Delete</div>
+							</a>
+						</div>
+					</li>
+					<li class="swipeout">
+						<a href="/inbox-detail" @click="getId(1)" class="item-link item-content swipeout-content">
+							<div class="item-content">
+								<div class="item-media text-color-red">
+									<i class="fa-stack">
+										<span class="fas fa-envelope-open fa-stack-1x"></span>
+									</i>
+								</div>
+								<div class="item-inner">
+									<div class="item-text text-color-black" style="-webkit-line-clamp: 1;">Promotion
+										notification:
+										Description Description Description Description </div>
+									<div class="item-after">11/11</div>
+								</div>
+							</div>
+						</a>
+						<div class="swipeout-actions swipeout-actions-left">
+							<a href="#" @click="deleteNoti(1)"
+								class="swipeout-action swipeout-close swipeout-delete color-red">
+								<div class="swipeout-action-icon">
+									<i class="icon far fa-trash-alt"></i>
+								</div>
+								<div class="swipeout-action-label">Delete</div>
+							</a>
+						</div>
+					</li>
+					<li class="swipeout">
+						<a href="/inbox-detail" @click="getId(1)" class="item-link item-content swipeout-content">
+							<div class="item-content">
+								<div class="item-media text-color-red">
+									<i class="fa-stack">
+										<span class="fas fa-envelope-open fa-stack-1x"></span>
+									</i>
+								</div>
+								<div class="item-inner">
+									<div class="item-text text-color-black" style="-webkit-line-clamp: 1;">Promotion
+										notification:
+										Description Description Description Description</div>
+									<div class="item-after">11/11</div>
+								</div>
+							</div>
+						</a>
+						<div class="swipeout-actions swipeout-actions-left">
+							<a href="#" @click="deleteNoti(1)"
+								class="swipeout-action swipeout-close swipeout-delete color-red">
+								<div class="swipeout-action-icon">
+									<i class="icon far fa-trash-alt"></i>
+								</div>
+								<div class="swipeout-action-label">Delete</div>
+							</a>
+						</div>
+					</li>
+					<li class="swipeout" style="background: #9e9e9e40;">
+						<a href="/inbox-detail" @click="getId(1)" class="item-link item-content swipeout-content">
+							<div class="item-content">
+								<div class="item-media text-color-red">
+									<i class="fa-stack">
+										<span class="far fa-envelope fa-stack-1x"></span>
+									</i>
+								</div>
+								<div class="item-inner">
+									<div class="item-text text-color-black" style="-webkit-line-clamp: 1;">Promotion
+										notification:
+										Description Description Description Description</div>
+									<div class="item-after">10/11</div>
+								</div>
+							</div>
+						</a>
+						<div class="swipeout-actions swipeout-actions-left">
+							<a href="#" @click="deleteNoti(1)"
+								class="swipeout-action swipeout-close swipeout-delete color-red">
+								<div class="swipeout-action-icon">
+									<i class="icon far fa-trash-alt"></i>
+								</div>
+								<div class="swipeout-action-label">Delete</div>
+							</a>
+						</div>
+					</li>
+					<li class="swipeout" class="read">
+						<a href="/inbox-detail" @click="getId(1)" class="item-link item-content swipeout-content">
+							<div class="item-content">
+								<div class="item-media text-color-red">
+									<i class="fa-stack">
+										<span class="fas fa-bell fa-stack-1x"></span>
+									</i>
+								</div>
+								<div class="item-inner">
+									<div class="item-text text-color-black" style="-webkit-line-clamp: 1;">Transaction
+										Id 100101:
+										Description Description Description Description </div>
+									<div class="item-after">09/11</div>
+								</div>
+							</div>
+						</a>
+						<div class="swipeout-actions swipeout-actions-left">
+							<a href="#" @click="deleteNoti(1)"
+								class="swipeout-action swipeout-close swipeout-delete color-red">
+								<div class="swipeout-action-icon">
+									<i class="icon far fa-trash-alt"></i>
+								</div>
+								<div class="swipeout-action-label">Delete</div>
+							</a>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</template>
+<style>
+    .fa-stack {
+        width: 2em;
+    }
+</style>
+<script>
+    return {
+        data: function () {
+            return {
+
+            }
+        },
+        methods: {
+            getId: function (id) {
+                var self = this;
+            },
+            deleteNoti: function (id) {
+                var self = this;
+            }
+        },
+        mounted() {
+            var self = this;
+        }
+    }
+</script>
