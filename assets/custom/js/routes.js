@@ -471,6 +471,11 @@ window.routes = [
 							localStorage.removeItem('WOKPPL_passcode');
 							localStorage.removeItem('addProduct');
 							localStorage.removeItem('cartItems');
+							localStorage.removeItem('listOrderSession');
+							localStorage.removeItem('listOrderDate');
+							localStorage.removeItem('categories');
+							localStorage.removeItem('editProduct');
+							localStorage.removeItem('sessions');
 						}
 					},
 					mounted() {
