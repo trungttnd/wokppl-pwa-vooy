@@ -276,6 +276,8 @@
                     self.updateCartList.listOrderSession.name = null;
                     self.updateCartList.listOrderSession.startTime = '';
                     self.updateCartList.listOrderSession.endTime = '';
+                    self.updateCartList.quantity = 0;
+                    self.updateCartList.total = 0;
                     self.$setState({
                         listOrderDate: null,
                         orderSessionName: null,
@@ -466,6 +468,7 @@
                 var self = this;
                 self.initializeTimepicker24()
                 let cartTemp = JSON.parse(localStorage.getItem('cartItems'));
+                console.log('cartTemp:', cartTemp);
                 let tempString = [];
                 if (cartTemp != null)
                     for (let i = 0; i < cartTemp.items.length; i++) {
