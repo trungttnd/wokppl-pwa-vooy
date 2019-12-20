@@ -12,7 +12,7 @@
         </div>
         <div class="page-content">
             <div class="block-title display-flex justify-content-space-between text-color-black">
-                <span>Transactions Id: 100101</span>
+                <span>Transactions Id: {{detail.orderNumber}}</span>
             </div>
             <div class="data-table card">
                     <table>
@@ -23,18 +23,12 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {{#each orderItems}}
                             <tr>
-                                <td class="label-cell">Noodle</td>
-                                <td class="numeric-cell">$1.00</td>
+                                <td class="label-cell">{{this.productName}}</td>
+                                <td class="numeric-cell">${{this.price.toFixed(2)}}</td>
                             </tr>
-                            <tr>
-                                <td class="label-cell">Chicken Rice</td>
-                                <td class="numeric-cell">$1.00</td>
-                            </tr>
-                            <tr>
-                                <td class="label-cell">Sushi</td>
-                                <td class="numeric-cell">$1.00</td>
-                            </tr>                           
+                            {{/each}}
                         </tbody>
                     </table>
                 </div>
@@ -46,7 +40,7 @@
                                 <div class="item-content">
                                     <div class="item-inner">
                                         <div class="item-title">Subtotal</div>
-                                        <div class="item-after">$3.00</div>
+                                        <div class="item-after">${{this.total.toFixed(2)}}</div>
                                     </div>
                                 </div>
                             </li>
@@ -70,7 +64,7 @@
                                 <div class="item-content">
                                     <div class="item-inner">
                                         <div class="item-title"><b>Grand Total</b></div>
-                                        <div class="item-after"><b>$3.00</b></div>
+                                        <div class="item-after"><b>${{this.total.toFixed(2)}}</b></div>
                                     </div>
                                 </div>
                             </li>
@@ -88,24 +82,33 @@
     return {
         data: function () {
             return {
-                detail: null
+                detail: [],
+                orderItems: [],
+                total: 0,
             }
         },
         methods: {
             loadData: function () {
                 var self = this;
-                let det = JSON.parse(localStorage.getItem('Konbini_cardDetail'));
-                //console.log('Konbini_cardDetail',det)
+                let tempTotal = 0;
+                let det = JSON.parse(localStorage.getItem('detTransactions'));
+                for (let i = 0; i < det.orderItems.length; i++){
+                    tempTotal += det.orderItems[i].price
+                }
                 self.$setState({
-                    detail: det
+                    detail: det,
+                    orderItems: det.orderItems,
+                    total: tempTotal,
                 });
-                // self.detail = JSON.parse(localStorage.getItem('Konbini_cardDetail'));
+                
             },
         },
         on: {
             pageInit: function () {
                 var self = this;
-                //self.loadData()
+                self.loadData();
+                console.log('self.detail', self.detail)
+                console.log('self.detail.orderNumber: ', self.detail.orderNumber) 
             }
         }
     }

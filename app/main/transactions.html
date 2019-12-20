@@ -35,9 +35,9 @@
             <div class="list">
                 <div class="list-group">
                     <ul>
-                        <li class="list-group-title">11-2019</li>
+                        {{#each items}}
                         <li>
-                            <a href="/transactions-detail" @click="getId(1)" class="item-link">
+                            <a href="#" @click="loadDetails('{{this.id}}')" class="item-link">
                                 <div class="item-content">
                                     <div class="item-media">
                                         <i class="fa-stack">
@@ -47,230 +47,22 @@
                                     </div>
                                     <div class="item-inner">
                                         <div class="item-title">
-                                            <span>Order Id</span>
+                                            <span>{{this.orderNumber}}</span>
                                             <div class="item-header">
-                                                13/11/2019 09:21
+                                                {{this.orderTime}}
                                             </div>
                                         </div>
-                                        <div class="item-title">
+                                        <div class="item-title" style="text-align: right;">
                                             <div class="item-header text-color-red">
-                                                SGD -1.00
+                                                $ -{{this.totalPrice.toFixed(2)}}
                                             </div>
-                                            <span class="badge color-green">Success</span>
+                                            <span class="badge color-green">{{this.statusName}}</span>
                                         </div>
                                     </div>
                                 </div>
                             </a>
                         </li>
-                        <li>
-                            <a href="/transactions-detail" @click="getId(1)" class="item-link">
-                                <div class="item-content">
-                                    <div class="item-media">
-                                        <i class="fa-stack">
-                                            <span class="fas fa-circle fa-stack-2x text-color-red"></span>
-                                            <span class="fas fa-shopping-cart fa-stack-1x fa-inverse"></span>
-                                        </i>
-                                    </div>
-                                    <div class="item-inner">
-                                        <div class="item-title">
-                                            <span>Order Id</span>
-                                            <div class="item-header">
-                                                13/11/2019 09:21
-                                            </div>
-                                        </div>
-                                        <div class="item-title">
-                                            <div class="item-header text-color-green">
-                                                SGD +1.00
-                                            </div>
-                                            <span class="badge color-green">Success</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/transactions-detail" @click="getId(1)" class="item-link">
-                                <div class="item-content">
-                                    <div class="item-media">
-                                        <i class="fa-stack">
-                                            <span class="fas fa-circle fa-stack-2x text-color-red"></span>
-                                            <span class="fas fa-shopping-cart fa-stack-1x fa-inverse"></span>
-                                        </i>
-                                    </div>
-                                    <div class="item-inner">
-                                        <div class="item-title">
-                                            <span>Order Id</span>
-                                            <div class="item-header">
-                                                13/11/2019 09:21
-                                            </div>
-                                        </div>
-                                        <div class="item-title">
-                                            <div class="item-header text-color-red">
-                                                SGD -1.00
-                                            </div>
-                                            <span class="badge color-green">Success</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="list-group-title">10-2019</li>
-                        <li>
-                            <a href="/transactions-detail" @click="getId(1)" class="item-link">
-                                <div class="item-content">
-                                    <div class="item-media">
-                                        <i class="fa-stack">
-                                            <span class="fas fa-circle fa-stack-2x text-color-red"></span>
-                                            <span class="fas fa-shopping-cart fa-stack-1x fa-inverse"></span>
-                                        </i>
-                                    </div>
-                                    <div class="item-inner">
-                                        <div class="item-title">
-                                            <span>Order Id</span>
-                                            <div class="item-header">
-                                                13/11/2019 09:21
-                                            </div>
-                                        </div>
-                                        <div class="item-title">
-                                            <div class="item-header text-color-red">
-                                                SGD -1.00
-                                            </div>
-                                            <span class="badge color-green">Success</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/transactions-detail" @click="getId(1)" class="item-link">
-                                <div class="item-content">
-                                    <div class="item-media">
-                                        <i class="fa-stack">
-                                            <span class="fas fa-circle fa-stack-2x text-color-red"></span>
-                                            <span class="fas fa-shopping-cart fa-stack-1x fa-inverse"></span>
-                                        </i>
-                                    </div>
-                                    <div class="item-inner">
-                                        <div class="item-title">
-                                            <span>Order Id</span>
-                                            <div class="item-header">
-                                                13/11/2019 09:21
-                                            </div>
-                                        </div>
-                                        <div class="item-title">
-                                            <div class="item-header text-color-green">
-                                                SGD +1.00
-                                            </div>
-                                            <span class="badge color-green">Success</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/transactions-detail" @click="getId(1)" class="item-link">
-                                <div class="item-content">
-                                    <div class="item-media">
-                                        <i class="fa-stack">
-                                            <span class="fas fa-circle fa-stack-2x text-color-red"></span>
-                                            <span class="fas fa-shopping-cart fa-stack-1x fa-inverse"></span>
-                                        </i>
-                                    </div>
-                                    <div class="item-inner">
-                                        <div class="item-title">
-                                            <span>Order Id</span>
-                                            <div class="item-header">
-                                                13/11/2019 09:21
-                                            </div>
-                                        </div>
-                                        <div class="item-title">
-                                            <div class="item-header text-color-red">
-                                                SGD -1.00
-                                            </div>
-                                            <span class="badge color-green">Success</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/transactions-detail" @click="getId(1)" class="item-link">
-                                <div class="item-content">
-                                    <div class="item-media">
-                                        <i class="fa-stack">
-                                            <span class="fas fa-circle fa-stack-2x text-color-red"></span>
-                                            <span class="fas fa-shopping-cart fa-stack-1x fa-inverse"></span>
-                                        </i>
-                                    </div>
-                                    <div class="item-inner">
-                                        <div class="item-title">
-                                            <span>Order Id</span>
-                                            <div class="item-header">
-                                                13/11/2019 09:21
-                                            </div>
-                                        </div>
-                                        <div class="item-title">
-                                            <div class="item-header text-color-red">
-                                                SGD -1.00
-                                            </div>
-                                            <span class="badge color-green">Success</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/transactions-detail" @click="getId(1)" class="item-link">
-                                <div class="item-content">
-                                    <div class="item-media">
-                                        <i class="fa-stack">
-                                            <span class="fas fa-circle fa-stack-2x text-color-red"></span>
-                                            <span class="fas fa-shopping-cart fa-stack-1x fa-inverse"></span>
-                                        </i>
-                                    </div>
-                                    <div class="item-inner">
-                                        <div class="item-title">
-                                            <span>Order Id</span>
-                                            <div class="item-header">
-                                                13/11/2019 09:21
-                                            </div>
-                                        </div>
-                                        <div class="item-title">
-                                            <div class="item-header text-color-green">
-                                                SGD +1.00
-                                            </div>
-                                            <span class="badge color-green">Success</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/transactions-detail" @click="getId(1)" class="item-link">
-                                <div class="item-content">
-                                    <div class="item-media">
-                                        <i class="fa-stack">
-                                            <span class="fas fa-circle fa-stack-2x text-color-red"></span>
-                                            <span class="fas fa-shopping-cart fa-stack-1x fa-inverse"></span>
-                                        </i>
-                                    </div>
-                                    <div class="item-inner">
-                                        <div class="item-title">
-                                            <span>Order Id</span>
-                                            <div class="item-header">
-                                                13/11/2019 09:21
-                                            </div>
-                                        </div>
-                                        <div class="item-title">
-                                            <div class="item-header text-color-red">
-                                                SGD -1.00
-                                            </div>
-                                            <span class="badge color-green">Success</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
+                        {{/each}}
                     </ul>
                 </div>
             </div>
@@ -296,18 +88,53 @@
         methods: {
             loadData: function (startDate, endDate) {
                 var self = this;
-                app.request.getJSON(window.config.url + 'api/services/app/Transaction/GetAllTransactions?StartDate=' + startDate + '&&EndDate=' + endDate,
+                let tempItem = [];
+                app.request.getJSON(window.config.url + 'api/services/app/Preorder/GetTransactions',
+                //console.log(window.config.url + 'api/services/app/Preorder/GetTransactions?StartDate=' + startDate + '&&EndDate=' + endDate);
+                //app.request.getJSON(window.config.url + 'api/services/app/Preorder/GetTransactions?StartDate=' + startDate + '&&EndDate=' + endDate,
                     function (suc) {
+                        console.log('suc.result', suc.result)
+                        if (startDate != null && endDate != null){
+                            let compDate = new Date();
+                            for (let i = 0; i < suc.result.items.length; i++){
+                                compDate = new Date(suc.result.items[i].orderTime)
+                                compDate = compDate.toISOString().substr(0, 10);
+                                if (startDate <= compDate && compDate <= endDate){
+                                    tempItem.push(suc.result.items[i]);
+                                }
+                            }
+                        }
+                        else {
+                            tempItem = suc.result.items;
+                        }
+                        for (let i = 0; i < tempItem.length; i++){
+                            let orderTime = new Date(tempItem[i].orderTime);
+                            let tempTotalPrice = 0;
+                            tempItem[i].orderTime = orderTime.getMonth()+1 + "/" + orderTime.getDate() + "/" + orderTime.getFullYear() + " " + orderTime.getHours() + ":" + orderTime.getMinutes(); 
+                            for (let j = 0; j < tempItem[i].orderItems.length; j++){
+                                tempTotalPrice += tempItem[i].orderItems[j].price;
+                                console.log(tempTotalPrice)
+                            }   
+                            tempItem[i].totalPrice = tempTotalPrice;                       
+                        }
                         self.$setState({
-                            transactions: suc.result.items,
+                            transactions: tempItem,
                             totalCount: suc.result.totalCount,
-                            items: self.groupItems(suc.result.items)
+                            items: tempItem
                         });
-                        console.log(self.items)
+                        console.log(tempItem)                       
                     },
                     function (err) {
                         console.log(err)
                     })
+            },
+            loadDetails: function (id){
+                let self = this;
+                let det = self.items.find(function (el) {
+					return el.id == id;
+				})
+                localStorage.setItem('detTransactions', JSON.stringify(det))
+                app.views.current.router.navigate('/transactions-detail');
             },
             groupItems: function (list) {
                 list.forEach(element => {
@@ -336,7 +163,9 @@
             },
             search: function () {
                 var self = this;
-                self.loadData(self.startDate, self.endDate)
+                let fromDate = self.$('input[name=fromDate]').val();
+                let toDate = self.$('input[name=toDate]').val();
+                self.loadData(fromDate, toDate)
             },
             getId: function (id) {
                 var self = this;
@@ -350,6 +179,7 @@
             let dat = new Date();
             dat.setDate(1);
             self.startDate = dat.toISOString().substr(0, 10);
+            self.loadData();
         }
     }
 </script>
