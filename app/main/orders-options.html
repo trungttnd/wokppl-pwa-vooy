@@ -33,15 +33,16 @@
                         <div class="stepper stepper-small stepper-round stepper-fill stepper-init">
                             <div class="stepper-button-minus" @click="minusQuantity()"></div>
                             <div class="stepper-input-wrap">
-                                <input type="number" name="addQuantity" value="{{defaultQuan}}" min="1" max="{{detail.quantity}}" readonly step="1" />
+                                <input type="number" name="addQuantity" value="{{defaultQuan}}" min="1"
+                                    max="{{detail.quantity}}" readonly step="1" />
                             </div>
                             <div class="stepper-button-plus" @click="plusQuantity()"></div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div class="block-title text-color-black">Modification</div>
+            {{#if detail.modifierGroups.length}}
+            <div class="block-title text-color-black">Modifications</div>
             <div class="list">
                 <!-- <div class="list-group">
                     <ul>
@@ -75,7 +76,7 @@
                         </li>
                     </ul>
                 </div> -->
-                {{#if detail.modifierGroups}}
+
                 {{#each detail.modifierGroups}}
                 <div class="list-group">
                     <ul>
@@ -87,7 +88,7 @@
                                     <div class="item-title">{{this.name}} (${{this.price.toFixed(2)}})</div>
                                 </div>
                                 {{#if this.isChoose}}
-                                <input type="checkbox" name="topping" value="{{this.id}}" checked="checked"/>
+                                <input type="checkbox" name="topping" value="{{this.id}}" checked="checked" />
                                 {{else}}
                                 <input type="checkbox" name="topping" value="{{this.id}}" />
                                 {{/if}}
@@ -98,8 +99,9 @@
                     </ul>
                 </div>
                 {{/each}}
-                {{/if}}
+
             </div>
+            {{/if}}
             <div class="block">
                 &nbsp;
             </div>
@@ -165,24 +167,23 @@
             }
         },
         methods: {
-            goCart: function(){
-				var self = this;
-				if (self.cartItems.quantity>0)
-					app.view.current.router.navigate('/orders-cart');				
-			},
+            goCart: function () {
+                var self = this;
+                if (self.cartItems.quantity > 0)
+                    app.view.current.router.navigate('/orders-cart');
+            },
             minusQuantity: function () {
                 var self = this;
-                
-                if (self.tempQuantity > 1)
-                {
+
+                if (self.tempQuantity > 1) {
                     console.log(self.price);
                     console.log(self.detail.price);
                     self.$setState({
-                		tempQuantity: self.tempQuantity - 1,
-                		price: self.price
-                	})
+                        tempQuantity: self.tempQuantity - 1,
+                        price: self.price
+                    })
                 }
-                	
+
             },
             plusQuantity: function () {
                 var self = this;
@@ -195,7 +196,7 @@
                     price: self.price
                 })
             },
-            closeButton: function (){
+            closeButton: function () {
                 localStorage.removeItem('isEdit');
                 console.log('abc');
             },
@@ -208,18 +209,18 @@
                 self.cartItems.listOrderSession = self.templistOrderSession;
                 increaseQuan = quan - self.detail.orderQuantity;
                 self.cartItems.quantity += increaseQuan;
-                console.log('self.cartItems.total truoc: ',self.cartItems.total);
+                console.log('self.cartItems.total truoc: ', self.cartItems.total);
                 self.cartItems.total += selectItem.price * increaseQuan + self.modPrice * quan;
-                console.log('self.cartItems.total sau: ',self.cartItems.total);
-                console.log('selectItem.price * increaseQuan: ',selectItem.price * increaseQuan);
-                console.log('self.modPrice * quan: ',self.modPrice * quan);
-                console.log('selectItem.price: ',selectItem.price);
-                console.log('self.modPrice: ',self.modPrice);
+                console.log('self.cartItems.total sau: ', self.cartItems.total);
+                console.log('selectItem.price * increaseQuan: ', selectItem.price * increaseQuan);
+                console.log('self.modPrice * quan: ', self.modPrice * quan);
+                console.log('selectItem.price: ', selectItem.price);
+                console.log('self.modPrice: ', self.modPrice);
                 self.detail.price += self.modPrice;
                 self.detail.orderQuantity = quan;
-                for (let i = 0; i < self.cartItems.items.length; i++){
+                for (let i = 0; i < self.cartItems.items.length; i++) {
                     let tempIndexProduct = i + '-' + self.cartItems.items[i].id;
-                    if (self.cartItems.items[i].editornew == true && self.cartItems.items[i].indexProduct == tempIndexProduct){
+                    if (self.cartItems.items[i].editornew == true && self.cartItems.items[i].indexProduct == tempIndexProduct) {
                         self.cartItems.items[i] = self.detail;
                         self.cartItems.items[i].editornew = false;
                         console.log(self.cartItems.items[i]);
@@ -242,7 +243,7 @@
                     text: 'Update cart',
                     position: 'bottom',
                     cssClass: 'toast-round bg-color-green'
-                });  
+                });
                 // app.views.current.router.reloadPage('/orders-cart');
                 // app.views.current.router.navigate( '/orders-cart', {
                 //     ignoreCache: true,
@@ -250,7 +251,7 @@
                 //     animate: false,
                 // } );
                 // console.log('abc')
-                app.views.current.router.navigate('/orders-cart');  
+                app.views.current.router.navigate('/orders-cart');
             },
             addToCart: function () {
                 var self = this;
@@ -259,15 +260,15 @@
                 self.cartItems.listOrderDate = self.templistOrderDate;
                 self.cartItems.listOrderSession = self.templistOrderSession;
                 self.cartItems.quantity += quan;
-                self.cartItems.total += (selectItem.price  + self.modPrice) * quan;
-                console.log('self.cartItems.total: ',self.cartItems.total);
-                console.log('selectItem.price: ',selectItem.price);
-                console.log('self.modPrice: ',self.modPrice);
-                console.log('self.cartItems.quantity: ',self.cartItems.quantity);
+                self.cartItems.total += (selectItem.price + self.modPrice) * quan;
+                console.log('self.cartItems.total: ', self.cartItems.total);
+                console.log('selectItem.price: ', selectItem.price);
+                console.log('self.modPrice: ', self.modPrice);
+                console.log('self.cartItems.quantity: ', self.cartItems.quantity);
                 self.detail.price += self.modPrice;
                 self.detail.orderQuantity = quan;
-                console.log('self.detail.orderQuantity: ',self.detail.orderQuantity);
-                console.log('self.detail.price: ',self.detail.price);
+                console.log('self.detail.orderQuantity: ', self.detail.orderQuantity);
+                console.log('self.detail.price: ', self.detail.price);
                 // var self = this;
                 // let quan = +self.$('input[name=addQuantity]').val()
                 // let selectItem = self.detail;
@@ -291,7 +292,7 @@
                     position: 'bottom',
                     cssClass: 'toast-round bg-color-green'
                 });
-                app.views.current.router.navigate('/tab-order/');  
+                app.views.current.router.navigate('/tab-order/');
             }
         },
         on: {
@@ -299,10 +300,10 @@
                 var self = this;
                 let isEdit = localStorage.getItem('isEdit');
                 let det = JSON.parse(localStorage.getItem('addProduct'));
-                if (isEdit == 'true'){
+                if (isEdit == 'true') {
                     det = JSON.parse(localStorage.getItem('editProduct'));
                     self.$setState({
-                        editButton: true, 
+                        editButton: true,
                     })
                 }
                 // else let det = JSON.parse(localStorage.getItem('addProduct'));
@@ -317,34 +318,34 @@
                     templistOrderSession: listOrderSession,
                 })
                 console.log('det', det);
-                
-                self.$('input[type=checkbox]').change(function(){
+
+                self.$('input[type=checkbox]').change(function () {
                     let modId = $(this).val();
                     self.tempOptionList = [];
                     console.log(modId)
-                    if ($(this).is(":checked")){
-                        for (let i=0; i< self.detail.modifierGroups.length; i++){
-                            for (let j=0; j<self.detail.modifierGroups[i].modifiers.length;j++){
-                                if (self.detail.modifierGroups[i].modifiers[j].id == modId){
+                    if ($(this).is(":checked")) {
+                        for (let i = 0; i < self.detail.modifierGroups.length; i++) {
+                            for (let j = 0; j < self.detail.modifierGroups[i].modifiers.length; j++) {
+                                if (self.detail.modifierGroups[i].modifiers[j].id == modId) {
                                     self.detail.modifierGroups[i].modifiers[j].isChoose = true;
-                                    self.modPrice += self.detail.modifierGroups[i].modifiers[j].price;  
+                                    self.modPrice += self.detail.modifierGroups[i].modifiers[j].price;
                                     self.$setState({
-                                        price : self.price + self.detail.modifierGroups[i].modifiers[j].price,
+                                        price: self.price + self.detail.modifierGroups[i].modifiers[j].price,
                                     })
-                                }                                   
+                                }
                             }
                         }
                         //self.tempOptionList.push(self.detail.modifierGroups);
                     } else {
-                        for (let i=0; i< self.detail.modifierGroups.length; i++){
-                            for (let j=0; j<self.detail.modifierGroups[i].modifiers.length;j++){
-                                if (self.detail.modifierGroups[i].modifiers[j].id == modId){                                    
+                        for (let i = 0; i < self.detail.modifierGroups.length; i++) {
+                            for (let j = 0; j < self.detail.modifierGroups[i].modifiers.length; j++) {
+                                if (self.detail.modifierGroups[i].modifiers[j].id == modId) {
                                     self.detail.modifierGroups[i].modifiers[j].isChoose = false;
                                     self.modPrice -= self.detail.modifierGroups[i].modifiers[j].price;
                                     self.$setState({
-                                        price : self.price - self.detail.modifierGroups[i].modifiers[j].price,
+                                        price: self.price - self.detail.modifierGroups[i].modifiers[j].price,
                                     })
-                                } 
+                                }
                             }
                         }
                         //self.tempOptionList.push(self.detail.modifierGroups);
