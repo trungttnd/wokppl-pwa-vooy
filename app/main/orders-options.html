@@ -254,7 +254,7 @@
             },
             addToCart: function () {
                 var self = this;
-                let quan = +self.$('input[name=addQuantity]').val()
+                let quan = +self.$('input[name=addQuantity]').val();
                 let selectItem = self.detail;
                 self.cartItems.listOrderDate = self.templistOrderDate;
                 self.cartItems.listOrderSession = self.templistOrderSession;
@@ -283,6 +283,7 @@
                 // self.detail.quantity = quan;
                 self.cartItems.items.push(self.detail);
                 localStorage.setItem('cartItems', JSON.stringify(self.cartItems))
+
                 console.log(self.cartItems);
                 app.toast.show({
                     icon: '<i class="fas fa-fw fa-lg fa-cart-plus"></i>',

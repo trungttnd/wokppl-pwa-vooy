@@ -42,7 +42,8 @@
                                             <!-- <input type="text" id="timepicker-24" placeholder="Select" readonly /> -->
                                         </div>
                                         <div class="item-input">
-                                            <input type="text" id="timepicker-24" placeholder="Select" readonly />
+                                            <input type="text" placeholder="Select" readonly="readonly" id="timepicker-24"/>
+                                            <!-- <input type="text" id="timepicker-24" placeholder="Select" readonly /> -->
                                         </div>
                                     </div>
                                 </div>
@@ -263,11 +264,13 @@
             },
             deleteProduct: function (indexProduct) {
                 var self = this;
+                var tempGrandTotal = 0;
                 console.log(self.updateCartList);
                 for (let i = 0; i < self.updateCartList.items.length; i++) {
                     if (self.updateCartList.items[i].indexProduct == indexProduct) {
-                        self.updateCartList.quantity = self.updateCartList.quantity - self.updateCartList.items[i].quantity;
-                        self.updateCartList.total = self.updateCartList.total - self.updateCartList.items[i].price * self.updateCartList.items[i].quantity;
+                        self.updateCartList.quantity = self.updateCartList.quantity - self.updateCartList.items[i].orderQuantity;
+                        self.updateCartList.total = self.updateCartList.total - self.updateCartList.items[i].price * self.updateCartList.items[i].orderQuantity;
+                        tempGrandTotal = self.grandTotal - self.updateCartList.items[i].price * self.updateCartList.items[i].orderQuantity;
                         self.updateCartList.items.splice(i, 1);
                     }
                 }
@@ -292,6 +295,7 @@
                     productList: cartTemp.items,
                     quantity: cartTemp.quantity,
                     total: cartTemp.total,
+                    grandTotal: tempGrandTotal,
                 })
             },
             clearProduct: function (indexProduct) {
@@ -466,13 +470,56 @@
                             console.log('err', err)
                         })
                 }
+            },
+            showTimePicker: function(){
+                var today = new Date();
+                var pickerInline = app.picker.create({
+                //containerEl: '#demo-picker-date-container',
+                inputEl: '#timepicker-24',
+                toolbar: false,
+                rotateEffect: true,
+                value: [
+                    today.getHours(),
+                    today.getMinutes() < 10 ? '0' + today.getMinutes() : today.getMinutes()
+                ],
+                formatValue: function (values) {
+                    return values[0] + ':' + values[1];
+                },
+                cols: [
+                    // Hours
+                    {
+                    values: (function () {
+                        var arr = [];
+                        for (var i = 0; i <= 23; i++) { arr.push(i); }
+                        return arr;
+                    })(),
+                    },
+                    // Divider
+                    {
+                    divider: true,
+                    content: ':'
+                    },
+                    // Minutes
+                    {
+                    values: (function () {
+                        var arr = [];
+                        for (var i = 0; i <= 59; i++) { arr.push(i < 10 ? '0' + i : i); }
+                        return arr;
+                    })(),
+                    }
+                ],
+                on: {
+                    change: function (picker, values) {
+                    
+                    },
+                }
+                });
             }
         },
         on: {
             pageInit: function () {
-                console.log('abc');
                 var self = this;
-                self.initializeTimepicker24()
+                //self.initializeTimepicker24()
                 let cartTemp = JSON.parse(localStorage.getItem('cartItems'));
                 console.log('cartTemp:', cartTemp);
                 let tempString = [];
@@ -509,8 +556,8 @@
                         grandTotal: cartTemp.total - Number(self.discount) + Number(self.gst),
                     })
                 }
-                console.log('grandTotal', self.grandTotal)
-
+                console.log('productList', self.productList)
+                self.showTimePicker();    
             }
         }
     }

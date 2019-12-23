@@ -254,6 +254,18 @@
 					},
 					function (suc) {
 						let response = JSON.parse(suc)
+						let cartTemp = JSON.parse(localStorage.getItem('cartItems'));
+						if (cartTemp != null){
+							for (let i = 0; i < cartTemp.items.length; i++){
+								for (let j = 0; j < response.result.items.length; j++){
+									if (cartTemp.items[i].id == response.result.items[j].id){
+										response.result.items[j].quantity = response.result.items[j].quantity - cartTemp.items[i].orderQuantity
+									}
+								}
+							}
+						}
+						console.log('cartTemp', cartTemp)
+						console.log('response', response)
 						console.log('get product success', response)
 						self.$setState({
 							allProducts: response.result.items,
@@ -328,7 +340,7 @@
 		},
 		on: {
 			pageInit: function () {
-				console.log('pageInit')
+				console.log('pageInit');
 			}
 		}
 	}
