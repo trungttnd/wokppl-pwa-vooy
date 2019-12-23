@@ -281,6 +281,7 @@
                     self.updateCartList.listOrderSession.endTime = '';
                     self.updateCartList.quantity = 0;
                     self.updateCartList.total = 0;
+                    localStorage.removeItem('cartAvailable');
                     self.$setState({
                         listOrderDate: null,
                         orderSessionName: null,

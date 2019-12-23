@@ -255,17 +255,29 @@
 					function (suc) {
 						let response = JSON.parse(suc)
 						let cartTemp = JSON.parse(localStorage.getItem('cartItems'));
-						if (cartTemp != null){
-							for (let i = 0; i < cartTemp.items.length; i++){
-								for (let j = 0; j < response.result.items.length; j++){
-									if (cartTemp.items[i].id == response.result.items[j].id){
-										response.result.items[j].quantity = response.result.items[j].quantity - cartTemp.items[i].orderQuantity
-									}
+						var cartAvailableItems = [];
+						let tempcartAvailable = [];
+						let cartAvailable = JSON.parse(localStorage.getItem('cartAvailable'));
+						if (cartAvailable == null){
+							for (let i = 0; i < response.result.items.length; i ++){
+								cartAvailableItems = {
+									id: response.result.items[i].id,
+									availableNumbers: response.result.items[i].quantity,
+								};
+								tempcartAvailable.push(cartAvailableItems);
+							}
+							cartAvailable = tempcartAvailable;
+							localStorage.setItem('cartAvailable', JSON.stringify(cartAvailable))
+							console.log('cartAvailable', cartAvailable);
+						}
+						else{
+							console.log('cartAvailable', cartAvailable);
+							for (let i = 0; i < response.result.items.length; i++){
+								if (response.result.items[i].id == cartAvailable[i].id){
+									response.result.items[i].quantity = cartAvailable[i].availableNumbers
 								}
 							}
 						}
-						console.log('cartTemp', cartTemp)
-						console.log('response', response)
 						console.log('get product success', response)
 						self.$setState({
 							allProducts: response.result.items,
