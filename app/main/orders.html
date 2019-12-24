@@ -182,7 +182,7 @@
 				}
 				localStorage.setItem('listOrderDate', JSON.stringify(self.listOrderDate));
 				localStorage.setItem('listOrderSession', JSON.stringify(self.listOrderSession));
-				if (det.quantity != null){
+				if (det.quantity != null && det.quantity > 0){
 					app.views.current.router.navigate('/orders-options');
 				}
 			},
