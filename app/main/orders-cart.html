@@ -281,7 +281,7 @@
                     self.updateCartList.listOrderSession.endTime = '';
                     self.updateCartList.quantity = 0;
                     self.updateCartList.total = 0;
-                    localStorage.removeItem('cartAvailable');
+                    //localStorage.removeItem('cartAvailable');
                     self.$setState({
                         listOrderDate: null,
                         orderSessionName: null,
@@ -474,6 +474,9 @@
             },
             showTimePicker: function(){
                 var today = new Date();
+                let sessionTemp = JSON.parse(localStorage.getItem('listOrderSession'))
+                today.setTime(today.getTime() + (sessionTemp.preparationTime * 60 * 1000) + (sessionTemp.bufferTime * 60 * 1000));
+                today = new Date(today);
                 var pickerInline = app.picker.create({
                 //containerEl: '#demo-picker-date-container',
                 inputEl: '#timepicker-24',

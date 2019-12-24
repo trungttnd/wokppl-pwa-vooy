@@ -231,15 +231,15 @@
                 // self.cartItems.items.push(self.detail);
 
                 localStorage.setItem('cartItems', JSON.stringify(self.cartItems))
-                for (let i = 0; i < cartAvailable.length; i++){
-                    if (cartAvailable[i].id == self.detail.id){
-                        cartAvailable[i].id = self.detail.id
-                        console.log('self.detail.quantity', self.detail.quantity)
-                        console.log('quan', quan)
-                        cartAvailable[i].availableNumbers = self.detail.quantity - quan;
-                    }
-                }
-                localStorage.setItem('cartAvailable', JSON.stringify(cartAvailable))
+                // for (let i = 0; i < cartAvailable.length; i++){
+                //     if (cartAvailable[i].id == self.detail.id){
+                //         cartAvailable[i].id = self.detail.id
+                //         console.log('self.detail.quantity', self.detail.quantity)
+                //         console.log('quan', quan)
+                //         cartAvailable[i].availableNumbers = self.detail.quantity - quan;
+                //     }
+                // }
+                // localStorage.setItem('cartAvailable', JSON.stringify(cartAvailable))
                 console.log('cartAvailable', cartAvailable);
                 // let cartTemp = JSON.parse(localStorage.getItem('cartItems'));
                 // self.$setState({
@@ -269,7 +269,7 @@
                 let quan = +self.$('input[name=addQuantity]').val();
                 let selectItem = self.detail;
                 let availableNumbers = 0;
-                let cartAvailable = JSON.parse(localStorage.getItem('cartAvailable'));
+                //let cartAvailable = JSON.parse(localStorage.getItem('cartAvailable'));
                 self.cartItems.listOrderDate = self.templistOrderDate;
                 self.cartItems.listOrderSession = self.templistOrderSession;
                 self.cartItems.quantity += quan;
@@ -297,14 +297,18 @@
                 // self.detail.quantity = quan;
                 self.cartItems.items.push(self.detail);
                 localStorage.setItem('cartItems', JSON.stringify(self.cartItems))
-                for (let i = 0; i < cartAvailable.length; i++){
-                    if (cartAvailable[i].id == self.detail.id){
-                        cartAvailable[i].id = self.detail.id
-                        cartAvailable[i].availableNumbers = self.detail.quantity - quan;
-                    }
-                }
-                localStorage.setItem('cartAvailable', JSON.stringify(cartAvailable))
-                console.log('cartAvailable', cartAvailable);
+                // if (self.detail.quantity != null){
+                //     for (let i = 0; i < cartAvailable.length; i++){
+                //         if (cartAvailable[i].id == self.detail.id){
+                //             cartAvailable[i].id = self.detail.id
+                //             cartAvailable[i].availableNumbers = self.detail.quantity - quan;
+                //         }
+                //     }
+                //     localStorage.setItem('cartAvailable', JSON.stringify(cartAvailable))
+                // }
+                
+                // localStorage.setItem('cartAvailable', JSON.stringify(cartAvailable))
+                // console.log('cartAvailable', cartAvailable);
                 console.log(self.cartItems);
                 app.toast.show({
                     icon: '<i class="fas fa-fw fa-lg fa-cart-plus"></i>',
@@ -323,6 +327,7 @@
                 if (isEdit == 'true') {
                     det = JSON.parse(localStorage.getItem('editProduct'));
                     let cartAvailable = JSON.parse(localStorage.getItem('cartAvailable'));
+                    console.log('cartAvailable', cartAvailable)
                     for (let i = 0; i < cartAvailable.length; i++){
                         if (det.id == cartAvailable[i].id){
                             det.quantity = det.orderQuantity + cartAvailable[i].availableNumbers
