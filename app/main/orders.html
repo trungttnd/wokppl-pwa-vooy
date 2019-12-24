@@ -51,12 +51,14 @@
 					{{#each productList}}
 					<li>
 						<div class="item-content">
-							<div class="item-media"><img
-									src="https://wokpplapi.konbi.cloud/uploads/{{this.imageFileName}}" width="80" />
+							<div class="item-media"><a href="#" @click="selectOption('{{this.id}}')" class="item-link"><img
+									src="https://wokpplapi.konbi.cloud/uploads/{{this.imageFileName}}" width="80" /></a>
 							</div>
 							<div class="item-inner">
-								<div class="item-title-row">
-									<div class="item-title">{{this.name}}</div>
+								<div class="item-title-row">									
+									<div class="item-title">
+										<a href="#" @click="selectOption('{{this.id}}')" class="item-link"
+											>{{this.name}}</a></div>
 									<div class="item-title" style="font-weight: bold;">
 										$ {{this.price.toFixed(2)}}</div>
 								</div>
@@ -64,9 +66,9 @@
 									{{this.name}}
 									{{/each}}
 								</div> -->
-								<div class="item-subtitle">Available numbers: {{this.quantity}}</div>
+								<div class="item-subtitle"><a href="#" @click="selectOption('{{this.id}}')" class="item-link">Available numbers: {{this.quantity}}</a></div>
 								<div class="item-row">
-									<div class="item-text">{{this.description}}
+									<div class="item-text"><a href="#" @click="selectOption('{{this.id}}')" class="item-link">{{this.description}}</a>
 									</div>
 									<div class="item-after" style="color: red; font-weight: bold;">
 										<a href="#" @click="selectOption('{{this.id}}')" class="item-link tooltip-init"
@@ -209,15 +211,24 @@
 				}
 				else {
 					// self.loadProduct(dateInput, sess, selected);
+					let tempList = []
+					for (let i=0; i<self.allProducts.length; i++){
+						for (let j=0; j<self.allProducts[i].categories.length; j++){
+							if (self.allProducts[i].categories[j].id == selected)
+								tempList.push(self.allProducts[i])
+						}
+					}
 					self.$setState({
-						productList: self.allProducts.filter(function (el) {
-							for (let i = 0; i < el.categories.length; i++) {
-								return el.categories[i].id == selected
-							}
-						})
+						productList: tempList
 					})
+					// self.$setState({
+					// 	productList: self.allProducts.filter(function (el) {
+					// 		for (let i = 0; i < el.categories.length; i++) {
+					// 			return el.categories[i].id == selected
+					// 		}
+					// 	})
+					// })
 				}
-
 			},
 			loadSession: function () {
 				var self = this;
