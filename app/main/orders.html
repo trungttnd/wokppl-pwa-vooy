@@ -175,7 +175,7 @@
 					detail: det,
 					tempQuantity: self.tempQuantity + 1,
 				})
-				//console.log(self.detail)
+				//console.log('self.session', self.session)
 				self.listOrderDate = orderDate;
 				for (let i = 0; i < self.session.length; i++) {
 					if (orderSession == self.session[i].id) {
@@ -184,7 +184,9 @@
 				}
 				localStorage.setItem('listOrderDate', JSON.stringify(self.listOrderDate));
 				localStorage.setItem('listOrderSession', JSON.stringify(self.listOrderSession));
-				app.views.current.router.navigate('/orders-options');
+				if (det.quantity != null){
+					app.views.current.router.navigate('/orders-options');
+				}
 			},
 			selectCat: function (selected) {
 				var self = this;
@@ -281,14 +283,14 @@
 							localStorage.setItem('cartAvailable', JSON.stringify(cartAvailable))
 							console.log('cartAvailable', cartAvailable);
 						}
-						else{
-							console.log('cartAvailable', cartAvailable);
-							for (let i = 0; i < response.result.items.length; i++){
-								if (response.result.items[i].id == cartAvailable[i].id){
-									response.result.items[i].quantity = cartAvailable[i].availableNumbers
-								}
-							}
-						}
+						// else{
+						// 	console.log('cartAvailable', cartAvailable);
+						// 	for (let i = 0; i < response.result.items.length; i++){
+						// 		if (response.result.items[i].id == cartAvailable[i].id){
+						// 			response.result.items[i].quantity = cartAvailable[i].availableNumbers
+						// 		}
+						// 	}
+						// }
 						console.log('get product success', response)
 						self.$setState({
 							allProducts: response.result.items,
@@ -346,7 +348,7 @@
 			// self.loadCategory();
 			// self.loadProduct(dateInput, self.session[0].id, '');
 			let sessionTemp = JSON.parse(localStorage.getItem('listOrderSession'))
-			console.log(sessionTemp)
+			console.log('self.session',self.session)
 			if (sessionTemp!=null) self.$('select[name=session]').val(sessionTemp.id)
 			self.loadProduct(dateInput, self.$('select[name=session]').val(), '')
 			self.$("#menuCats").css("margin-top", "44px")
