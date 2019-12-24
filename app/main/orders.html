@@ -55,10 +55,10 @@
 									src="https://wokpplapi.konbi.cloud/uploads/{{this.imageFileName}}" width="80" /></a>
 							</div>
 							<div class="item-inner">
-								<div class="item-title-row">									
-									<div class="item-title">
+								<div class="row">									
+									<div class="item-title col-80">
 										<a href="#" @click="selectOption('{{this.id}}')" class="item-link"
-											>{{this.name}}</a></div>
+											>{{this.name}} {{#if this.isSoldOut}} (Sold out) {{/if}}</a></div>
 									<div class="item-title" style="font-weight: bold;">
 										$ {{this.price.toFixed(2)}}</div>
 								</div>
@@ -291,6 +291,15 @@
 						// 		}
 						// 	}
 						// }
+						for (let i = 0; i < response.result.items.length; i ++){
+							if (response.result.items[i].quantity == null || response.result.items[i].quantity == 0){
+								response.result.items[i].quantity = 0;
+								response.result.items[i].isSoldOut = true;
+							}
+							else{
+								response.result.items[i].isSoldOut = false;
+							}
+						}
 						console.log('get product success', response)
 						self.$setState({
 							allProducts: response.result.items,
