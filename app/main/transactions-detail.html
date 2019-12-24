@@ -95,10 +95,11 @@
                 for (let i = 0; i < det.orderItems.length; i++){
                     tempTotal += det.orderItems[i].price
                 }
+                //console.log(det.payments[0].amount);
                 self.$setState({
                     detail: det,
                     orderItems: det.orderItems,
-                    total: tempTotal,
+                    total: det.payments[0].amount,
                 });
                 
             },

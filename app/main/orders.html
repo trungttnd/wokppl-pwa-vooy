@@ -58,7 +58,7 @@
 								<div class="row">									
 									<div class="item-title col-80">
 										<a href="#" @click="selectOption('{{this.id}}')" class="item-link"
-											>{{this.name}} {{#if this.isSoldOut}} (Sold out) {{/if}}</a></div>
+											>{{this.name}} {{#if this.isSoldOut}} <span style="color: red;">(Sold out)</span> {{/if}}</a></div>
 									<div class="item-title" style="font-weight: bold;">
 										$ {{this.price.toFixed(2)}}</div>
 								</div>
