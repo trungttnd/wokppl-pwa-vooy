@@ -34,7 +34,7 @@
                             <div class="stepper-button-minus" @click="minusQuantity()"></div>
                             <div class="stepper-input-wrap">
                                 <input type="number" name="addQuantity" value="{{defaultQuan}}" min="1"
-                                    max="{{detail.quantity}}" readonly step="1" />
+                                    max="{{availableNumbers}}" readonly step="1" />
                             </div>
                             <div class="stepper-button-plus" @click="plusQuantity()"></div>
                         </div>
@@ -164,6 +164,7 @@
                 total: 0,
                 productList: [
                 ],
+                availableNumbers: 0,
             }
         },
         methods: {
@@ -176,8 +177,6 @@
                 var self = this;
 
                 if (self.tempQuantity > 1) {
-                    console.log(self.price);
-                    console.log(self.detail.price);
                     self.$setState({
                         tempQuantity: self.tempQuantity - 1,
                         price: self.price
@@ -187,10 +186,6 @@
             },
             plusQuantity: function () {
                 var self = this;
-                console.log(self.price);
-                console.log(self.detail.price);
-                console.log(self.detail.quantity);
-                console.log(self.tempQuantity);
                 self.$setState({
                     tempQuantity: self.tempQuantity + 1,
                     price: self.price
@@ -198,14 +193,14 @@
             },
             closeButton: function () {
                 localStorage.removeItem('isEdit');
-                console.log('abc');
             },
             updateCart: function () {
                 var self = this;
                 let quan = +self.$('input[name=addQuantity]').val()
                 let selectItem = self.detail;
                 let increaseQuan = 0;
-                let cartAvailable = JSON.parse(localStorage.getItem('cartAvailable'));
+                let availableNumbers = 0;
+                //let cartAvailable = JSON.parse(localStorage.getItem('cartAvailable'));
                 self.cartItems.listOrderDate = self.templistOrderDate;
                 self.cartItems.listOrderSession = self.templistOrderSession;
                 increaseQuan = quan - self.detail.orderQuantity;
@@ -229,6 +224,13 @@
                     }
                 }
                 // self.cartItems.items.push(self.detail);
+                availableNumbers = self.detail.availableNumbers - increaseQuan;
+                for (let i = 0; i < self.cartItems.items.length; i++){
+                    if (self.cartItems.items[i].id == self.detail.id){
+                        self.cartItems.items[i].availableNumbers = availableNumbers;
+                    }
+                }
+                self.detail.availableNumbers = availableNumbers;
 
                 localStorage.setItem('cartItems', JSON.stringify(self.cartItems))
                 // for (let i = 0; i < cartAvailable.length; i++){
@@ -240,7 +242,7 @@
                 //     }
                 // }
                 // localStorage.setItem('cartAvailable', JSON.stringify(cartAvailable))
-                console.log('cartAvailable', cartAvailable);
+                //console.log('cartAvailable', cartAvailable);
                 // let cartTemp = JSON.parse(localStorage.getItem('cartItems'));
                 // self.$setState({
                 //     updateCartList: cartTemp,
@@ -295,8 +297,16 @@
                 // self.cartItems.total += selectItem.price * increaseQuan + self.modPrice;
                 // self.detail.price += self.modPrice;
                 // self.detail.quantity = quan;
+                availableNumbers = self.detail.availableNumbers - quan;
+                for (let i = 0; i < self.cartItems.items.length; i++){
+                    if (self.cartItems.items[i].id == self.detail.id){
+                        self.cartItems.items[i].availableNumbers = availableNumbers;
+                    }
+                }
+                self.detail.availableNumbers = availableNumbers;
                 self.cartItems.items.push(self.detail);
                 localStorage.setItem('cartItems', JSON.stringify(self.cartItems))
+
                 // if (self.detail.quantity != null){
                 //     for (let i = 0; i < cartAvailable.length; i++){
                 //         if (cartAvailable[i].id == self.detail.id){
@@ -335,6 +345,12 @@
                     }
                     self.$setState({
                         editButton: true,
+                        availableNumbers: det.availableNumbers + det.orderQuantity,
+                    })
+                }
+                else{
+                    self.$setState({
+                        availableNumbers: det.availableNumbers,
                     })
                 }
                 // else let det = JSON.parse(localStorage.getItem('addProduct'));

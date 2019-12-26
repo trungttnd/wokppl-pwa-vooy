@@ -94,7 +94,7 @@
                                                             class="item-link tooltip-init"
                                                             data-tooltip="Edit Your Cart">
                                                             <i class="fas fa-fw fa-lg fa-edit text-color-red"></i></a>
-                                                        <a href="#" @click="deleteProduct('{{this.indexProduct}}')"
+                                                        <a href="#" @click="deleteProduct('{{this.indexProduct}}', '{{this.id}}')"
                                                             class="item-link tooltip-init"
                                                             data-tooltip="Remove from Cart">
                                                             <i class="fas fa-fw fa-lg fa-trash text-color-red"></i></a>
@@ -262,15 +262,19 @@
                     setCurrentTime: true
                 });
             },
-            deleteProduct: function (indexProduct) {
+            deleteProduct: function (indexProduct, id) {
                 var self = this;
                 var tempGrandTotal = 0;
+                var tempAvailableNumbers = 0;
                 console.log(self.updateCartList);
+                console.log(id);
                 for (let i = 0; i < self.updateCartList.items.length; i++) {
                     if (self.updateCartList.items[i].indexProduct == indexProduct) {
                         self.updateCartList.quantity = self.updateCartList.quantity - self.updateCartList.items[i].orderQuantity;
                         self.updateCartList.total = self.updateCartList.total - self.updateCartList.items[i].price * self.updateCartList.items[i].orderQuantity;
                         tempGrandTotal = self.grandTotal - self.updateCartList.items[i].price * self.updateCartList.items[i].orderQuantity;
+                        tempAvailableNumbers = self.updateCartList.items[i].orderQuantity;
+                        console.log('tempAvailableNumbers',tempAvailableNumbers);
                         self.updateCartList.items.splice(i, 1);
                     }
                 }
@@ -287,6 +291,12 @@
                         orderSessionName: null,
                         orderSessionTime: null,
                     })
+                }
+                for (let i = 0; i < self.updateCartList.items.length; i++){
+                    if (self.updateCartList.items[i].id == id){
+                        self.updateCartList.items[i].availableNumbers += tempAvailableNumbers;
+                        console.log('self.updateCartList.items[i].availableNumbers',self.updateCartList.items[i].availableNumbers);
+                    }
                 }
                 console.log(self.updateCartList);
                 localStorage.setItem('cartItems', JSON.stringify(self.updateCartList));
