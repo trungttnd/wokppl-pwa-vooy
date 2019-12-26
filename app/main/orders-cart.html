@@ -413,9 +413,9 @@
                     let arr = self.listOrderDate.split('/');
                     let time = self.$('input[id=timepicker-24]').val().split(':');
                     let dat = new Date(arr[2], arr[1] - 1, arr[0], time[0], time[1]);
-                    var hours = dat.getHours();
-                    hours += offset;
-                    dat.setHours(hours);
+                    // var hours = dat.getHours();
+                    // hours += offset;
+                    // dat.setHours(hours);
 
                     self.newOrder.collectionTime = dat.toISOString();
                     self.newOrder.type = 2;
