@@ -336,13 +336,13 @@
                 let det = JSON.parse(localStorage.getItem('addProduct'));
                 if (isEdit == 'true') {
                     det = JSON.parse(localStorage.getItem('editProduct'));
-                    let cartAvailable = JSON.parse(localStorage.getItem('cartAvailable'));
-                    console.log('cartAvailable', cartAvailable)
-                    for (let i = 0; i < cartAvailable.length; i++){
-                        if (det.id == cartAvailable[i].id){
-                            det.quantity = det.orderQuantity + cartAvailable[i].availableNumbers
-                        }
-                    }
+                    // let cartAvailable = JSON.parse(localStorage.getItem('cartAvailable'));
+                    // console.log('cartAvailable', cartAvailable)
+                    // for (let i = 0; i < cartAvailable.length; i++){
+                    //     if (det.id == cartAvailable[i].id){
+                    //         det.quantity = det.orderQuantity + cartAvailable[i].availableNumbers
+                    //     }
+                    // }
                     self.$setState({
                         editButton: true,
                         availableNumbers: det.availableNumbers + det.orderQuantity,
