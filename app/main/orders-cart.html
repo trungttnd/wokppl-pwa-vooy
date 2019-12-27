@@ -475,7 +475,7 @@
                         function (suc) {
                             console.log('suc', suc)
                             localStorage.removeItem('cartItems')
-                            app.views.current.router.navigate('/orders-finish');  
+                            app.views.current.router.navigate('/orders-finish?order=' + suc.result.orderNumber);  
                         },
                         function (err) {
                             console.log('err', err)
