@@ -461,7 +461,7 @@
                         }
                         self.newOrder.orderItems.push(temp)
                     })
-                    console.log(self.newOrder)
+                    console.log('newOrder', self.newOrder)
                     //app.views.current.router.navigate('/orders-finish'); 
                     //create new order
                     app.request.postJSON(window.config.url + 'api/services/app/Preorder/CreateOrder',
