@@ -64,9 +64,9 @@
 								<div class="row">									
 									<div class="item-title col-80">
 										<a href="#" @click="selectOption('{{this.id}}')" class="item-link"
-											>{{this.name}} {{#if this.isSoldOut}} <span style="color: red;">(Sold out)</span> {{/if}}</a></div>
+											>{{this.name}}</a></div>
 									<div class="item-title" style="font-weight: bold;">
-										$ {{this.price.toFixed(2)}}</div>
+										${{this.price.toFixed(2)}}</div>
 								</div>
 								<!-- <div class="item-subtitle">{{#each this.categories}}
 									{{this.name}}
@@ -76,11 +76,17 @@
 								<div class="item-row">
 									<div class="item-text"><a href="#" @click="selectOption('{{this.id}}')" class="item-link">{{this.description}}</a>
 									</div>
+									{{#if this.isSoldOut}}
+									<div class="item-after" style="color: red; font-weight: bold;">
+										<img @click="selectOption('{{this.id}}')" class="theme-light-only" src="assets/custom/img/sold.png" height="35" alt="" />
+									</div>	
+									{{else}}
 									<div class="item-after" style="color: red; font-weight: bold;">
 										<a href="#" @click="selectOption('{{this.id}}')" class="item-link tooltip-init"
 											data-tooltip="Add to Cart">
 											<i class="fas fa-fw fa-lg fa-cart-plus text-color-red"></i></a>
 									</div>
+									{{/if}}
 								</div>
 							</div>
 						</div>
@@ -193,6 +199,9 @@
 				localStorage.setItem('listOrderSession', JSON.stringify(self.listOrderSession));
 				if (det.quantity != null && det.quantity > 0){
 					app.views.current.router.navigate('/orders-options');
+				}
+				else{
+					app.views.current.router.navigate('/details-only');
 				}
 			},
 			selectCat: function (selected) {

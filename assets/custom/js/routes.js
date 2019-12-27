@@ -535,6 +535,10 @@ window.routes = [
 		componentUrl: './app/main/orders-cart.html'
 	},
 	{
+		path: '/details-only',
+		componentUrl: './app/main/details-only.html'
+	},
+	{
 		path: '/inbox-detail',
 		componentUrl: './app/main/inbox-detail.html',
 	},
@@ -591,5 +595,5 @@ window.routes = [
 	{
 		path: '(.*)',
 		componentUrl: './app/404.html'
-	}
+	},
 ]
