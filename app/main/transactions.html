@@ -58,7 +58,7 @@
                                         </div>
                                         <div class="item-title" style="text-align: right;">
                                             <div class="item-header text-color-red">
-                                                $-{{this.totalPrice.toFixed(2)}}
+                                                ${{this.totalPrice.toFixed(2)}}
                                             </div>
                                             <span class="badge color-green">{{this.statusName}}</span>
                                         </div>
@@ -146,9 +146,11 @@
 					return el.id == id;
 				})
                 //chuyen thoi gian Collection time lay tu api ve local time
-                let collectionTime = new Date(det.collectionTime)
-                console.log('Date Time:', collectionTime)
-
+                let collectionTime = new Date(det.collectionTime+'.000Z')
+                //let collectionTime = new Date('2019-12-27T09:59:00.000Z')
+                console.log('Date Time:', collectionTime.toLocaleString())
+                det.collectionTime = collectionTime.toLocaleString()
+                console.log(det.collectionTime)
                 localStorage.setItem('detTransactions', JSON.stringify(det))
                 app.views.current.router.navigate('/transactions-detail');
             },

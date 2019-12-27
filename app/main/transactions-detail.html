@@ -111,15 +111,14 @@
                 for (let i = 0; i < det.orderItems.length; i++){
                     tempTotal += det.orderItems[i].price
                 }
-                det.collectionTime = new Date(det.collectionTime);
-                det.collectionTime = det.collectionTime.getMonth()+1 + "/" + det.collectionTime.getDate() + "/" + det.collectionTime.getFullYear() + " " + det.collectionTime.getHours() + ":" + det.collectionTime.getMinutes();
+                //det.collectionTime = new Date(det.collectionTime);
+                //det.collectionTime = det.collectionTime.getMonth()+1 + "/" + det.collectionTime.getDate() + "/" + det.collectionTime.getFullYear() + " " + det.collectionTime.getHours() + ":" + det.collectionTime.getMinutes();
                 //console.log(det.payments[0].amount);
                 self.$setState({
                     detail: det,
                     orderItems: det.orderItems,
                     total: det.payments[0].amount,
-                });
-                
+                });                
             },
         },
         on: {
