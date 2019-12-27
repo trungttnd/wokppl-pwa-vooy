@@ -442,7 +442,7 @@
                         let temp = {
                             productId: el.id,
                             productName: el.name,
-                            quantity: el.quantity,
+                            quantity: el.orderQuantity,
                             price: el.price,
                             modifiers: []
                         };
@@ -461,7 +461,7 @@
                         }
                         self.newOrder.orderItems.push(temp)
                     })
-                    console.log('self.newOrder',self.newOrder)
+                    console.log('newOrder', self.newOrder)
                     //app.views.current.router.navigate('/orders-finish'); 
                     //create new order
                     app.request.postJSON(window.config.url + 'api/services/app/Preorder/CreateOrder',
