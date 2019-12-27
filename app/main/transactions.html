@@ -58,7 +58,7 @@
                                         </div>
                                         <div class="item-title" style="text-align: right;">
                                             <div class="item-header text-color-red">
-                                                $ -{{this.totalPrice.toFixed(2)}}
+                                                $-{{this.totalPrice.toFixed(2)}}
                                             </div>
                                             <span class="badge color-green">{{this.statusName}}</span>
                                         </div>
@@ -101,6 +101,7 @@
                 var self = this;
                 let tempItem = [];
                 app.request.getJSON(window.config.url + 'api/services/app/Preorder/GetTransactions',
+                {MaxResultCount: 5000},
                 //console.log(window.config.url + 'api/services/app/Preorder/GetTransactions?StartDate=' + startDate + '&&EndDate=' + endDate);
                 //app.request.getJSON(window.config.url + 'api/services/app/Preorder/GetTransactions?StartDate=' + startDate + '&&EndDate=' + endDate,
                     function (suc) {
@@ -144,6 +145,10 @@
                 let det = self.items.find(function (el) {
 					return el.id == id;
 				})
+                //chuyen thoi gian Collection time lay tu api ve local time
+                let collectionTime = new Date(det.collectionTime)
+                console.log('Date Time:', collectionTime)
+
                 localStorage.setItem('detTransactions', JSON.stringify(det))
                 app.views.current.router.navigate('/transactions-detail');
             },
