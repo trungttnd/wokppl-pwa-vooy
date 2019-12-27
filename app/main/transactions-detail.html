@@ -29,6 +29,7 @@
                         <thead>
                             <tr>
                                 <th class="label-cell">Your cart</th>
+                                <th class="numeric-cell" style="text-align: center;">Quantity</th>
                                 <th class="numeric-cell">Amount</th>
                             </tr>
                         </thead>
@@ -36,6 +37,7 @@
                             {{#each orderItems}}
                             <tr>
                                 <td class="label-cell">{{this.productName}}</td>
+                                <td class="label-cell" style="text-align: center;">{{this.quantity}}</td>
                                 <td class="numeric-cell">${{this.price.toFixed(2)}}</td>
                             </tr>
                             {{/each}}
