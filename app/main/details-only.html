@@ -15,8 +15,8 @@
         <div class="page-content">
             {{#if detail}}
             <div class="block">
-                <img class="img-center img-responsive"
-                    src="https://wokpplapi.konbi.cloud/uploads/{{detail.imageFileName}}" alt="" />
+                <img class="img-center"
+                    src="https://wokpplapi.konbi.cloud/uploads/{{detail.imageFileName}}" height="{{orgHeight}}px" alt="" />
             </div>
             <div class="block">
                 <div class="row">
@@ -82,7 +82,11 @@
 </template>
 
 <style scoped>
-
+.halfwidth {
+    width: 100%;
+    height: 50vw;
+    background-color: #e0e0e0;
+}
 </style>
 
 <script>
@@ -110,6 +114,8 @@
                 productList: [
                 ],
                 availableNumbers: 0,
+                orgWidth: 0,
+                orgHeight: 0,
             }
         },
         methods: {
@@ -351,6 +357,23 @@
                 //     });
                 // });
                 // console.log('chay den cuoi 2')
+                var tmpImg = new Image();
+                tmpImg.src="https://wokpplapi.konbi.cloud/uploads/" + self.detail.imageFileName; //or  document.images[i].src;
+                $(tmpImg).one('load',function(){                  
+                    //alert(tmpImg.width+"x"+tmpImg.height);
+                    if (($(window).height() / 2) < tmpImg.height){
+                        self.$setState({
+                            orgWidth: tmpImg.width,
+                            orgHeight: $(window).height() / 2,
+                        });
+                    }
+                    else{
+                        self.$setState({
+                            orgWidth: tmpImg.width,
+                            orgHeight: tmpImg.height,
+                        });
+                    }
+                });
             }
         }
     }

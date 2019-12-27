@@ -29,6 +29,7 @@
                         <thead>
                             <tr>
                                 <th class="label-cell">Your cart</th>
+                                <th class="numeric-cell" style="text-align: center;">Quantity</th>
                                 <th class="numeric-cell">Amount</th>
                             </tr>
                         </thead>
@@ -36,6 +37,7 @@
                             {{#each orderItems}}
                             <tr>
                                 <td class="label-cell">{{this.productName}}</td>
+                                <td class="label-cell" style="text-align: center;">{{this.quantity}}</td>
                                 <td class="numeric-cell">${{this.price.toFixed(2)}}</td>
                             </tr>
                             {{/each}}
@@ -112,7 +114,7 @@
                     tempTotal += det.orderItems[i].price
                 }
                 det.collectionTime = new Date(det.collectionTime);
-                det.collectionTime = det.collectionTime.getMonth()+1 + "/" + det.collectionTime.getDate() + "/" + det.collectionTime.getFullYear() + " " + det.collectionTime.getHours() + ":" + det.collectionTime.getMinutes();
+                det.collectionTime = det.collectionTime.getDate() + "/" + (det.collectionTime.getMonth()+1) + "/" + det.collectionTime.getFullYear() + " " + det.collectionTime.getHours() + ":" + det.collectionTime.getMinutes();
                 //console.log(det.payments[0].amount);
                 self.$setState({
                     detail: det,
