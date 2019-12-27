@@ -461,7 +461,7 @@
                         }
                         self.newOrder.orderItems.push(temp)
                     })
-                    console.log(self.newOrder)
+                    console.log('self.newOrder',self.newOrder)
                     //app.views.current.router.navigate('/orders-finish'); 
                     //create new order
                     app.request.postJSON(window.config.url + 'api/services/app/Preorder/CreateOrder',
@@ -475,7 +475,7 @@
                         function (suc) {
                             console.log('suc', suc)
                             localStorage.removeItem('cartItems')
-                            app.views.current.router.navigate('/orders-finish');  
+                            app.views.current.router.navigate('/orders-finish?order=' + suc.result.orderNumber);  
                         },
                         function (err) {
                             console.log('err', err)
