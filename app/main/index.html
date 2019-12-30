@@ -51,9 +51,8 @@
             }
         },
         methods: {
-
             logout: function () {
-                var self=this;
+                var self = this;
                 localStorage.removeItem('WOKPPL_OldUser');
                 localStorage.removeItem('WOKPPL_accessToken');
                 localStorage.removeItem('WOKPPL_expireInSeconds');
@@ -67,6 +66,11 @@
                 localStorage.removeItem('WOKPPL_passcode');
                 localStorage.removeItem('addProduct');
                 localStorage.removeItem('cartItems');
+                localStorage.removeItem('listOrderSession');
+                localStorage.removeItem('listOrderDate');
+                localStorage.removeItem('categories');
+                localStorage.removeItem('editProduct');
+                localStorage.removeItem('sessions');
             }
         },
         on: {
@@ -77,14 +81,14 @@
                 // $('#tab-order').on('tab:show', function () {
                 //     app.views.current.router.refreshPage();
                 // });
-                app.request.get(window.config.url + 'api/services/app/Session/GetCurrentLoginInformations',
-                    function (suc) {
-                        let response = JSON.parse(suc)
-                        if (response.result.user == null) self.logout();
-                    },
-                    function (err) {
-                        console.log(err)
-                    })
+                // app.request.get(window.config.url + 'api/services/app/Session/GetCurrentLoginInformations',
+                //     function (suc) {
+                //         let response = JSON.parse(suc)
+                //         if (response.result.user == null) self.logout();
+                //     },
+                //     function (err) {
+                //         console.log(err)
+                //     })
                 setTimeout(function () {
                     if (!localStorage.getItem('WOKPPL_OldUser')) {
                         console.log('main')
