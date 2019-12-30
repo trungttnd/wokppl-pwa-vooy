@@ -24,7 +24,8 @@
 							<select name="session">
 								{{#if session}}
 								{{#each session}}
-								<option value="{{this.id}}">{{this.name}}: {{this.startTime}}-{{this.endTime}}</option>
+								<option value="{{this.id}}">{{this.name}}:
+									{{this.startTime.substr(0,5)}}-{{this.endTime.substr(0,5)}}</option>
 								{{/each}}
 								{{/if}}
 							</select>
@@ -47,9 +48,9 @@
 			</div>
 			{{#if isNoProduct}}
 			<div class="block text-align-left"></div>
-            <div class="content-block block-card text-align-center">
-                <div class="your-cart">No product available!</div>
-            </div>
+			<div class="content-block block-card text-align-center">
+				<div class="your-cart">No product available!</div>
+			</div>
 			{{/if}}
 			<div class="list media-list no-hairlines no-hairlines-between margin-vertical descriptionFont">
 				<ul>
@@ -57,14 +58,16 @@
 					{{#each productList}}
 					<li>
 						<div class="item-content">
-							<div class="item-media"><a href="#" @click="selectOption('{{this.id}}')" class="item-link"><img
-									src="https://wokpplapi.konbi.cloud/uploads/{{this.imageFileName}}" width="80" /></a>
+							<div class="item-media"><a href="#" @click="selectOption('{{this.id}}')"
+									class="item-link"><img
+										src="https://wokpplapi.konbi.cloud/uploads/{{this.imageFileName}}"
+										width="80" /></a>
 							</div>
 							<div class="item-inner">
-								<div class="row">									
+								<div class="row">
 									<div class="item-title col-80">
-										<a href="#" @click="selectOption('{{this.id}}')" class="item-link"
-											>{{this.name}}</a></div>
+										<a href="#" @click="selectOption('{{this.id}}')"
+											class="item-link">{{this.name}}</a></div>
 									<div class="item-title" style="font-weight: bold;">
 										${{this.price.toFixed(2)}}</div>
 								</div>
@@ -72,19 +75,22 @@
 									{{this.name}}
 									{{/each}}
 								</div> -->
-								<div class="item-subtitle"><a href="#" @click="selectOption('{{this.id}}')" class="item-link">Available numbers: {{this.quantity}}</a></div>
+								<div class="item-subtitle"><a href="#" @click="selectOption('{{this.id}}')"
+										class="item-link">Available numbers: {{this.quantity}}</a></div>
 								<div class="item-row">
-									<div class="item-text"><a href="#" @click="selectOption('{{this.id}}')" class="item-link">{{this.description}}</a>
+									<div class="item-text"><a href="#" @click="selectOption('{{this.id}}')"
+											class="item-link">{{this.description}}</a>
 									</div>
-									{{#if this.isSoldOut}}
-									<div class="item-after" style="color: red; font-weight: bold;">
-										<img @click="selectOption('{{this.id}}')" class="theme-light-only" src="assets/custom/img/sold.png" height="35" alt="" />
-									</div>	
-									{{else}}
+									{{#if this.isAvailable}}
 									<div class="item-after" style="color: red; font-weight: bold;">
 										<a href="#" @click="selectOption('{{this.id}}')" class="item-link tooltip-init"
 											data-tooltip="Add to Cart">
 											<i class="fas fa-fw fa-lg fa-cart-plus text-color-red"></i></a>
+									</div>
+									{{else}}
+									<div class="item-after" style="color: red; font-weight: bold;">
+										<img @click="selectOption('{{this.id}}')" class="theme-light-only"
+											src="assets/custom/img/sold.png" height="35" alt="" />
 									</div>
 									{{/if}}
 								</div>
@@ -128,10 +134,10 @@
 			}
 		},
 		methods: {
-			goCart: function(){
+			goCart: function () {
 				var self = this;
-				if (self.cartItems.quantity>0)
-					app.view.current.router.navigate('/orders-cart');				
+				if (self.cartItems.quantity > 0)
+					app.view.current.router.navigate('/orders-cart');
 			},
 			formatDate: function (date, langCode) {
 				var day = date.toLocaleString(langCode, { day: '2-digit' });   // DD
@@ -177,7 +183,7 @@
 				let orderDate = $('#date').val();
 				let orderSession = self.$('select[name=session]').val();
 				console.log(id);
-				for (let i = 0; i < self.productList.length; i++){
+				for (let i = 0; i < self.productList.length; i++) {
 					self.productList[i].orderQuantity = null;
 				}
 				let det = self.productList.find(function (el) {
@@ -197,10 +203,10 @@
 				}
 				localStorage.setItem('listOrderDate', JSON.stringify(self.listOrderDate));
 				localStorage.setItem('listOrderSession', JSON.stringify(self.listOrderSession));
-				if (det.quantity != null && det.quantity > 0){
+				if (det.quantity != null && det.quantity > 0) {
 					app.views.current.router.navigate('/orders-options');
 				}
-				else{
+				else {
 					app.views.current.router.navigate('/details-only');
 				}
 			},
@@ -229,19 +235,19 @@
 				else {
 					// self.loadProduct(dateInput, sess, selected);
 					let tempList = []
-					for (let i=0; i<self.allProducts.length; i++){
-						for (let j=0; j<self.allProducts[i].categories.length; j++){
+					for (let i = 0; i < self.allProducts.length; i++) {
+						for (let j = 0; j < self.allProducts[i].categories.length; j++) {
 							if (self.allProducts[i].categories[j].id == selected)
 								tempList.push(self.allProducts[i])
 						}
 					}
 					console.log('tempList.length', tempList.length);
-					if (tempList.length == 0){
+					if (tempList.length == 0) {
 						self.$setState({
 							isNoProduct: true,
 						})
 					}
-					else{
+					else {
 						self.$setState({
 							isNoProduct: false,
 						})
@@ -300,18 +306,18 @@
 						var cartAvailableItems = [];
 						let tempcartAvailable = [];
 						// let cartAvailable = JSON.parse(localStorage.getItem('cartAvailable'));
-						if (cartTemp != null){
-							for (let i = 0; i < response.result.items.length; i++){
+						if (cartTemp != null) {
+							for (let i = 0; i < response.result.items.length; i++) {
 								response.result.items[i].availableNumbers = response.result.items[i].quantity;
-								for (let j = 0; j < cartTemp.items.length; j++){
-									if (response.result.items[i].id == cartTemp.items[j].id){
+								for (let j = 0; j < cartTemp.items.length; j++) {
+									if (response.result.items[i].id == cartTemp.items[j].id) {
 										response.result.items[i].availableNumbers = cartTemp.items[j].availableNumbers;
 									}
 								}
 							}
 						}
-						else{
-							for (let i = 0; i < response.result.items.length; i++){
+						else {
+							for (let i = 0; i < response.result.items.length; i++) {
 								response.result.items[i].availableNumbers = response.result.items[i].quantity
 							}
 							// for (let i = 0; response.result.items.length; i++){
@@ -343,12 +349,12 @@
 						// 		}
 						// 	}
 						// }
-						for (let i = 0; i < response.result.items.length; i ++){
-							if (response.result.items[i].quantity == null || response.result.items[i].quantity == 0){
+						for (let i = 0; i < response.result.items.length; i++) {
+							if (response.result.items[i].quantity == null || response.result.items[i].quantity == 0) {
 								response.result.items[i].quantity = 0;
 								response.result.items[i].isSoldOut = true;
 							}
-							else{
+							else {
 								response.result.items[i].isSoldOut = false;
 							}
 						}
@@ -376,15 +382,48 @@
 						$('a[id=' + id + ']').removeClass('tab-link-active');
 				})
 				self.loadProduct(dt, sess, '')
+			},
+			logout: function () {
+				var self = this;
+				localStorage.removeItem('WOKPPL_OldUser');
+				localStorage.removeItem('WOKPPL_accessToken');
+				localStorage.removeItem('WOKPPL_expireInSeconds');
+				localStorage.removeItem('WOKPPL_expired');
+				localStorage.removeItem('WOKPPL_refreshToken');
+				localStorage.removeItem('WOKPPL_mobile');
+				localStorage.removeItem('WOKPPL_name');
+				localStorage.removeItem('WOKPPL_email');
+				localStorage.removeItem('WOKPPL_username');
+				localStorage.removeItem('WOKPPL_userId');
+				localStorage.removeItem('WOKPPL_passcode');
+				localStorage.removeItem('addProduct');
+				localStorage.removeItem('cartItems');
+				localStorage.removeItem('listOrderSession');
+				localStorage.removeItem('listOrderDate');
+				localStorage.removeItem('categories');
+				localStorage.removeItem('editProduct');
+				localStorage.removeItem('sessions');
 			}
 		},
 		mounted() {
 			localStorage.removeItem('isEdit');
 			var self = this;
+			console.log('3-getcurrent-order')
+			app.request.get(window.config.url + 'api/services/app/Session/GetCurrentLoginInformations',
+				function (suc) {
+					let response = JSON.parse(suc)
+					console.log(response.result.user)
+					if (response.result.user == null)
+						//console.log(response.result.user)
+						self.logout();
+				},
+				function (err) {
+					console.log(err)
+				})
 			let date = new Date();
 			let dateInput = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
 			console.log(dateInput);
-			
+
 			self.$setState({
 				today: self.formatDate(date, 'en'),
 				cartItems: JSON.parse(localStorage.getItem('cartItems')) == undefined ? { quantity: 0, total: 0.00, items: [] } : JSON.parse(localStorage.getItem('cartItems')),
@@ -409,8 +448,8 @@
 			// self.loadCategory();
 			// self.loadProduct(dateInput, self.session[0].id, '');
 			let sessionTemp = JSON.parse(localStorage.getItem('listOrderSession'))
-			console.log('self.session',self.session)
-			if (sessionTemp!=null) self.$('select[name=session]').val(sessionTemp.id)
+			console.log('self.session', self.session)
+			if (sessionTemp != null) self.$('select[name=session]').val(sessionTemp.id)
 			self.loadProduct(dateInput, self.$('select[name=session]').val(), '')
 			self.$("#menuCats").css("margin-top", "44px")
 			self.$('select[name=session]').change(function () {

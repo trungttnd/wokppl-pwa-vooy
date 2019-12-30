@@ -117,8 +117,9 @@
                 //det.collectionTime = new Date(det.collectionTime);
                 //det.collectionTime = det.collectionTime.getMonth()+1 + "/" + det.collectionTime.getDate() + "/" + det.collectionTime.getFullYear() + " " + det.collectionTime.getHours() + ":" + det.collectionTime.getMinutes();
                 //console.log(det.payments[0].amount);
-                let colTime = new Date(det.collectionTime+'.000Z')
-                self.collectionTimeDisplay = colTime.toLocaleString();
+                //let colTime = new Date(det.collectionTime+'.000Z')
+                let colTime = new Date(det.collectionTimeDisplay);
+                self.collectionTimeDisplay = colTime.toLocaleTimeString().substring(0,5) + ', ' + colTime.toLocaleDateString();
                 self.$setState({
                     detail: det,
                     orderItems: det.orderItems,

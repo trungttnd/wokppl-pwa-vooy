@@ -186,7 +186,7 @@ window.routes = [
 									'Content-Type': 'application/json'
 								}
 							});
-							console.log('2-getcurrent')
+							console.log('2-getcurrent-home')
 							app.request.get(window.config.url + 'api/services/app/Session/GetCurrentLoginInformations',
 							function (suc) {
 								let response = JSON.parse(suc)
