@@ -20,7 +20,7 @@
                         <span class="transaction-id">Order Id: {{detail.orderNumber}}</span>
                     </div>
                     <div class="item-subtitle">
-                        <span class="collection-time">Collection time: {{detail.collectionTime}}</span>
+                        <span class="collection-time">Collection time: {{collectionTimeDisplay}}</span>
                     </div>
                 </div>
             </div>
@@ -103,6 +103,7 @@
                 detail: [],
                 orderItems: [],
                 total: 0,
+                collectionTimeDisplay: ''
             }
         },
         methods: {
@@ -116,6 +117,8 @@
                 //det.collectionTime = new Date(det.collectionTime);
                 //det.collectionTime = det.collectionTime.getMonth()+1 + "/" + det.collectionTime.getDate() + "/" + det.collectionTime.getFullYear() + " " + det.collectionTime.getHours() + ":" + det.collectionTime.getMinutes();
                 //console.log(det.payments[0].amount);
+                let colTime = new Date(det.collectionTime+'.000Z')
+                self.collectionTimeDisplay = colTime.toLocaleString();
                 self.$setState({
                     detail: det,
                     orderItems: det.orderItems,

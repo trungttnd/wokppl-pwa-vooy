@@ -156,7 +156,7 @@
                         localStorage.setItem('WOKPPL_expireInSeconds', suc.result.expireInSeconds);
                         localStorage.setItem('WOKPPL_refreshToken', suc.result.refreshToken);
                         localStorage.setItem('WOKPPL_userId', suc.result.userId);
-
+                        console.log('1-login')
                         app.views.current.router.navigate('/');
                     },
                     function (err) {

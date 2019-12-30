@@ -186,6 +186,19 @@ window.routes = [
 									'Content-Type': 'application/json'
 								}
 							});
+							console.log('2-getcurrent')
+							app.request.get(window.config.url + 'api/services/app/Session/GetCurrentLoginInformations',
+							function (suc) {
+								let response = JSON.parse(suc)
+								console.log(response.result.user)
+								if (response.result.user == null) 
+								//console.log(response.result.user)
+								 self.logout();
+							},
+							function (err) {
+								console.log(err)
+							})
+
 							app.request.json(
 								'assets/custom/dataset/business.json',
 								function (data) {
@@ -301,18 +314,6 @@ window.routes = [
 					},
 					mounted() {
 						var self = this;
-						app.request.get(window.config.url + 'api/services/app/Session/GetCurrentLoginInformations',
-							function (suc) {
-								let response = JSON.parse(suc)
-								console.log(response.result.user)
-								if (response.result.user == null) 
-								//console.log(response.result.user)
-								 self.logout();
-							},
-							function (err) {
-								console.log(err)
-							})
-
 						self.loadData();
 						self.initializeSliderHero();
 						self.loadSession();
