@@ -58,7 +58,7 @@
                                         </div>
                                         <div class="item-title" style="text-align: right;">
                                             <div class="item-header text-color-red">
-                                                $-{{this.totalPrice.toFixed(2)}}
+                                                ${{this.totalPrice.toFixed(2)}}
                                             </div>
                                             <span class="badge color-green">{{this.statusName}}</span>
                                         </div>
@@ -120,7 +120,7 @@
                             tempItem = suc.result.items;
                         }
                         for (let i = 0; i < tempItem.length; i++){
-                            let orderTime = new Date(tempItem[i].orderTime);
+                            let orderTime = new Date(tempItem[i].orderTimeDisplay);
                             let tempTotalPrice = 0;
                             tempItem[i].orderTime = orderTime.getDate() + "/" + (orderTime.getMonth()+1) + "/" + orderTime.getFullYear() + " " + orderTime.getHours() + ":" + orderTime.getMinutes(); 
                             for (let j = 0; j < tempItem[i].orderItems.length; j++){
@@ -141,14 +141,18 @@
                     })
             },
             loadDetails: function (id){
+                //console.log(id)
                 let self = this;
                 let det = self.items.find(function (el) {
 					return el.id == id;
-				})
+                })
+                //console.log(det)
                 //chuyen thoi gian Collection time lay tu api ve local time
-                let collectionTime = new Date(det.collectionTime)
-                console.log('Date Time:', collectionTime)
-
+                //let collectionTime = new Date(det.collectionTime+'.000Z')
+                //let collectionTime = new Date('2019-12-27T09:59:00.000Z')
+                //console.log('Date Time:', collectionTime.toLocaleString())
+                //det.collectionTime = collectionTime.toLocaleString()
+                console.log(det.collectionTime)
                 localStorage.setItem('detTransactions', JSON.stringify(det))
                 app.views.current.router.navigate('/transactions-detail');
             },
@@ -186,10 +190,45 @@
             getId: function (id) {
                 var self = this;
                 console.log(id)
-            }
+            },
+            logout: function () {
+				var self = this;
+				localStorage.removeItem('WOKPPL_OldUser');
+				localStorage.removeItem('WOKPPL_accessToken');
+				localStorage.removeItem('WOKPPL_expireInSeconds');
+				localStorage.removeItem('WOKPPL_expired');
+				localStorage.removeItem('WOKPPL_refreshToken');
+				localStorage.removeItem('WOKPPL_mobile');
+				localStorage.removeItem('WOKPPL_name');
+				localStorage.removeItem('WOKPPL_email');
+				localStorage.removeItem('WOKPPL_username');
+				localStorage.removeItem('WOKPPL_userId');
+				localStorage.removeItem('WOKPPL_passcode');
+				localStorage.removeItem('addProduct');
+				localStorage.removeItem('cartItems');
+				localStorage.removeItem('listOrderSession');
+				localStorage.removeItem('listOrderDate');
+				localStorage.removeItem('categories');
+				localStorage.removeItem('editProduct');
+				localStorage.removeItem('sessions');
+			}
         },
         mounted() {
             var self = this;
+
+            console.log('4-getcurrent-history')
+			app.request.get(window.config.url + 'api/services/app/Session/GetCurrentLoginInformations',
+				function (suc) {
+					let response = JSON.parse(suc)
+					console.log(response.result.user)
+					if (response.result.user == null)
+						//console.log(response.result.user)
+						self.logout();
+				},
+				function (err) {
+					console.log(err)
+                })
+                
             let dt = new Date();
             self.endDate = dt.toISOString().substr(0, 10);
             let dat = new Date();

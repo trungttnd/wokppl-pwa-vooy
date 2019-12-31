@@ -186,6 +186,19 @@ window.routes = [
 									'Content-Type': 'application/json'
 								}
 							});
+							console.log('2-getcurrent-home')
+							app.request.get(window.config.url + 'api/services/app/Session/GetCurrentLoginInformations',
+							function (suc) {
+								let response = JSON.parse(suc)
+								console.log(response.result.user)
+								if (response.result.user == null) 
+								//console.log(response.result.user)
+								 self.logout();
+							},
+							function (err) {
+								console.log(err)
+							})
+
 							app.request.json(
 								'assets/custom/dataset/business.json',
 								function (data) {
@@ -277,6 +290,27 @@ window.routes = [
 									console.log('get category error', err)
 								})
 						},
+						logout: function () {
+							var self = this;
+							localStorage.removeItem('WOKPPL_OldUser');
+							localStorage.removeItem('WOKPPL_accessToken');
+							localStorage.removeItem('WOKPPL_expireInSeconds');
+							localStorage.removeItem('WOKPPL_expired');
+							localStorage.removeItem('WOKPPL_refreshToken');
+							localStorage.removeItem('WOKPPL_mobile');
+							localStorage.removeItem('WOKPPL_name');
+							localStorage.removeItem('WOKPPL_email');
+							localStorage.removeItem('WOKPPL_username');
+							localStorage.removeItem('WOKPPL_userId');
+							localStorage.removeItem('WOKPPL_passcode');
+							localStorage.removeItem('addProduct');
+							localStorage.removeItem('cartItems');
+							localStorage.removeItem('listOrderSession');
+							localStorage.removeItem('listOrderDate');
+							localStorage.removeItem('categories');
+							localStorage.removeItem('editProduct');
+							localStorage.removeItem('sessions');
+						}
 					},
 					mounted() {
 						var self = this;

@@ -20,7 +20,7 @@
                         <span class="transaction-id">Order Id: {{detail.orderNumber}}</span>
                     </div>
                     <div class="item-subtitle">
-                        <span class="collection-time">Collection time: {{detail.collectionTime}}</span>
+                        <span class="collection-time">Collection time: {{collectionTimeDisplay}}</span>
                     </div>
                 </div>
             </div>
@@ -103,6 +103,7 @@
                 detail: [],
                 orderItems: [],
                 total: 0,
+                collectionTimeDisplay: ''
             }
         },
         methods: {
@@ -113,15 +114,18 @@
                 for (let i = 0; i < det.orderItems.length; i++){
                     tempTotal += det.orderItems[i].price
                 }
-                det.collectionTime = new Date(det.collectionTime);
-                det.collectionTime = det.collectionTime.getDate() + "/" + (det.collectionTime.getMonth()+1) + "/" + det.collectionTime.getFullYear() + " " + det.collectionTime.getHours() + ":" + det.collectionTime.getMinutes();
+                //det.collectionTime = new Date(det.collectionTime);
+                //det.collectionTime = det.collectionTime.getMonth()+1 + "/" + det.collectionTime.getDate() + "/" + det.collectionTime.getFullYear() + " " + det.collectionTime.getHours() + ":" + det.collectionTime.getMinutes();
                 //console.log(det.payments[0].amount);
+                //let colTime = new Date(det.collectionTime+'.000Z')
+                let colTime = new Date(det.collectionTimeDisplay);
+                //self.collectionTimeDisplay = colTime.toLocaleTimeString().substring(0,5) + ', ' + colTime.toLocaleDateString();
+                self.collectionTimeDisplay = colTime.getHours()+':'+colTime.getMinutes()+', '+colTime.getDate()+'/'+(colTime.getMonth()+1)+'/'+colTime.getFullYear()
                 self.$setState({
                     detail: det,
                     orderItems: det.orderItems,
                     total: det.payments[0].amount,
-                });
-                
+                });                
             },
         },
         on: {
