@@ -48,6 +48,24 @@
                                     </div>
                                 </div>
                             </li>
+                            <li>
+                                <div class="item-content">
+                                    <div class="item-inner">
+                                        <div class="item-title">Receive Method: &nbsp;
+                                            <label class="radio">
+                                                <input type="radio" name="radio" value="3" checked/>
+                                                <i class="icon-radio"></i>
+                                            </label>
+                                            &nbsp;Dine In&nbsp;&nbsp;
+                                            <label class="radio color-red">
+                                                <input type="radio" name="radio" value="2"/>
+                                                <i class="icon-radio"></i>
+                                            </label>
+                                            &nbsp;Take Away
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -245,7 +263,7 @@
                 redeem: 0,
                 newOrder: {
                     collectionTime: '',
-                    type: 2,
+                    type: 3,
                     orderItems: [],
                     sessionId: ''
                 }
@@ -428,7 +446,7 @@
                     // dat.setHours(hours);
 
                     self.newOrder.collectionTime = dat.toISOString();
-                    self.newOrder.type = 2;
+                    //self.newOrder.type = 
                     self.newOrder.sessionId = self.listOrderSession.id;
                     self.newOrder.payments = [{
                         amount: self.grandTotal,
@@ -557,6 +575,10 @@
                         })
                     }
                 })
+                self.$('input[type=radio]').change(function (){
+                    console.log($(this).val())
+                    self.newOrder.type = $(this).val();
+                });
                 if (cartTemp != null) {
                     self.$setState({
                         updateCartList: cartTemp,
