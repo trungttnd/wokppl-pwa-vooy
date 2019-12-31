@@ -119,7 +119,8 @@
                 //console.log(det.payments[0].amount);
                 //let colTime = new Date(det.collectionTime+'.000Z')
                 let colTime = new Date(det.collectionTimeDisplay);
-                self.collectionTimeDisplay = colTime.toLocaleTimeString().substring(0,5) + ', ' + colTime.toLocaleDateString();
+                //self.collectionTimeDisplay = colTime.toLocaleTimeString().substring(0,5) + ', ' + colTime.toLocaleDateString();
+                self.collectionTimeDisplay = colTime.getHours()+':'+colTime.getMinutes()+', '+colTime.getDate()+'/'+(colTime.getMonth()+1)+'/'+colTime.getFullYear()
                 self.$setState({
                     detail: det,
                     orderItems: det.orderItems,

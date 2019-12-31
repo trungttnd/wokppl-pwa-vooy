@@ -22,7 +22,7 @@
                     <span class="tabbar-label">Order history</span>
                 </a>
                 <a href="/tab-inbox/" class="tab-link" data-route-tab-id="tab-inbox">
-                    <i class="icon material-icons">email<span class="badge color-red">3</span></i>
+                    <i class="icon material-icons">email<span class="badge color-red">{{inboxNumber}}</span></i>
                     <span class="tabbar-label">Inbox</span>
                 </a>
                 <a href="/tab-more/" class="tab-link" data-route-tab-id="tab-more">
@@ -47,7 +47,8 @@
     return {
         data: function () {
             return {
-
+                inboxResult: null,
+                inboxNumber: 0
             }
         },
         methods: {
@@ -95,6 +96,21 @@
                         app.views.current.router.navigate('/signin');
                     };
                 }, 0);
+
+                console.log('index')
+                app.request.get(window.config.url + 'api/services/app/Notification/GetUserNotifications',
+                {MaxResultCount: 1000},
+                function (suc){
+                    let response = JSON.parse(suc);
+                    //console.log('inbox', response); 
+                    self.$setState({
+                        //inboxResult : response.result,
+                        inboxNumber : response.result.unreadCount
+                    }) 
+                },
+                function (err){
+                    console.log(err)
+                })
             },
             pageAfterIn() {
                 var self = this;

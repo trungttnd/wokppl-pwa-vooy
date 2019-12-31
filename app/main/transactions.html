@@ -120,7 +120,7 @@
                             tempItem = suc.result.items;
                         }
                         for (let i = 0; i < tempItem.length; i++){
-                            let orderTime = new Date(tempItem[i].orderTime);
+                            let orderTime = new Date(tempItem[i].orderTimeDisplay);
                             let tempTotalPrice = 0;
                             tempItem[i].orderTime = orderTime.getDate() + "/" + (orderTime.getMonth()+1) + "/" + orderTime.getFullYear() + " " + orderTime.getHours() + ":" + orderTime.getMinutes(); 
                             for (let j = 0; j < tempItem[i].orderItems.length; j++){
