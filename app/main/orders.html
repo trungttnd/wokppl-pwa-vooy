@@ -24,7 +24,7 @@
 							<select name="session">
 								{{#if session}}
 								{{#each session}}
-								<option value="{{this.id}}">{{this.name}}: {{this.startTime}}-{{this.endTime}}</option>
+								<option value="{{this.id}}">{{this.name}}: {{this.startTime}} - {{this.endTime}}</option>
 								{{/each}}
 								{{/if}}
 							</select>
@@ -144,6 +144,10 @@
 				var self = this;
 				let now = new Date();
 				let dt = $('#date').val();
+				let changePrevDate = '';
+				let tempDate = new Date();
+				let prevDateInput = (tempDate.getMonth() + 1) + '/' + tempDate.getDate() + '/' + tempDate.getFullYear();
+				let prevtimeNow = tempDate.getHours() + ":" + tempDate.getMinutes();
 				console.log('now', now.toLocaleDateString())
 				console.log('dt', dt)
 				if (dt != self.formatDate(now, 'en')) {
@@ -154,13 +158,19 @@
 					self.$setState({
 						today: self.formatDate(date, 'en')
 					});
+					changePrevDate = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
 				}
+				console.log(date);
+				self.checkListSession(prevDateInput, prevtimeNow, changePrevDate);
 				self.updateProducts();
 			},
 			next: function () {
 				var self = this;
 				let dt = $('#date').val();
 				let arr = dt.split('/');
+				let tempDate = new Date();
+				let nextDateInput = (tempDate.getMonth() + 1) + '/' + tempDate.getDate() + '/' + tempDate.getFullYear();
+				let nexttimeNow = tempDate.getHours() + ":" + tempDate.getMinutes();
 				console.log('dt1', dt)
 				dt = arr[2] + '/' + arr[1] + '/' + arr[0]
 				console.log('dt2', dt)
@@ -170,6 +180,8 @@
 				self.$setState({
 					today: self.formatDate(date, 'en')
 				});
+				let changeNextDate = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
+				self.checkListSession(nextDateInput, nexttimeNow, changeNextDate);
 				self.updateProducts();
 			},
 			selectOption: function (id) {
@@ -263,7 +275,7 @@
 				app.request.get(window.config.url + 'api/services/app/Preorder/GetSessions',
 					function (suc) {
 						let response = JSON.parse(suc)
-						console.log('get session success', response)
+						console.log('get session success', response);
 						self.$setState({
 							session: response.result.items
 						})
@@ -376,6 +388,38 @@
 						$('a[id=' + id + ']').removeClass('tab-link-active');
 				})
 				self.loadProduct(dt, sess, '')
+			},
+			checkListSession: function(dateInput, timeNow, changeDate){
+				var self = this;
+				var count = 0;
+				var newDate = '';
+				let listSession = JSON.parse(localStorage.getItem('sessions'));
+				console.log('dateInput',dateInput);
+				console.log(Date.parse(dateInput + ' ' + timeNow));
+				console.log(Date.parse(dateInput + ' ' + listSession[0].startTime));
+				if (changeDate == ''){
+					newDate = dateInput;
+				}
+				else {
+					newDate = changeDate;
+				}
+				console.log('newDate', newDate);
+				for (let i = 0; i < listSession.length; i++){
+					if (Date.parse(newDate + ' ' + listSession[i].startTime) < Date.parse(dateInput + ' ' + timeNow) && Date.parse(dateInput + ' ' + timeNow) > Date.parse(newDate + ' ' + listSession[i].endTime)){
+						count++;
+					}	
+				}
+				listSession.splice(0, count);
+				for (let i = 0; i < listSession.length; i++){
+					let arrStart = listSession[i].startTime.split(':');
+					let arrEnd = listSession[i].endTime.split(':');
+					listSession[i].startTime = arrStart[0] + ':' + arrStart[1];
+					listSession[i].endTime = arrEnd[0] + ':' + arrEnd[1];
+				}
+				self.$setState({
+					session: listSession,
+				});
+				console.log(listSession);
 			}
 		},
 		mounted() {
@@ -383,12 +427,35 @@
 			var self = this;
 			let date = new Date();
 			let dateInput = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
-			console.log(dateInput);
+			let timeNow = date.getHours() + ":" + date.getMinutes();
+			
+			console.log(timeNow);
+			var dialog = app.dialog.create({
+				title: '',
+				content: '<div class="block no-margin no-padding text-align-center" style="font-size: 14px;"><img src="'+ window.config.app.logo +'" width="84" alt="" /><p><b>Your cart is not empty!</b></p><p>Please checkout or empty your cart before continue!.</p></div>',
+				verticalButtons: true,
+				buttons: [
+					{
+						text: 'Open cart!',
+						bold: true,
+						color: 'green',
+						onClick: function() {
+							app.views.current.router.navigate('/orders-cart');
+						}
+					},
+					{
+						text: 'No!',
+						color: 'gray'
+					}
+				]
+			});
+
+			self.checkListSession(dateInput, timeNow, '');
 			
 			self.$setState({
 				today: self.formatDate(date, 'en'),
 				cartItems: JSON.parse(localStorage.getItem('cartItems')) == undefined ? { quantity: 0, total: 0.00, items: [] } : JSON.parse(localStorage.getItem('cartItems')),
-				session: JSON.parse(localStorage.getItem('sessions')),
+				//session: listSession,
 				categories: JSON.parse(localStorage.getItem('categories'))
 			});
 			// setTimeout(function () {
@@ -405,20 +472,56 @@
 				closeOnSelect: true
 			});
 
-			//self.loadSession();
+			// self.loadSession();
 			// self.loadCategory();
 			// self.loadProduct(dateInput, self.session[0].id, '');
-			let sessionTemp = JSON.parse(localStorage.getItem('listOrderSession'))
-			console.log('self.session',self.session)
-			if (sessionTemp!=null) self.$('select[name=session]').val(sessionTemp.id)
+			let sessionTemp = JSON.parse(localStorage.getItem('listOrderSession'));
+			let orderDateTemp = JSON.parse(localStorage.getItem('listOrderDate'));
+			console.log('orderDateTemp', orderDateTemp);
+			if (sessionTemp!=null) self.$('select[name=session]').val(sessionTemp.id);
+			if (orderDateTemp != null) {
+				self.$setState({
+					today: orderDateTemp,
+				});
+			}
+			// else self.$('select[name=session]').val(self.session[0].id);
 			self.loadProduct(dateInput, self.$('select[name=session]').val(), '')
 			self.$("#menuCats").css("margin-top", "44px")
 			self.$('select[name=session]').change(function () {
-				self.updateProducts();
+				if (self.cartItems.quantity > 0){
+					var setDefautlVal = self.cartItems.listOrderSession.id;
+					if (self.$('select[name=session]').val() != self.cartItems.listOrderSession.id){
+						self.$('select[name=session]').val(setDefautlVal)
+						dialog.open();
+					}
+					else{
+						self.updateProducts();
+					}
+				}	
+				else{
+					self.updateProducts();
+				}
 			})
 
 			self.$('#date').change(function () {
-				self.updateProducts();
+				let arrDate = $('#date').val().split('/');
+				let changeDate = arrDate[1] + '/' + arrDate[0] + '/' + arrDate[2];
+				//let orderDateTempArr = orderDateTemp.split('/');
+				//orderDateTemp = orderDateTempArr[1] + '/' + orderDateTempArr[0] + '/' + orderDateTempArr[2];
+				if (self.cartItems.quantity > 0){
+					if (self.$('#date').val() != orderDateTemp){
+						self.$('#date').val(orderDateTemp)
+						dialog.open();
+					}
+					else{
+						self.checkListSession(dateInput, timeNow, changeDate);
+						self.updateProducts();
+					}
+				}	
+				else{
+					self.checkListSession(dateInput, timeNow, changeDate);
+					self.updateProducts();
+				}
 			})
 			// $('#tab-order').on('tab:show', function () {
 			// 	app.views.current.router.refreshPage();
