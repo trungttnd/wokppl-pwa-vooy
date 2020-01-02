@@ -2,7 +2,7 @@
     <div class="page">
 		<div class="navbar">
 			<div class="navbar-inner">
-				<img class="theme-light-only" src="assets/custom/img/konbini-logo.svg" height="24" alt="" />
+				<img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="36" alt="" />
 				<div class="right">
 					<!-- <a href="#" class="link icon-only" title="Read All">
 						<i class="fas fa-check-double"></i>
@@ -22,7 +22,7 @@
 					{{else}}
 					<li class="swipeout">
 					{{/if}}
-						<a href="/inbox-detail/{{this.notification.data.properties.orderId}}" @click="markAsRead('{{this.id}}'))" class="item-link item-content swipeout-content">
+						<a href="/inbox-detail/{{this.notification.data.properties.orderNumber}}" @click="markAsRead('{{this.id}}'))" class="item-link item-content swipeout-content">
 							<div class="item-content">
 								<div class="item-media text-color-red">
 									<i class="fa-stack">

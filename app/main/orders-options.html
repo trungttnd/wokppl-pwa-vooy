@@ -2,7 +2,7 @@
     <div class="page">
         <div class="navbar">
             <div class="navbar-inner">
-                <img class="theme-light-only" src="assets/custom/img/konbini-logo.svg" height="24" alt="" />
+                <img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="36" alt="" />
                 <div class="right">
                     <a href="#" @click="goCart" class="link icon-only">
                         <i class="icon material-icons">shopping_cart<span
@@ -413,7 +413,7 @@
                 // });
                 // console.log('chay den cuoi 2');
                 var tmpImg = new Image();
-                tmpImg.src="https://wokpplapi.konbi.cloud/uploads/" + self.detail.imageFileName; //or  document.images[i].src;
+                tmpImg.src= window.config.upload + self.detail.imageFileName; //or  document.images[i].src;
                 $(tmpImg).one('load',function(){  
                     if ((($(window).height() / 2) < tmpImg.height) && (tmpImg.width < (($(window).width() * 80) / 100))){
                         console.log('Vao 1')

@@ -2,10 +2,10 @@
     <div class="page">
         <div class="navbar">
             <div class="navbar-inner">
-                <img class="theme-light-only" src="assets/custom/img/konbini-logo.svg" height="24" alt="" />
+                <img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="36" alt="" />
             </div>
         </div>
-        <div class="page-content" style="padding-top: 44px;">
+        <div class="page-content  infinite-scroll-content" style="padding-top: 44px;">
             <!-- <div class="block">
                 <div class="row">
                     <div class="col-25">
@@ -37,9 +37,9 @@
                 <div class="your-cart">All orders</div>
             </div>
             <div class="list">
-                <div class="list-group">
+                <div id="list-infinite-scroll" class="list-group">
                     <ul>
-                        {{#each items}}
+                        <!-- {{#each items}}
                         <li>
                             <a href="#" @click="loadDetails('{{this.id}}')" class="item-link">
                                 <div class="item-content">
@@ -63,29 +63,31 @@
                                             {{#js_if "this.status=='5'"}}
                                             <span class="badge color-green">{{this.statusName}}</span>
                                             {{else}}
-                                                {{#js_if "this.status=='3'"}}
-                                                <span class="badge color-yellow">{{this.statusName}}</span>
-                                                {{else}}
-                                                <span class="badge color-red">{{this.statusName}}</span>
-                                                {{/js_if}}
+                                            {{#js_if "this.status=='3'"}}
+                                            <span class="badge color-yellow">{{this.statusName}}</span>
+                                            {{else}}
+                                            <span class="badge color-red">{{this.statusName}}</span>
+                                            {{/js_if}}
                                             {{/js_if}}
                                         </div>
                                     </div>
                                 </div>
                             </a>
                         </li>
-                        {{/each}}
+                        {{/each}} -->
                     </ul>
                 </div>
             </div>
+            <div class="preloader infinite-scroll-preloader"></div>
         </div>
     </div>
 </template>
 <style>
-.fa-stack {
-    width: 2em;
-}
-.your-cart {
+    .fa-stack {
+        width: 2em;
+    }
+
+    .your-cart {
         font-size: 25px;
         font-weight: bold;
         letter-spacing: 0.5px;
@@ -102,6 +104,9 @@
                 totalCount: 0,
                 startDate: '2000-01-01',
                 endDate: '2099-12-31',
+                allowInfinite: true,
+                itemsPerLoad: 10,
+                lastItemIndex: null
             }
         },
         methods: {
@@ -109,17 +114,17 @@
                 var self = this;
                 let tempItem = [];
                 app.request.getJSON(window.config.url + 'api/services/app/Preorder/GetTransactions',
-                {MaxResultCount: 5000},
-                //console.log(window.config.url + 'api/services/app/Preorder/GetTransactions?StartDate=' + startDate + '&&EndDate=' + endDate);
-                //app.request.getJSON(window.config.url + 'api/services/app/Preorder/GetTransactions?StartDate=' + startDate + '&&EndDate=' + endDate,
+                    { MaxResultCount: 5000 },
+                    //console.log(window.config.url + 'api/services/app/Preorder/GetTransactions?StartDate=' + startDate + '&&EndDate=' + endDate);
+                    //app.request.getJSON(window.config.url + 'api/services/app/Preorder/GetTransactions?StartDate=' + startDate + '&&EndDate=' + endDate,
                     function (suc) {
                         console.log('suc.result', suc.result)
-                        if (startDate != null && endDate != null){
+                        if (startDate != null && endDate != null) {
                             let compDate = new Date();
-                            for (let i = 0; i < suc.result.items.length; i++){
+                            for (let i = 0; i < suc.result.items.length; i++) {
                                 compDate = new Date(suc.result.items[i].orderTime)
                                 compDate = compDate.toISOString().substr(0, 10);
-                                if (startDate <= compDate && compDate <= endDate){
+                                if (startDate <= compDate && compDate <= endDate) {
                                     tempItem.push(suc.result.items[i]);
                                 }
                             }
@@ -127,32 +132,50 @@
                         else {
                             tempItem = suc.result.items;
                         }
-                        for (let i = 0; i < tempItem.length; i++){
+                        for (let i = 0; i < tempItem.length; i++) {
                             let orderTime = new Date(tempItem[i].orderTimeDisplay);
                             let tempTotalPrice = 0;
-                            tempItem[i].orderTime = orderTime.getDate() + "/" + (orderTime.getMonth()+1) + "/" + orderTime.getFullYear() + " " + orderTime.getHours() + ":" + orderTime.getMinutes(); 
-                            for (let j = 0; j < tempItem[i].orderItems.length; j++){
+                            tempItem[i].orderTime = orderTime.getDate() + "/" + (orderTime.getMonth() + 1) + "/" + orderTime.getFullYear() + " " + orderTime.getHours() + ":" + orderTime.getMinutes();
+                            for (let j = 0; j < tempItem[i].orderItems.length; j++) {
                                 tempTotalPrice += tempItem[i].orderItems[j].price;
                                 console.log(tempTotalPrice)
-                            }   
-                            tempItem[i].totalPrice = tempTotalPrice;                       
+                            }
+                            tempItem[i].totalPrice = tempTotalPrice;
                         }
                         self.$setState({
                             transactions: tempItem,
                             totalCount: suc.result.totalCount,
                             items: tempItem
                         });
-                        console.log(tempItem)                       
+                        console.log(tempItem)
+                        var html = '';
+                        for (var i = 0; i < self.itemsPerLoad; i++) {
+                            //html += '<li>Item ' + i + '</li>';
+                            html += '<li>'
+                            html += '<a href="#" @click="loadDetails(' + self.items[i].id + ')" class="item-link">'
+                            html += '<div class="item-content"><div class="item-media"><i class="fa-stack">'
+                            html += '<span class="fas fa-circle fa-stack-2x text-color-red"></span>'
+                            html += '<span class="fas fa-shopping-cart fa-stack-1x fa-inverse"></span></i></div>'
+                            html += '<div class="item-inner"><div class="item-title"><span>' + self.items[i].orderNumber + '</span>'
+                            html += '<div class="item-header">' + self.items[i].orderTime + '</div> </div>'
+                            html += '<div class="item-title" style="text-align: right;"><div class="item-header text-color-red">'
+                            html += self.items[i].totalPrice.toFixed(2) + '</div>'
+                            html += self.items[i].status == 5 ? '<span class="badge color-green">' + self.items[i].statusName + '</span>' : self.items[i].status == 3 ? '<span class="badge color-yellow">' + self.items[i].statusName + '</span>' : '<span class="badge color-red">' + self.items[i].statusName + '</span>'
+                            html += '</div> </div></div></a>'
+                            html += '</li>'
+                        }
+                        self.$('#list-infinite-scroll ul').append(html);
+                        self.lastItemIndex = 10;
                     },
                     function (err) {
                         console.log(err)
                     })
             },
-            loadDetails: function (id){
+            loadDetails: function (id) {
                 //console.log(id)
                 let self = this;
                 let det = self.items.find(function (el) {
-					return el.id == id;
+                    return el.id == id;
                 })
                 //console.log(det)
                 //chuyen thoi gian Collection time lay tu api ve local time
@@ -200,49 +223,95 @@
                 console.log(id)
             },
             logout: function () {
-				var self = this;
-				localStorage.removeItem('WOKPPL_OldUser');
-				localStorage.removeItem('WOKPPL_accessToken');
-				localStorage.removeItem('WOKPPL_expireInSeconds');
-				localStorage.removeItem('WOKPPL_expired');
-				localStorage.removeItem('WOKPPL_refreshToken');
-				localStorage.removeItem('WOKPPL_mobile');
-				localStorage.removeItem('WOKPPL_name');
-				localStorage.removeItem('WOKPPL_email');
-				localStorage.removeItem('WOKPPL_username');
-				localStorage.removeItem('WOKPPL_userId');
-				localStorage.removeItem('WOKPPL_passcode');
-				localStorage.removeItem('addProduct');
-				localStorage.removeItem('cartItems');
-				localStorage.removeItem('listOrderSession');
-				localStorage.removeItem('listOrderDate');
-				localStorage.removeItem('categories');
-				localStorage.removeItem('editProduct');
-				localStorage.removeItem('sessions');
-			}
+                var self = this;
+                localStorage.removeItem('WOKPPL_OldUser');
+                localStorage.removeItem('WOKPPL_accessToken');
+                localStorage.removeItem('WOKPPL_expireInSeconds');
+                localStorage.removeItem('WOKPPL_expired');
+                localStorage.removeItem('WOKPPL_refreshToken');
+                localStorage.removeItem('WOKPPL_mobile');
+                localStorage.removeItem('WOKPPL_name');
+                localStorage.removeItem('WOKPPL_email');
+                localStorage.removeItem('WOKPPL_username');
+                localStorage.removeItem('WOKPPL_userId');
+                localStorage.removeItem('WOKPPL_passcode');
+                localStorage.removeItem('addProduct');
+                localStorage.removeItem('cartItems');
+                localStorage.removeItem('listOrderSession');
+                localStorage.removeItem('listOrderDate');
+                localStorage.removeItem('categories');
+                localStorage.removeItem('editProduct');
+                localStorage.removeItem('sessions');
+            },
+            onInfiniteScroll: function () {
+                var self = this;
+                if (!self.allowInfinite) {
+                    return;
+                }
+                self.$setState({
+                    allowInfinite: false
+                });
+                setTimeout(function () {
+                    self.$setState({
+                        allowInfinite: true
+                    });
+                    if (self.lastItemIndex >= self.totalCount) {
+                        app.infiniteScroll.destroy('.infinite-scroll-content');
+                        self.$('.infinite-scroll-preloader').remove();
+                        return;
+                    }
+                    var html = '';
+                    for (var i = self.lastItemIndex; i < self.lastItemIndex + self.itemsPerLoad; i++) {
+                        if (i < self.totalCount) {
+                            html += '<li>'
+                            html += '<a href="#" @click="loadDetails(' + self.items[i].id + ')" class="item-link">'
+                            html += '<div class="item-content"><div class="item-media"><i class="fa-stack">'
+                            html += '<span class="fas fa-circle fa-stack-2x text-color-red"></span>'
+                            html += '<span class="fas fa-shopping-cart fa-stack-1x fa-inverse"></span></i></div>'
+                            html += '<div class="item-inner"><div class="item-title"><span>' + self.items[i].orderNumber + '</span>'
+                            html += '<div class="item-header">' + self.items[i].orderTime + '</div> </div>'
+                            html += '<div class="item-title" style="text-align: right;"><div class="item-header text-color-red">'
+                            html += self.items[i].totalPrice.toFixed(2) + '</div>'
+                            html += self.items[i].status == 5 ? '<span class="badge color-green">' + self.items[i].statusName + '</span>' : self.items[i].status == 3 ? '<span class="badge color-yellow">' + self.items[i].statusName + '</span>' : '<span class="badge color-red">' + self.items[i].statusName + '</span>'
+                            html += '</div> </div></div></a>'
+                            html += '</li>'
+                        }
+                    }
+                    self.$('#list-infinite-scroll ul').append(html);
+                    self.$setState({
+                        lastItemIndex: self.$('#list-infinite-scroll li').length
+                    });
+                }, 1500);
+            }
         },
         mounted() {
             var self = this;
 
             console.log('4-getcurrent-history')
-			app.request.get(window.config.url + 'api/services/app/Session/GetCurrentLoginInformations',
-				function (suc) {
-					let response = JSON.parse(suc)
-					console.log(response.result.user)
-					if (response.result.user == null || response.result.user == 'null')
-						//console.log(response.result.user)
-						self.logout();
-				},
-				function (err) {
-					console.log(err)
+            app.request.get(window.config.url + 'api/services/app/Session/GetCurrentLoginInformations',
+                function (suc) {
+                    let response = JSON.parse(suc)
+                    console.log(response.result.user)
+                    if (response.result.user == null || response.result.user == 'null')
+                        //console.log(response.result.user)
+                        self.logout();
+                },
+                function (err) {
+                    console.log(err)
                 })
-                
+
             let dt = new Date();
             self.endDate = dt.toISOString().substr(0, 10);
             let dat = new Date();
             dat.setDate(1);
             self.startDate = dat.toISOString().substr(0, 10);
             self.loadData();
+            //lazy load
+
+            self.$setState({
+                lastItemIndex: self.$('#list-infinite-scroll li').length
+            });
+            self.$('.infinite-scroll-content').on('infinite', self.onInfiniteScroll);
         }
     }
 </script>

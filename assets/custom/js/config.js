@@ -13,7 +13,7 @@ window.config.app = {
 	version: '2.8.0',
 	title: 'Konbini',
 	tagline: 'Mobile Web App Kit',
-	logo: 'assets/custom/img/konbini-logo.svg'
+	logo: 'assets/custom/img/wokppllogo.png'
 };
 
 /*
