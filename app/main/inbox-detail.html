@@ -1,88 +1,171 @@
 <template>
     <div class="page">
         <div class="navbar">
-            <div class="navbar-inner">               
+            <div class="navbar-inner">
                 <img class="theme-light-only" src="assets/custom/img/konbini-logo.svg" height="24" alt="" />
                 <div class="right">
-                    <a href="#" class="link back">
+                    <!-- <a href="#" class="link back">
                         <span>Back</span>
-                    </a>
+                    </a> -->
                 </div>
             </div>
         </div>
         <div class="page-content">
+            <!-- <div class="block-title display-flex justify-content-space-between text-color-black">
+                <span>Transactions Id: {{detail.orderNumber}}</span>
+            </div> -->
             <div class="block-title display-flex justify-content-space-between text-color-black">
-                <span class="time-input">Order collection time:</span><input type="text" id="timepicker-24" placeholder="Select" readonly /><span></span>
-            </div>
-            <div class="content-block block-card text-align-left">
-                <span class="trans-id" style="font-size: 17px;">Transactions ID: 100101</span>
+                <div class="item-inner">
+                    <div class="item-title">
+                        <span class="transaction-id">Order Id: {{detail.orderNumber}}</span>
+                    </div>
+                    <div class="item-subtitle">
+                        <span class="collection-time">Collection time: {{collectionTimeDisplay}}</span>
+                    </div>
+                    <div class="item-subtitle">
+                        <span class="collection-time">Order Status: {{statusName}}</span>
+                    </div>
+                </div>
             </div>
             <div class="data-table card">
                 <table>
                     <thead>
                         <tr>
-                            <th class="label-cell">Product</th>
+                            <th class="label-cell">Your cart</th>
+                            <th class="numeric-cell" style="text-align: center;">Quantity</th>
                             <th class="numeric-cell">Amount</th>
                         </tr>
                     </thead>
                     <tbody>
+                        {{#each orderItems}}
                         <tr>
-                            <td class="label-cell">Noodle</td>
-                            <td class="numeric-cell">$1.00</td>
+                            <td class="label-cell">{{this.productName}}</td>
+                            <td class="label-cell" style="text-align: center;">{{this.quantity}}</td>
+                            <td class="numeric-cell">${{this.price.toFixed(2)}}</td>
                         </tr>
-                        <tr>
-                            <td class="label-cell">Chicken Rice</td>
-                            <td class="numeric-cell">$1.00</td>
-                        </tr>
-                        <tr>
-                            <td class="label-cell">Sushi</td>
-                            <td class="numeric-cell">$1.00</td>
-                        </tr>                           
+                        {{/each}}
                     </tbody>
                 </table>
-            </div> 
+            </div>
+            <div class="card">
+                <div class="card-content card-content-padding">
+                    <div class="list no-hairlines no-hairlines-between">
+                        <ul>
+                            <li>
+                                <div class="item-content">
+                                    <div class="item-inner">
+                                        <div class="item-title">Subtotal</div>
+                                        <div class="item-after">${{this.total.toFixed(2)}}</div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="item-content">
+                                    <div class="item-inner">
+                                        <div class="item-title">Discount</div>
+                                        <div class="item-after">$0.00</div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="item-content">
+                                    <div class="item-inner">
+                                        <div class="item-title">GST</div>
+                                        <div class="item-after">$0.00</div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="item-content">
+                                    <div class="item-inner">
+                                        <div class="item-title"><b>Grand Total</b></div>
+                                        <div class="item-after"><b>${{this.total.toFixed(2)}}</b></div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="fab fab-right-top color-orange">
+            <a href="/tab-inbox/" class="link item">
+                <i class="icon material-icons">close</i>
+            </a>
         </div>
     </div>
 </template>
 <style>
-.trans-id {
-    padding-left: 15px;
-}
-.time-order {
-    padding-right: 10px;
-}
+    .collection-time {
+        font-size: 15px;
+        color: gray;
+    }
+
+    .transaction-id {
+        font-size: 20px;
+    }
 </style>
 <script>
     return {
         data: function () {
             return {
-                detail: null
+                detail: [],
+                orderItems: [],
+                total: 0,
+                collectionTimeDisplay: '',
+                id: this.$route.params.id,
+                listOrders: null,
+                det: null,
+                statusName: ''
             }
         },
         methods: {
             loadData: function () {
                 var self = this;
-                let det = JSON.parse(localStorage.getItem('WOKPPL_cardDetail'));
-                //console.log('WOKPPL_cardDetail',det)
-                self.$setState({
-                    detail: det
-                });
-                // self.detail = JSON.parse(localStorage.getItem('WOKPPL_cardDetail'));
 
+                //list orders
+                app.request.getJSON(window.config.url + 'api/services/app/Preorder/GetTransactions',
+                    { MaxResultCount: 1000 },
+                    function (suc) {
+                        console.log('suc.result', suc.result)
+
+                        self.$setState({
+                            listOrders: suc.result.items,
+                            det: suc.result.items.find(function (el) {
+                                return el.id == self.id;
+                            })
+                        });
+                        // console.log('listorders', self.listOrders);
+                        console.log('det', self.det)
+
+                        let tempTotal = 0;
+                        for (let i = 0; i < self.det.orderItems.length; i++) {
+                            tempTotal += self.det.orderItems[i].price
+                        }
+                        let colTime = new Date(self.det.collectionTimeDisplay);
+                        //self.collectionTimeDisplay = colTime.toLocaleTimeString().substring(0,5) + ', ' + colTime.toLocaleDateString();
+                        self.collectionTimeDisplay = colTime.getHours() + ':' + colTime.getMinutes() + ', ' + colTime.getDate() + '/' + (colTime.getMonth() + 1) + '/' + colTime.getFullYear()
+                        self.statusName = self.det.statusName;
+                        self.$setState({
+                            detail: self.det,
+                            orderItems: self.det.orderItems,
+                            total: self.det.payments[0].amount,
+                        });
+                    },
+                    function (err) {
+                        console.log(err)
+                    })
             },
             
         },
         on: {
             pageInit: function () {
                 var self = this;
-                //self.loadData()
-                jQuery('#timepicker-24').timeDropper({
-                    autoswitch: true,
-                    format: 'HH:mm',
-                    init_animation: 'dropDown',
-                    meridians: false,
-                    setCurrentTime: true
-                });
+                console.log(self.id)
+                self.loadData();
+                
+                console.log('inbox-detail')
+
             }
         }
     }

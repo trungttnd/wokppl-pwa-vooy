@@ -60,7 +60,15 @@
                                             <div class="item-header text-color-red">
                                                 ${{this.totalPrice.toFixed(2)}}
                                             </div>
+                                            {{#js_if "this.status=='5'"}}
                                             <span class="badge color-green">{{this.statusName}}</span>
+                                            {{else}}
+                                                {{#js_if "this.status=='3'"}}
+                                                <span class="badge color-yellow">{{this.statusName}}</span>
+                                                {{else}}
+                                                <span class="badge color-red">{{this.statusName}}</span>
+                                                {{/js_if}}
+                                            {{/js_if}}
                                         </div>
                                     </div>
                                 </div>
@@ -221,7 +229,7 @@
 				function (suc) {
 					let response = JSON.parse(suc)
 					console.log(response.result.user)
-					if (response.result.user == null)
+					if (response.result.user == null || response.result.user == 'null')
 						//console.log(response.result.user)
 						self.logout();
 				},

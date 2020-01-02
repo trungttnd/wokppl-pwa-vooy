@@ -534,17 +534,16 @@
 				function (suc) {
 					let response = JSON.parse(suc)
 					console.log(response.result.user)
-					if (response.result.user == null)
-						//console.log(response.result.user)
+					if (response.result.user == null || response.result.user == 'null')
 						self.logout();
 				},
 				function (err) {
 					console.log(err)
 				})
 			let date = new Date();
-			let dateInput = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
+			let dateInput = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();			
 			let timeNow = date.getHours() + ":" + date.getMinutes();
-			
+
 			console.log(timeNow);
 			let sessionTemp = JSON.parse(localStorage.getItem('listOrderSession'));
 			let orderDateTemp = JSON.parse(localStorage.getItem('listOrderDate'));
@@ -568,6 +567,7 @@
 			self.$setState({
 				today: self.formatDate(date, 'en'),
 				cartItems: JSON.parse(localStorage.getItem('cartItems')) == undefined ? { quantity: 0, total: 0.00, items: [] } : JSON.parse(localStorage.getItem('cartItems')),
+				//session: JSON.parse(localStorage.getItem('sessions')),
 				//session: listSession,
 				categories: JSON.parse(localStorage.getItem('categories'))
 			});
@@ -585,7 +585,7 @@
 				closeOnSelect: true
 			});
 
-			// self.loadSession();
+			//self.loadSession();
 			// self.loadCategory();
 			// self.loadProduct(dateInput, self.session[0].id, '');
 			

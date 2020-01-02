@@ -32,6 +32,8 @@ var app = new Framework7({
 	routes: window.routes,
 	lazyModulesPath: 'assets/vendor/framework7/lazy-components',
 	init: false,
+	cache: false,
+	
 	data: function() {
 		return {
 			a2hs: null,

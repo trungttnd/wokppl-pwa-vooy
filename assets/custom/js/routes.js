@@ -191,7 +191,7 @@ window.routes = [
 							function (suc) {
 								let response = JSON.parse(suc)
 								console.log(response.result.user)
-								if (response.result.user == null) 
+								if (response.result.user == null || response.result.user == 'null') 
 								//console.log(response.result.user)
 								 self.logout();
 							},
@@ -573,7 +573,7 @@ window.routes = [
 		componentUrl: './app/main/details-only.html'
 	},
 	{
-		path: '/inbox-detail',
+		path: '/inbox-detail/:id',
 		componentUrl: './app/main/inbox-detail.html',
 	},
 	{
