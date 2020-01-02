@@ -588,9 +588,10 @@
 				firstLoadDay = arrFirstDay[1] + '/' + arrFirstDay[0] + '/' + arrFirstDay[2];
 				if (Date.parse(firstLoadDay + ' ' + sessionTemp.endTime) < Date.parse(dateInput + ' ' + timeNow)) {
 					localStorage.setItem('disableCheckout', JSON.stringify('true'))
-					self.goCartDialog().open();
+					//self.goCartDialog().open();
 				}
 			}
+			
 			// console.log('orderDateTemp', orderDateTemp);
 			// console.log('dateInput', dateInput);
 
