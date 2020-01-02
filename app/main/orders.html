@@ -15,7 +15,7 @@
 							<i class="fas fa-caret-left" style="margin-right: 8px"></i>
 						</a>
 						<div class="item-input-wrap">
-							<input type="text" value="{{today}}" readonly="readonly" id="date" style="width: 6rem;" />
+							<input type="text" value="{{today}}" readonly="readonly" id="date" style="width: 6.2rem;" />
 						</div>
 						<a href="#" @click="next" class="item-link">
 							<i class="fas fa-caret-right" style="margin-left: 8px"></i>
@@ -165,9 +165,24 @@
 					});
 					changePrevDate = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
 				}
-				console.log(date);
-				self.checkListSession(prevDateInput, prevtimeNow, changePrevDate);
-				self.updateProducts();
+				let orderDateTemp = JSON.parse(localStorage.getItem('listOrderDate'));
+				if (self.cartItems.quantity > 0){
+					if (self.today != orderDateTemp){
+						self.$('#date').val(orderDateTemp)
+						self.openDialog().open();
+					}
+					else{
+						self.checkListSession(prevDateInput, prevtimeNow, changePrevDate);
+						self.updateProducts();
+					}
+				}	
+				else{
+					self.checkListSession(prevDateInput, prevtimeNow, changePrevDate);
+					self.updateProducts();
+				}
+				console.log('changePrevDate', changePrevDate);
+				// self.checkListSession(prevDateInput, prevtimeNow, changePrevDate);
+				// self.updateProducts();
 			},
 			next: function () {
 				var self = this;
@@ -186,8 +201,23 @@
 					today: self.formatDate(date, 'en')
 				});
 				let changeNextDate = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
-				self.checkListSession(nextDateInput, nexttimeNow, changeNextDate);
-				self.updateProducts();
+				let orderDateTemp = JSON.parse(localStorage.getItem('listOrderDate'));
+				if (self.cartItems.quantity > 0){
+					if (self.today != orderDateTemp){
+						self.$('#date').val(orderDateTemp)
+						self.openDialog().open();
+					}
+					else{
+						self.checkListSession(nextDateInput, nexttimeNow, changeNextDate);
+						self.updateProducts();
+					}
+				}	
+				else{
+					self.checkListSession(nextDateInput, nexttimeNow, changeNextDate);
+					self.updateProducts();
+				}
+				// self.checkListSession(nextDateInput, nexttimeNow, changeNextDate);
+				// self.updateProducts();
 			},
 			selectOption: function (id) {
 				var self = this;
@@ -400,8 +430,8 @@
 				var newDate = '';
 				let listSession = JSON.parse(localStorage.getItem('sessions'));
 				console.log('dateInput',dateInput);
-				console.log(Date.parse(dateInput + ' ' + timeNow));
-				console.log(Date.parse(dateInput + ' ' + listSession[0].startTime));
+				console.log('timeNow',Date.parse(dateInput + ' ' + timeNow));
+				console.log('startTime',Date.parse(dateInput + ' ' + listSession[0].startTime));
 				if (changeDate == ''){
 					newDate = dateInput;
 				}
@@ -446,6 +476,54 @@
 				localStorage.removeItem('categories');
 				localStorage.removeItem('editProduct');
 				localStorage.removeItem('sessions');
+			},
+			openDialog: function(){
+				var dialog = app.dialog.create({
+					title: '',
+					content: '<div class="block no-margin no-padding text-align-center" style="font-size: 14px;"><img src="'+ window.config.app.logo +'" width="84" alt="" /><p><b>Your cart is not empty!</b></p><p>Please checkout or empty your cart before continue!.</p></div>',
+					verticalButtons: true,
+					buttons: [
+						{
+							text: 'Open cart!',
+							bold: true,
+							color: 'green',
+							onClick: function() {
+								app.views.current.router.navigate('/orders-cart');
+							}
+						},
+						{
+							text: 'No!',
+							color: 'gray'
+						}
+					]
+				});
+				return dialog;
+			},
+			goCartDialog: function(){
+				var dialog = app.dialog.create({
+					title: '',
+					content: '<div class="block no-margin no-padding text-align-center" style="font-size: 14px;"><img src="'+ window.config.app.logo +'" width="84" alt="" /><p><b>Over time!</b></p><p>Please empty your cart before continue!.</p></div>',
+					verticalButtons: true,
+					buttons: [
+						{
+							text: 'Open cart!',
+							bold: true,
+							color: 'green',
+							onClick: function() {
+								app.views.current.router.navigate('/orders-cart');
+							}
+						},
+						{
+							text: 'Go to home page!',
+							bold: true,
+							color: 'gray',
+							onClick: function() {
+								app.views.current.router.navigate('/');
+							}
+						}
+					]
+				});
+				return dialog;
 			}
 		},
 		mounted() {
@@ -467,28 +545,25 @@
 			let timeNow = date.getHours() + ":" + date.getMinutes();
 
 			console.log(timeNow);
-			var dialog = app.dialog.create({
-				title: '',
-				content: '<div class="block no-margin no-padding text-align-center" style="font-size: 14px;"><img src="'+ window.config.app.logo +'" width="84" alt="" /><p><b>Your cart is not empty!</b></p><p>Please checkout or empty your cart before continue!.</p></div>',
-				verticalButtons: true,
-				buttons: [
-					{
-						text: 'Open cart!',
-						bold: true,
-						color: 'green',
-						onClick: function() {
-							app.views.current.router.navigate('/orders-cart');
-						}
-					},
-					{
-						text: 'No!',
-						color: 'gray'
-					}
-				]
-			});
+			let sessionTemp = JSON.parse(localStorage.getItem('listOrderSession'));
+			let orderDateTemp = JSON.parse(localStorage.getItem('listOrderDate'));
+			let firstLoad = '';
+			if (orderDateTemp == null){
+				firstLoadDay = '';
+			}
+			else{
+				let arrFirstDay = orderDateTemp.split('/');
+				firstLoadDay = arrFirstDay[1] + '/' + arrFirstDay[0] + '/' + arrFirstDay[2];
+				if (Date.parse(firstLoadDay + ' ' + sessionTemp.endTime) < Date.parse(dateInput + ' ' + timeNow)){
+					localStorage.setItem('disableCheckout', JSON.stringify('true'))
+					self.goCartDialog().open();
+				}
+			}
+			console.log('orderDateTemp', orderDateTemp);
+			console.log('dateInput', dateInput);
 
-			self.checkListSession(dateInput, timeNow, '');
-
+			self.checkListSession(dateInput, timeNow, firstLoadDay);
+			
 			self.$setState({
 				today: self.formatDate(date, 'en'),
 				cartItems: JSON.parse(localStorage.getItem('cartItems')) == undefined ? { quantity: 0, total: 0.00, items: [] } : JSON.parse(localStorage.getItem('cartItems')),
@@ -513,24 +588,31 @@
 			//self.loadSession();
 			// self.loadCategory();
 			// self.loadProduct(dateInput, self.session[0].id, '');
-			let sessionTemp = JSON.parse(localStorage.getItem('listOrderSession'));
-			let orderDateTemp = JSON.parse(localStorage.getItem('listOrderDate'));
+			
 			console.log('orderDateTemp', orderDateTemp);
-			if (sessionTemp!=null) self.$('select[name=session]').val(sessionTemp.id);
+			if (sessionTemp!=null) {
+				self.$('select[name=session]').val(sessionTemp.id);
+			}
 			if (orderDateTemp != null) {
 				self.$setState({
 					today: orderDateTemp,
 				});
 			}
 			// else self.$('select[name=session]').val(self.session[0].id);
-			self.loadProduct(dateInput, self.$('select[name=session]').val(), '')
+			if (orderDateTemp != null){
+				self.loadProduct(firstLoadDay, self.$('select[name=session]').val(), '')
+			}
+			else{
+				self.loadProduct(dateInput, self.$('select[name=session]').val(), '')
+			}
+			
 			self.$("#menuCats").css("margin-top", "44px")
 			self.$('select[name=session]').change(function () {
 				if (self.cartItems.quantity > 0){
 					var setDefautlVal = self.cartItems.listOrderSession.id;
 					if (self.$('select[name=session]').val() != self.cartItems.listOrderSession.id){
 						self.$('select[name=session]').val(setDefautlVal)
-						dialog.open();
+						self.openDialog().open();
 					}
 					else{
 						self.updateProducts();
@@ -549,7 +631,7 @@
 				if (self.cartItems.quantity > 0){
 					if (self.$('#date').val() != orderDateTemp){
 						self.$('#date').val(orderDateTemp)
-						dialog.open();
+						self.openDialog().open();
 					}
 					else{
 						self.checkListSession(dateInput, timeNow, changeDate);

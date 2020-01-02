@@ -16,7 +16,7 @@
             {{#if detail}}
             <div class="block">
                 <img id="img-product" class="img-center"
-                    src="https://wokpplapi.konbi.cloud/uploads/{{detail.imageFileName}}" height="{{orgHeight}}px" alt="" />
+                    src="https://wokpplapi.konbi.cloud/uploads/{{detail.imageFileName}}" height="{{orgHeight}}" width="{{orgWidth}}" alt="" />
             </div>
             <div class="block">
                 <div class="row">
@@ -169,8 +169,8 @@
                 productList: [
                 ],
                 availableNumbers: 0,
-                orgWidth: 0,
-                orgHeight: 0,
+                orgWidth: '',
+                orgHeight: '',
             }
         },
         methods: {
@@ -414,18 +414,33 @@
                 // console.log('chay den cuoi 2');
                 var tmpImg = new Image();
                 tmpImg.src="https://wokpplapi.konbi.cloud/uploads/" + self.detail.imageFileName; //or  document.images[i].src;
-                $(tmpImg).one('load',function(){                  
-                    //alert(tmpImg.width+"x"+tmpImg.height);
-                    if (($(window).height() / 2) < tmpImg.height){
+                $(tmpImg).one('load',function(){  
+                    if ((($(window).height() / 2) < tmpImg.height) && (tmpImg.width < (($(window).width() * 80) / 100))){
+                        console.log('Vao 1')
                         self.$setState({
-                            orgWidth: tmpImg.width,
-                            orgHeight: $(window).height() / 2,
+                            orgWidth: '',
+                            orgHeight: $(window).height() / 2 + 'px',
+                        });
+                    }
+                    else if (tmpImg.height < (($(window).height() / 2)) && ((($(window).width() * 80) / 100) < tmpImg.width)){
+                        console.log('Vao 2')
+                        self.$setState({
+                            orgWidth: $(window).width() * 80 / 100 + 'px',
+                            orgHeight: '',
+                        });
+                    }
+                    else if ((($(window).height() / 2) < tmpImg.height) && ((($(window).width() * 80) / 100) < tmpImg.width)){
+                        console.log('Vao 3')
+                        self.$setState({
+                            orgWidth: $(window).width() * 80 / 100 + 'px',
+                            orgHeight: '',
                         });
                     }
                     else{
+                        console.log('Khong vao dau')
                         self.$setState({
-                            orgWidth: tmpImg.width,
-                            orgHeight: tmpImg.height,
+                            orgWidth: tmpImg.width + 'px',
+                            orgHeight: tmpImg.height + 'px',
                         });
                     }
                 });

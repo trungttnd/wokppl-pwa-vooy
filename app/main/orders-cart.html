@@ -205,11 +205,13 @@
                 <i class="icon material-icons">close</i>
             </a>
         </div>
+        {{#if disableCheckout}}
         <div class="fab fab-extended fab-center-bottom color-red" style="width: 120px;">
             <a href="#" class="link item" @click="checkout">
                 <span style="font-family: cabin regular;">CHECKOUT</span>
             </a>
         </div>
+        {{/if}}
         <!-- <div class="fab fab-morph fab-right-bottom color-orange">
             <a href="#" @click="clearProduct()">
                 <span style="font-family: cabin regular;">Clear</span>
@@ -266,7 +268,8 @@
                     type: 3,
                     orderItems: [],
                     sessionId: ''
-                }
+                },
+                disableCheckout: true,
             }
         },
         methods: {
@@ -304,6 +307,8 @@
                     self.updateCartList.quantity = 0;
                     self.updateCartList.total = 0;
                     localStorage.removeItem('listOrderSession');
+                    localStorage.removeItem('listOrderDate');
+                    localStorage.removeItem('disableCheckout');
                     self.$setState({
                         listOrderDate: null,
                         orderSessionName: null,
@@ -504,6 +509,7 @@
                 var today = new Date();
                 let sessionTemp = JSON.parse(localStorage.getItem('listOrderSession'))
                 today.setTime(today.getTime() + (sessionTemp.preparationTime * 60 * 1000) + (sessionTemp.bufferTime * 60 * 1000));
+                console.log('today', today);
                 today = new Date(today);
                 var pickerInline = app.picker.create({
                 //containerEl: '#demo-picker-date-container',
@@ -553,6 +559,18 @@
                 var self = this;
                 //self.initializeTimepicker24()
                 let cartTemp = JSON.parse(localStorage.getItem('cartItems'));
+                let disableCheckout = JSON.parse(localStorage.getItem('disableCheckout'));
+                if (disableCheckout != null){
+                    self.$setState({
+                        disableCheckout: false,
+                    })  
+                }
+                else{
+                    self.$setState({
+                        disableCheckout: true,
+                    })
+                }
+                console.log('disableCheckout', disableCheckout);
                 console.log('cartTemp:', cartTemp);
                 let tempString = [];
                 if (cartTemp != null)
@@ -579,6 +597,25 @@
                     console.log($(this).val())
                     self.newOrder.type = $(this).val();
                 });
+
+                let sessionTemp = JSON.parse(localStorage.getItem('listOrderSession'));
+                let orderDateTemp = JSON.parse(localStorage.getItem('listOrderDate'));
+                console.log('sessionTemp', sessionTemp);
+                console.log('orderDateTemp', orderDateTemp);
+                self.$('input[id=timepicker-24]').change(function (){
+                    let arrDate = orderDateTemp.split('/');
+                    let newDate = arrDate[1] + '/' + arrDate[0] + '/' + arrDate[2];
+                    let newDateTime = newDate + ' ' + self.$('input[id=timepicker-24]').val();
+                    let newDT = new Date(newDateTime);
+                    newDT.setTime(newDT.getTime() + (sessionTemp.preparationTime * 60 * 1000) + (sessionTemp.bufferTime * 60 * 1000));
+                    console.log('newDT', newDT);
+                    newDT = new Date(newDT);
+                    console.log('newDate',newDate);
+                    console.log('Time picker',self.$('input[id=timepicker-24]').val());
+                    console.log('newDT',newDT);
+                    let selectTime = self.$('input[id=timepicker-24]').val() 
+                });
+
                 if (cartTemp != null) {
                     self.$setState({
                         updateCartList: cartTemp,
