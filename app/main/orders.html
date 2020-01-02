@@ -15,7 +15,7 @@
 							<i class="fas fa-caret-left" style="margin-right: 8px"></i>
 						</a>
 						<div class="item-input-wrap">
-							<input type="text" value="{{today}}" readonly="readonly" id="date" style="width: 6.2rem;" />
+							<input type="text" value="{{today}}" readonly="readonly" id="date" style="width: 6.5rem;" />
 						</div>
 						<a href="#" @click="next" class="item-link">
 							<i class="fas fa-caret-right" style="margin-left: 8px"></i>
@@ -267,9 +267,10 @@
 				let dateInput = arr[1] + '/' + arr[0] + '/' + arr[2]
 				if (selected == undefined) {
 					// self.loadProduct(dateInput, sess, '')
+
 					self.$setState({
 						productList: self.allProducts,
-						isNoProduct: false,
+						isNoProduct: self.allProducts.length==0?true: false,
 					})
 
 				}
@@ -403,6 +404,7 @@
 						self.$setState({
 							allProducts: response.result.items,
 							productList: response.result.items,
+							isNoProduct: response.result.items.length==0?true:false
 						})
 						console.log('ABC: ', self.productList)
 					},
@@ -578,10 +580,12 @@
 			// 	});
 			// });
 			console.log('test', self.cartItems)
+			let dateNow = new Date();
+			dateNow.setDate(dateNow.getDate()-1);
 			var calendarDateFormat = app.calendar.create({
 				inputEl: '#date',
 				dateFormat: 'dd/mm/yyyy',
-				minDate: new Date(),
+				minDate: dateNow,
 				closeOnSelect: true
 			});
 
