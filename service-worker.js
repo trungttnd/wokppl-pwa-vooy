@@ -46,3 +46,28 @@ workbox.routing.registerRoute(
     cacheName: 'cache-font'
   })
 );
+
+/*Notify*/
+self.addEventListener('push', function(event) {
+  //console.log('[Service Worker] Push Received.');
+  //console.log(`[Service Worker] Push had this data: "${event.data.text()}"`);
+  let dataContent = JSON.parse(event.data.text());
+  const title = dataContent.title;
+  const options = {
+    body: dataContent.message,
+    icon: 'assets/custom/img/konbini-logo-white.svg',
+    badge: 'images/badge.png'
+  };
+  //localStorage.setItem('Konbini_popup', dataContent.title)
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
+self.addEventListener('notificationclick', function(event) {
+  console.log('[Service Worker] Notification click Received.');
+
+  event.notification.close();
+
+  event.waitUntil(
+    clients.openWindow('http://localhost:81/cusPWA/wokppl-pwa-vooy/')
+  );
+});

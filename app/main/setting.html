@@ -3,12 +3,17 @@
 
         <div class="navbar">
             <div class="navbar-inner">
-                    <img class="theme-light-only" src="assets/custom/img/konbini-logo.svg" height="24" alt="" />
-                <div class="right">
+                <div class="left">
                     <a href="#" class="link back">
-                        <span>Back</span>
+                        <i class="icon icon-back"></i>
                     </a>
                 </div>
+                <div class="title">Settings</div>
+                <!-- <div class="subnavbar ios-only">
+					<div class="subnavbar-inner">
+						<div class="title" data-i18n="permissions-api">Permissions API</div>
+					</div>
+				</div> -->
             </div>
         </div>
 
@@ -17,26 +22,7 @@
             <div class="block-title">Permission</div>
             <div class="list inset">
                 <ul>
-                    <li class="permission-notifications">
-                        <div class="item-content">
-                            <div class="item-media">
-                                <i class="fa-stack">
-                                    <span class="fas fa-circle fa-stack-2x text-color-red"></span>
-                                    <span class="fas fa-bell fa-stack-1x fa-inverse"></span>
-                                </i>
-                            </div>
-                            <div class="item-inner">
-                                <div class="item-title">Notifications</div>
-                                <div class="item-after">
-                                    <label class="toggle toggle-init color-green tooltip-init" data-tooltip="Request">
-                                        <input type="checkbox" data-permission="notifications" />
-                                        <span class="toggle-icon"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="permission-camera">
+                    <!-- <li class="permission-camera">
                         <div class="item-content">
                             <div class="item-media">
                                 <i class="fa-stack">
@@ -111,6 +97,25 @@
                                 </div>
                             </div>
                         </div>
+                    </li> -->
+                    <li class="permission-notifications">
+                        <div class="item-content">
+                            <div class="item-media">
+                                <i class="fa-stack">
+                                    <span class="fas fa-circle fa-stack-2x text-color-red"></span>
+                                    <span class="fas fa-bell fa-stack-1x fa-inverse"></span>
+                                </i>
+                            </div>
+                            <div class="item-inner">
+                                <div class="item-title">Notifications</div>
+                                <div class="item-after">
+                                    <label class="toggle toggle-init color-green tooltip-init" data-tooltip="Request">
+                                        <input type="checkbox" data-permission="notifications" />
+                                        <span class="toggle-icon"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                     </li>
                 </ul>
             </div>
@@ -118,7 +123,12 @@
             <div class="note note-warning text-align-center">
                 <p>Once granted or denied, the permissions cannot be revoked in App. They must be
                     explicitly revoked by the user from browser's settings.</p>
-            </div>            
+            </div>
+            <!-- <div class="item-inner">
+                <div class="item-title">- Endpoint: {{endpoint}}</div>
+                <div class="item-title">- P256dh: {{p256dh}}</div>
+                <div class="item-title">- Auth: {{auth}}</div>
+            </div> -->
             {{else}}
             <div class="empty-state">
                 <div class="empty-state-media">
@@ -135,7 +145,6 @@
             {{/if}}
 
         </div>
-
     </div>
 </template>
 
@@ -143,7 +152,6 @@
     return {
         data: function () {
             return {
-                swRegistration: null,
                 isApiSupported: (function () {
                     return app.support.webApi.permissions;
                 })(),
@@ -187,7 +195,58 @@
             requestPermission: function (permissionName) {
                 var self = this;
                 switch (permissionName) {
-                    
+                    // case 'camera':
+                    //     navigator.getUserMedia(
+                    //         {
+                    //             video: true
+                    //         },
+                    //         function () {
+                    //             self.showSuccessMessage('Permission Granted');
+                    //         },
+                    //         function (error) {
+                    //             self.showErrorMessage(error.message);
+                    //         }
+                    //     );
+                    //     self.checkPermissionStatus('camera');
+                    //     break;
+                    // case 'geolocation':
+                    //     navigator.geolocation.getCurrentPosition(
+                    //         function () {
+                    //             self.showSuccessMessage('Permission Granted');
+                    //         },
+                    //         function (error) {
+                    //             self.showErrorMessage(error.message);
+                    //         }
+                    //     );
+                    //     self.checkPermissionStatus('geolocation');
+                    //     break;
+                    // case 'microphone':
+                    //     navigator.getUserMedia(
+                    //         {
+                    //             audio: true
+                    //         },
+                    //         function () {
+                    //             self.showSuccessMessage('Permission Granted');
+                    //         },
+                    //         function (error) {
+                    //             self.showErrorMessage(error.message);
+                    //         }
+                    //     );
+                    //     self.checkPermissionStatus('microphone');
+                    //     break;
+                    // case 'midi':
+                    //     navigator.requestMIDIAccess(
+                    //         {
+                    //             sysex: true
+                    //         })
+                    //         .then(function () {
+                    //             self.showSuccessMessage('Permission Granted');
+                    //         })
+                    //         .catch(function (error) {
+                    //             self.showErrorMessage(error.message);
+                    //             self.updatePermissionStatus('midi', 'denied');
+                    //         });
+                    //     break;
                     case 'notifications':
                         Notification.requestPermission()
                             .then(function (status) {
@@ -227,46 +286,56 @@
 
                 if (subscription) {
                     let sss = JSON.stringify(subscription);
-                    let output = JSON.parse(sss)                    
+                    let output = JSON.parse(sss)
+                    // self.$setState({
+                    //     endpoint: output.endpoint,
+                    //     p256dh: output.keys.p256dh,
+                    //     auth: output.keys.auth
+                    // })
+                    // //console.log('subscription',subscription)
+                    // console.log('sss',output)
                     console.log('endpoint', output.endpoint);
                     console.log('p256dh', output.keys.p256dh)
                     console.log('auth', output.keys.auth)
-                    // app.request.postJSON(window.config.url + 'api/services/app/Device/Create', {
-                    //     name: 'Name',
-                    //     pushEndPoint: output.endpoint,
-                    //     pushP256DH: output.keys.p256dh,
-                    //     pushAuth: output.keys.auth
-                    // },
-                    //     function (suc) {
-                    //         console.log(suc);
-                    //         app.toast.show({
-                    //             text: 'User subcription successful.',
-                    //             position: 'bottom',
-                    //             cssClass: 'toast-round bg-color-green'
-                    //         });
-                    //     },
-                    //     function (err) {
-                    //         let response = JSON.parse(err.response);
-                    //         console.log(response);
-                    //         var dialog = app.dialog.create({
-                    //             content: '<div class="block no-margin margin-top text-align-center"><i class="fa-stack fa-3x"><span class="fas fa-stack-2x fa-circle text-color-red"></span><span class="fas fa-stack-1x fa-inverse fa-times"></span></i><p>' + response.error.message + '.</p></div>',
-                    //             buttons: [
-                    //                 {
-                    //                     text: 'Retry',
-                    //                     bold: true,
-                    //                     color: 'red'
-                    //                 }
-                    //             ]
-                    //         });
-                    //         dialog.open();
-                    //     });
+                    app.request.postJSON(window.config.url + 'api/services/app/Device/Create', {
+                        name: 'Name',
+                        pushEndPoint: output.endpoint,
+                        pushP256DH: output.keys.p256dh,
+                        pushAuth: output.keys.auth
+                    },
+                        function (suc) {
+                            console.log(suc);
+                            app.toast.show({
+                                text: 'User subcription successful.',
+                                position: 'bottom',
+                                cssClass: 'toast-round bg-color-green'
+                            });
+                        },
+                        function (err) {
+                            let response = JSON.parse(err.response);
+                            console.log(response);
+                            var dialog = app.dialog.create({
+                                content: '<div class="block no-margin margin-top text-align-center"><i class="fa-stack fa-3x"><span class="fas fa-stack-2x fa-circle text-color-red"></span><span class="fas fa-stack-1x fa-inverse fa-times"></span></i><p>' + response.error.message + '.</p></div>',
+                                buttons: [
+                                    {
+                                        text: 'Retry',
+                                        bold: true,
+                                        color: 'red'
+                                    }
+                                ]
+                            });
+                            dialog.open();
+                        });
                 }
             }
         },
         on: {
             pageInit: function () {
                 var self = this;
-                
+                // self.checkPermissionStatus('camera');
+                // self.checkPermissionStatus('geolocation');
+                // self.checkPermissionStatus('microphone');
+                // self.checkPermissionStatus('midi', { sysex: true });
                 self.checkPermissionStatus('notifications');
 
                 self.$('[data-permission]').on('change', function () {

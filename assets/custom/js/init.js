@@ -5,7 +5,7 @@
 | Framework7 Plugins
 |------------------------------------------------------------------------------
 */
-
+var swRegistration = null;
 Framework7.use(Framework7Keypad);
 
 /*
@@ -33,7 +33,7 @@ var app = new Framework7({
 	lazyModulesPath: 'assets/vendor/framework7/lazy-components',
 	init: false,
 	cache: false,
-	
+
 	data: function() {
 		return {
 			a2hs: null,
@@ -166,8 +166,19 @@ app.on('routerAjaxError', function() {
 */
 
 function initializeServiceWorker() {
-	if ('serviceWorker' in navigator) {
-		navigator.serviceWorker.register('./service-worker.js');
+	if ('serviceWorker' in navigator && 'PushManager' in window) {
+		console.log('Service Worker and Push is supported');
+		navigator.serviceWorker.register('./service-worker.js')
+		.then(function (swReg) {
+			//console.log('Service Worker is registered', swReg);
+			swRegistration = swReg;
+		})
+		.catch(function (error) {
+			console.error('Service Worker Error', error);
+		});
+	}
+	else {
+		console.warn('Push messaging is not supported');
 	}
 }
 
