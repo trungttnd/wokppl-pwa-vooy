@@ -22,6 +22,9 @@
                     <div class="item-subtitle">
                         <span class="collection-time">Collection time: {{collectionTimeDisplay}}</span>
                     </div>
+                    <div class="item-subtitle">
+                        <span class="collection-time">Order Status: {{statusName}}</span>
+                    </div>
                 </div>
             </div>
             <div class="data-table card">
@@ -103,7 +106,8 @@
                 detail: [],
                 orderItems: [],
                 total: 0,
-                collectionTimeDisplay: ''
+                collectionTimeDisplay: '',
+                statusName: ''
             }
         },
         methods: {
@@ -120,7 +124,8 @@
                 //let colTime = new Date(det.collectionTime+'.000Z')
                 let colTime = new Date(det.collectionTimeDisplay);
                 //self.collectionTimeDisplay = colTime.toLocaleTimeString().substring(0,5) + ', ' + colTime.toLocaleDateString();
-                self.collectionTimeDisplay = colTime.getHours()+':'+colTime.getMinutes()+', '+colTime.getDate()+'/'+(colTime.getMonth()+1)+'/'+colTime.getFullYear()
+                self.collectionTimeDisplay = colTime.getHours()+':'+colTime.getMinutes()+', '+colTime.getDate()+'/'+(colTime.getMonth()+1)+'/'+colTime.getFullYear();
+                self.statusName = det.statusName;
                 self.$setState({
                     detail: det,
                     orderItems: det.orderItems,

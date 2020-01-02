@@ -22,7 +22,7 @@
 					{{else}}
 					<li class="swipeout">
 					{{/if}}
-						<a href="/inbox-detail" @click="getId('{{this.id}}'))" class="item-link item-content swipeout-content">
+						<a href="/inbox-detail/{{this.notification.data.properties.orderId}}" @click="markAsRead('{{this.id}}'))" class="item-link item-content swipeout-content">
 							<div class="item-content">
 								<div class="item-media text-color-red">
 									<i class="fa-stack">
@@ -42,7 +42,7 @@
 							</div>
 						</a>
 						<div class="swipeout-actions swipeout-actions-left">
-							<a href="#" @click="deleteNoti(1)"
+							<a href="#" @click="deleteNoti('{{this.id}}')"
 								class="swipeout-action swipeout-close swipeout-delete color-red">
 								<div class="swipeout-action-icon">
 									<i class="icon far fa-trash-alt"></i>
@@ -98,11 +98,74 @@
             }
         },
         methods: {
-            getId: function (id) {
+			markAsRead: function (id) {
                 var self = this;
+                console.log(id)
+                app.request.postJSON(window.config.url + 'api/services/app/Notification/SetNotificationAsRead',
+                    {
+                        id: id
+                    },
+                    function (suc) {
+                        console.log(suc)
+                    },
+                    function (err) {
+                        console.log('err', err)
+                    });
             },
             deleteNoti: function (id) {
-                var self = this;
+				var self = this;
+				app.request({
+                    url: window.config.url + 'api/services/app/Notification/DeleteNotification',
+                    dataType: 'json',
+                    contentType: "application/json",
+                    method: 'DELETE',
+                    data: { Id: id },
+                    statusCode: {
+                        404: function (xhr) {
+                            console.log("URL not found");
+                        },
+                        400: function (xhr) {
+                            console.log("Bad request. Some of the inputs provided to the request aren't valid.");
+                        },
+                        401: function (xhr) {
+                            console.log("Not authenticated. The user session isn't valid.");
+                        },
+                        403: function (xhr) {
+                            console.log("The user isn't authorized to perform the specified request.");
+                        },
+                        500: function (xhr) {
+                            console.log("Internal server error. Additional details will be contained on the server logs.");
+                        },
+                        201: function (xhr) {
+                            console.log("The requested resource has been created.");
+                        }
+                    },
+                    success: function (data, status, xhr) {
+                        console.log(data);
+                        if (data.success) {
+                            app.toast.show({
+                                text: 'Delete Notification successful.',
+                                position: 'bottom',
+                                cssClass: 'toast-round bg-color-green'
+                            });
+                        }
+                    },
+                    error: function (xhr, status) {
+                        let response = JSON.parse(xhr.response);
+                        console.log(response);
+                        var dialog = app.dialog.create({
+                            content: '<div class="block no-margin margin-top text-align-center"><i class="fa-stack fa-3x"><span class="fas fa-stack-2x fa-circle text-color-red"></span><span class="fas fa-stack-1x fa-inverse fa-times"></span></i><p>' + response.error.message + '.</p></div>',
+                            buttons: [
+                                {
+                                    text: 'Retry',
+                                    bold: true,
+                                    color: 'red'
+                                }
+                            ]
+                        });
+                        dialog.open();
+                    }
+                });
             }
         },
         mounted() {
