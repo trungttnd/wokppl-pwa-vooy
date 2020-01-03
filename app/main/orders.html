@@ -90,8 +90,8 @@
 									</div>
 									{{else}}
 									<div class="item-after" style="color: red; font-weight: bold;">
-										<img @click="selectOption('{{this.id}}')" class="theme-light-only" title="Sold Out"
-											src="assets/custom/img/sold.png" height="35" alt="" />
+										<img @click="selectOption('{{this.id}}')" class="theme-light-only"
+											title="Sold Out" src="assets/custom/img/sold.png" height="35" alt="" />
 									</div>
 									{{/js_if}}
 									{{else}}
@@ -246,25 +246,26 @@
 				let orderSession = self.$('select[name=session]').val();
 				console.log(id, orderDate, orderSession);
 				console.log(self.cartItems)
-				if (self.cartItems.quantity==0 || (orderDate == self.cartItems.listOrderDate && orderSession == self.cartItems.listOrderSession.id)) {
-					for (let i = 0; i < self.productList.length; i++) {
-						self.productList[i].orderQuantity = null;
+				for (let i = 0; i < self.productList.length; i++) {
+					self.productList[i].orderQuantity = null;
+				}
+				let det = self.productList.find(function (el) {
+					return el.id == id;
+				})
+				localStorage.setItem('addProduct', JSON.stringify(det))
+				self.$setState({
+					detail: det,
+					tempQuantity: self.tempQuantity + 1,
+				})
+				//console.log('self.session', self.session)
+				self.listOrderDate = orderDate;
+				for (let i = 0; i < self.session.length; i++) {
+					if (orderSession == self.session[i].id) {
+						self.listOrderSession = self.session[i];
 					}
-					let det = self.productList.find(function (el) {
-						return el.id == id;
-					})
-					localStorage.setItem('addProduct', JSON.stringify(det))
-					self.$setState({
-						detail: det,
-						tempQuantity: self.tempQuantity + 1,
-					})
-					//console.log('self.session', self.session)
-					self.listOrderDate = orderDate;
-					for (let i = 0; i < self.session.length; i++) {
-						if (orderSession == self.session[i].id) {
-							self.listOrderSession = self.session[i];
-						}
-					}
+				}
+				if (self.cartItems.quantity == 0 || (orderDate == self.cartItems.listOrderDate && orderSession == self.cartItems.listOrderSession.id)) {
+
 					localStorage.setItem('listOrderDate', JSON.stringify(self.listOrderDate));
 					localStorage.setItem('listOrderSession', JSON.stringify(self.listOrderSession));
 					if (det.quantity != null && det.quantity > 0) {
@@ -275,8 +276,8 @@
 					}
 				}
 				else {
-
-					self.openDialog().open();
+					if (det.isAvailable && det.quantity>0)
+						self.openDialog().open();
 					app.views.current.router.navigate('/details-only');
 				}
 
@@ -591,7 +592,7 @@
 					//self.goCartDialog().open();
 				}
 			}
-			
+
 			// console.log('orderDateTemp', orderDateTemp);
 			// console.log('dateInput', dateInput);
 
