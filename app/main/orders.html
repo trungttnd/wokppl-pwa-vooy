@@ -476,10 +476,7 @@
 					newDate = changeDate;
 				}
 				//console.log('newDate', newDate);
-<<<<<<< HEAD
-=======
 				self.session = [];
->>>>>>> c32bb34eee677605df0ba8694389c93ba5793797
 				let arr = [];
 				for (let i = 0; i < listSession.length; i++) {
 					if (Date.parse(newDate + ' ' + listSession[i].startTime) < Date.parse(dateInput + ' ' + timeNow) && Date.parse(dateInput + ' ' + timeNow) > Date.parse(newDate + ' ' + listSession[i].endTime)) {
