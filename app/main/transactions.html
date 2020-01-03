@@ -150,19 +150,20 @@
                         console.log(tempItem)
                         var html = '';
                         for (var i = 0; i < self.itemsPerLoad; i++) {
-                            //html += '<li>Item ' + i + '</li>';
-                            html += '<li>'
-                            html += '<a href="#" @click="loadDetails(' + self.items[i].id + ')" class="item-link">'
-                            html += '<div class="item-content"><div class="item-media"><i class="fa-stack">'
-                            html += '<span class="fas fa-circle fa-stack-2x text-color-red"></span>'
-                            html += '<span class="fas fa-shopping-cart fa-stack-1x fa-inverse"></span></i></div>'
-                            html += '<div class="item-inner"><div class="item-title"><span>' + self.items[i].orderNumber + '</span>'
-                            html += '<div class="item-header">' + self.items[i].orderTime + '</div> </div>'
-                            html += '<div class="item-title" style="text-align: right;"><div class="item-header text-color-red">'
-                            html += self.items[i].totalPrice.toFixed(2) + '</div>'
-                            html += self.items[i].status == 5 ? '<span class="badge color-green">' + self.items[i].statusName + '</span>' : self.items[i].status == 3 ? '<span class="badge color-yellow">' + self.items[i].statusName + '</span>' : '<span class="badge color-red">' + self.items[i].statusName + '</span>'
-                            html += '</div> </div></div></a>'
-                            html += '</li>'
+                            if (i < self.totalCount) {
+                                html += '<li>'
+                                html += '<a href="#" @click="loadDetails(' + self.items[i].id + ')" class="item-link">'
+                                html += '<div class="item-content"><div class="item-media"><i class="fa-stack">'
+                                html += '<span class="fas fa-circle fa-stack-2x text-color-red"></span>'
+                                html += '<span class="fas fa-shopping-cart fa-stack-1x fa-inverse"></span></i></div>'
+                                html += '<div class="item-inner"><div class="item-title"><span>' + self.items[i].orderNumber + '</span>'
+                                html += '<div class="item-header">' + self.items[i].orderTime + '</div> </div>'
+                                html += '<div class="item-title" style="text-align: right;"><div class="item-header text-color-red">'
+                                html += self.items[i].totalPrice.toFixed(2) + '</div>'
+                                html += self.items[i].status == 5 ? '<span class="badge color-green">' + self.items[i].statusName + '</span>' : self.items[i].status == 3 ? '<span class="badge color-yellow">' + self.items[i].statusName + '</span>' : '<span class="badge color-red">' + self.items[i].statusName + '</span>'
+                                html += '</div> </div></div></a>'
+                                html += '</li>'
+                            }
                         }
                         self.$('#list-infinite-scroll ul').append(html);
                         self.lastItemIndex = 10;
@@ -222,7 +223,7 @@
                 var self = this;
                 console.log(id)
             },
-            
+
             onInfiniteScroll: function () {
                 var self = this;
                 if (!self.allowInfinite) {
@@ -272,11 +273,10 @@
                 function (suc) {
                     let response = JSON.parse(suc)
                     console.log(response.result.user)
-                    if (response.result.user == null || response.result.user == 'null')
-                        {
-                            app.utils.custom.removeCookie();
-							app.views.current.router.navigate('/signin');
-                        }
+                    if (response.result.user == null || response.result.user == 'null') {
+                        app.utils.custom.removeCookie();
+                        app.views.current.router.navigate('/signin');
+                    }
                 },
                 function (err) {
                     console.log(err)

@@ -1,57 +1,73 @@
 <template>
     <div class="page">
-		<div class="navbar">
-			<div class="navbar-inner">
-				<img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="36" alt="" />
-				<div class="right">
-					<!-- <a href="#" class="link icon-only" title="Read All">
+        <div class="navbar">
+            <div class="navbar-inner">
+                <img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="36" alt="" />
+                <div class="right">
+                    <!-- <a href="#" class="link icon-only" title="Read All">
 						<i class="fas fa-check-double"></i>
 					</a> -->
-				</div>
-			</div>
-		</div>
+                </div>
+            </div>
+        </div>
 
-		<div class="page-content" style="padding-top: 44px;">
-			<div class="block-title text-color-black">Inbox</div>
-			<div class="list">
-				{{#if inboxItems}}
-				<ul>
-					{{#each inboxItems}}
-					{{#if this.state}}
-					<li class="swipeout" style="background: #9e9e9e40;">
-					{{else}}
-					<li class="swipeout">
-					{{/if}}
-						<a href="/inbox-detail/{{this.notification.data.properties.orderNumber}}" @click="markAsRead('{{this.id}}'))" class="item-link item-content swipeout-content">
-							<div class="item-content">
-								<div class="item-media text-color-red">
-									<i class="fa-stack">
-										<span class="far fa-bell fa-stack-1x"></span>
-									</i>
-								</div>
-								<div class="item-inner">
-									<div class="item-text text-color-black" style="-webkit-line-clamp: 1;"> 
-										{{#if this.notification.data.properties.orderNumber}}
-										Order {{this.notification.data.properties.orderNumber}}: {{this.notification.data.properties.Message}}
-										{{else}} 
-										{{this.notification.data.properties.Message}}
-										{{/if}}
-									</div>
-									<div class="item-after">{{this.notification.creationTime.substr(8,2)}}-{{this.notification.creationTime.substr(5,2)}}-{{this.notification.creationTime.substr(0,4)}}</div>
-								</div>
-							</div>
-						</a>
-						<div class="swipeout-actions swipeout-actions-left">
-							<a href="#" @click="deleteNoti('{{this.id}}')"
-								class="swipeout-action swipeout-close swipeout-delete color-red">
-								<div class="swipeout-action-icon">
-									<i class="icon far fa-trash-alt"></i>
-								</div>
-								<div class="swipeout-action-label">Delete</div>
-							</a>
-						</div>
-					</li>
-					<!-- <li class="swipeout">
+        <div class="page-content" style="padding-top: 44px;">
+            <div class="block-title text-color-black">Inbox</div>
+            <div class="list">
+                {{#if inboxItems}}
+                <ul>
+                    {{#each inboxItems}}
+                    {{#if this.state}}
+                    <li class="swipeout" style="background: #9e9e9e40;">
+                        {{else}}
+                    <li class="swipeout">
+                        {{/if}}
+                        <a href="/inbox-detail/{{this.notification.data.properties.orderNumber}}"
+                            @click="markAsRead('{{this.id}}'))" class="item-link item-content swipeout-content" style="padding-left: unset;">
+                            <div class="item-content"  style="padding-left: unset;">
+                                <div class="item-media text-color-red">
+                                    <i class="fa-stack">
+                                        <span class="far fa-bell fa-stack-1x"></span>
+                                    </i>
+                                </div>
+                                <div class="item-inner">
+                                    <div class="item-text text-color-black">
+                                        {{#if this.notification.data.properties.orderNumber}}
+                                        Order {{this.notification.data.properties.orderNumber}}:
+                                        {{this.notification.data.properties.Message}}
+                                        {{else}}
+                                        {{this.notification.data.properties.Message}}
+                                        {{/if}}
+                                    </div>
+                                    <div class="item-after">
+                                        {{this.notification.creationTime.substr(8,2)}}-{{this.notification.creationTime.substr(5,2)}}-{{this.notification.creationTime.substr(0,4)}}
+                                    </div>
+                                    <!-- <div class="item-title">
+                                        <span>Order {{this.notification.data.properties.orderNumber}}</span>
+                                        <div class="item-header">
+                                            {{this.notification.data.properties.Message}}
+                                        </div>
+                                    </div>
+                                    <div class="item-title" style="text-align: right;">
+                                        <div class="item-header">
+                                            {{this.notification.creationTime.substr(8,2)}}-{{this.notification.creationTime.substr(5,2)}}-{{this.notification.creationTime.substr(0,4)}}
+                                        </div>
+                                    </div> -->
+                                </div>
+                                
+                            </div>
+                        </a>
+                        <div class="swipeout-actions swipeout-actions-left">
+                            <a href="#" @click="deleteNoti('{{this.id}}')"
+                                class="swipeout-action swipeout-close swipeout-delete color-red">
+                                <div class="swipeout-action-icon">
+                                    <i class="icon far fa-trash-alt"></i>
+                                </div>
+                                <div class="swipeout-action-label">Delete</div>
+                            </a>
+                        </div>
+                    </li>
+                    <!-- <li class="swipeout">
 						<a href="/inbox-detail" @click="getId(1)" class="item-link item-content swipeout-content">
 							<div class="item-content">
 								<div class="item-media text-color-red">
@@ -77,12 +93,12 @@
 							</a>
 						</div>
 					</li> -->
-					{{/each}}
-				</ul>
-				{{/if}}
-			</div>
-		</div>
-	</div>
+                    {{/each}}
+                </ul>
+                {{/if}}
+            </div>
+        </div>
+    </div>
 </template>
 <style>
     .fa-stack {
@@ -93,12 +109,12 @@
     return {
         data: function () {
             return {
-				inboxItems: null,
-				inboxNumber: 0
+                inboxItems: null,
+                inboxNumber: 0
             }
         },
         methods: {
-			markAsRead: function (id) {
+            markAsRead: function (id) {
                 var self = this;
                 console.log(id)
                 app.request.postJSON(window.config.url + 'api/services/app/Notification/SetNotificationAsRead',
@@ -113,8 +129,8 @@
                     });
             },
             deleteNoti: function (id) {
-				var self = this;
-				app.request({
+                var self = this;
+                app.request({
                     url: window.config.url + 'api/services/app/Notification/DeleteNotification',
                     dataType: 'json',
                     contentType: "application/json",
@@ -169,18 +185,18 @@
             }
         },
         mounted() {
-			var self = this;
-			app.request.get(window.config.url + 'api/services/app/Notification/GetUserNotifications',
-                {MaxResultCount: 1000},
-                function (suc){
+            var self = this;
+            app.request.get(window.config.url + 'api/services/app/Notification/GetUserNotifications',
+                { MaxResultCount: 1000 },
+                function (suc) {
                     let response = JSON.parse(suc);
-                    console.log('inbox', response); 
+                    console.log('inbox', response);
                     self.$setState({
-                        inboxItems : response.result.items,
-                        inboxNumber : response.result.unreadCount
-                    }) 
+                        inboxItems: response.result.items,
+                        inboxNumber: response.result.unreadCount
+                    })
                 },
-                function (err){
+                function (err) {
                     console.log(err)
                 })
         }
