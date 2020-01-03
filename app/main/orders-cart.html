@@ -41,9 +41,14 @@
                                         <div class="item-title">Collection Time:
                                             <!-- <input type="text" id="timepicker-24" placeholder="Select" readonly /> -->
                                         </div>
-                                        <div class="item-input">
-                                            <input type="text" placeholder="Select" readonly="readonly" id="timepicker-24"/>
-                                            <!-- <input type="text" id="timepicker-24" placeholder="Select" readonly /> -->
+                                        <div class="item-content">
+                                            <div class="item-media"><img class="theme-light-only" src="assets/custom/img/clock.png" height="24" alt="" /></div>
+                                            <div class="item-inner">
+                                                <div class="item-input">
+                                                    <input type="text" placeholder="Select" readonly="readonly" id="timepicker-24"/>
+                                                    <!-- <input type="text" id="timepicker-24" placeholder="Select" readonly /> -->
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -200,11 +205,19 @@
                 &nbsp;
             </div>
         </div>
+        {{#if disableCloseButton}}
+        <div class="fab fab-right-top color-orange">
+            <a class="link item">
+                <i class="icon material-icons">close</i>
+            </a>
+        </div>
+        {{else}}
         <div class="fab fab-right-top color-orange">
             <a href="/tab-order/" class="link item" @click="closeButton()">
                 <i class="icon material-icons">close</i>
             </a>
         </div>
+        {{/if}}
         {{#if disableCheckout}}
         <div class="fab fab-extended fab-center-bottom color-red" style="width: 120px;">
             <a href="#" class="link item" @click="checkout">
@@ -270,6 +283,7 @@
                     sessionId: ''
                 },
                 disableCheckout: true,
+                disableCloseButton: false,
             }
         },
         methods: {
@@ -309,6 +323,7 @@
                     localStorage.removeItem('listOrderSession');
                     localStorage.removeItem('listOrderDate');
                     localStorage.removeItem('disableCheckout');
+                    localStorage.removeItem('cartItems');
                     self.$setState({
                         listOrderDate: null,
                         orderSessionName: null,
@@ -417,6 +432,21 @@
             checkout: function () {
                 var self = this;
                 let cartTemp = JSON.parse(localStorage.getItem('cartItems'));
+                // de tam day sua sau
+                // let orderDateTemp = JSON.parse(localStorage.getItem('listOrderDate'));
+                // let arrDate = orderDateTemp.split('/');
+                // let sessionDate = arrDate[1] + '/' + arrDate[0] + '/' + arrDate[2];
+                // sessionDate = new Date(sessionDate);
+                // let futureDate = (sessionDate.getMonth() + 1) + '/' + sessionDate.getDate() + '/' + sessionDate.getFullYear();
+                // let dateTimeNow = new Date();
+                // let dateNow = (dateTimeNow.getMonth() + 1) + '/' + dateTimeNow.getDate() + '/' + dateTimeNow.getFullYear();
+                // if (dateNow < futureDate){
+                //     alert('abc');
+                //     self.checkCollectionTime(null);
+                // }
+                // else{
+                //     alert('def');
+                // }
                 if (cartTemp != null) {
                     console.log(self.listOrderSession, self.listOrderDate)
                     console.log(cartTemp)
@@ -506,6 +536,7 @@
                 }
             },
             showTimePicker: function(){
+                var self = this;
                 var today = new Date();
                 let sessionTemp = JSON.parse(localStorage.getItem('listOrderSession'))
                 today.setTime(today.getTime() + (sessionTemp.preparationTime * 60 * 1000) + (sessionTemp.bufferTime * 60 * 1000));
@@ -548,11 +579,115 @@
                 ],
                 on: {
                     change: function (picker, values) {
-                    
+                        //console.log('values', values);
                     },
+                    close: function (picker){
+                        console.log('picker', picker);
+                        self.checkCollectionTime(picker.value);
+                        self.$setState({
+                            disableCloseButton: false,
+                        })
+                    }
                 }
                 });
-            }
+            },
+            openDialog: function (message) {
+                var self = this;
+				var dialog = app.dialog.create({
+					title: '',
+					content: '<div class="block no-margin no-padding text-align-center" style="font-size: 14px;"><img src="' + window.config.app.logo + '" width="84" alt="" /><p>'+ message +'</p></div>',
+					verticalButtons: true,
+					buttons: [
+						{
+							text: 'Ok',
+							bold: true,
+							color: 'green',
+							onClick: function () {
+                                self.$('input[id=timepicker-24]').val(self.setTimeNow());
+							}
+						},
+					]
+				});
+				return dialog;
+            },
+            setTimeNow: function(){
+                var self = this;
+                let nowDateTime = new Date();
+                let sessionTemp = JSON.parse(localStorage.getItem('listOrderSession'));
+                nowDateTime.setTime(nowDateTime.getTime() + (sessionTemp.preparationTime * 60 * 1000) + (sessionTemp.bufferTime * 60 * 1000));
+                nowDateTime = new Date(nowDateTime);
+                var nowHours = nowDateTime.getHours();
+                var nowMinutes = nowDateTime.getMinutes() < 10 ? '0' + nowDateTime.getMinutes() : nowDateTime.getMinutes();
+                var timeNow = nowHours + ':' + nowMinutes;
+                return timeNow;
+            },
+            checkCollectionTime: function(values){
+                var self = this;
+                if (values == null){
+                    var timePicker = self.$('input[id=timepicker-24]').val();
+                }
+                else{
+                    var timePicker = values[0] + ':' + values[1];
+                }
+                let startDateTimeExtend = new Date();
+                let dateTimeNow = new Date();
+                let dateTimeNowExtend = new Date();
+                let dayNow = (dateTimeNow.getMonth() + 1) + '/' + dateTimeNow.getDate() + '/' + dateTimeNow.getFullYear();
+                let acceptPicker = 0;
+                let sessionTemp = JSON.parse(localStorage.getItem('listOrderSession'));
+                let orderDateTemp = JSON.parse(localStorage.getItem('listOrderDate'));
+
+                // Ngay lay tu session
+                let arrDate = orderDateTemp.split('/');
+                let sessionDate = arrDate[1] + '/' + arrDate[0] + '/' + arrDate[2];
+                // Gan ngay lay tu session voi startime
+                let startDateTime = sessionDate + ' ' + sessionTemp.startTime;
+                startDateTime = new Date(startDateTime);
+                startDateTimeExtend.setTime(startDateTime.getTime() + (sessionTemp.preparationTime * 60 * 1000) + (sessionTemp.bufferTime * 60 * 1000));
+                startDateTimeExtend = new Date(startDateTimeExtend);
+                // Gan ngay lay tu session voi endtime
+                let endDateTime = sessionDate + ' ' + sessionTemp.endTime;
+                endDateTime = new Date(endDateTime);
+                // Gan ngay lay tu session voi timepicker
+                let pickerDateTime = sessionDate + ' ' + timePicker;
+                pickerDateTime = new Date(pickerDateTime);
+                // Gan ngay hien tai voi timepicker
+                let tempDateTimeNow = dayNow + ' ' + timePicker;
+                tempDateTimeNow = new Date(tempDateTimeNow);
+                dateTimeNowExtend.setTime(tempDateTimeNow.getTime() + (sessionTemp.preparationTime * 60 * 1000) + (sessionTemp.bufferTime * 60 * 1000));
+                dateTimeNowExtend = new Date(dateTimeNowExtend);
+
+                if (pickerDateTime < startDateTimeExtend || pickerDateTime < dateTimeNow){
+                    let message = "Collection time is not smaller start time!";
+                    self.openDialog(message).open();
+                }
+                else{
+                    acceptPicker = acceptPicker + 1;
+                }
+                if (pickerDateTime > endDateTime){
+                    let message = "Collection time is not bigger end time!";
+                    self.openDialog(message).open();
+                }
+                else{
+                    acceptPicker = acceptPicker + 1;
+                }
+                // if (pickerDateTime < dateTimeNow){
+                //     let message = "Collection time is not smaller time now!";
+                //     self.openDialog(message).open();
+                // }
+                // else{
+                //     acceptPicker = acceptPicker + 1;
+                // }
+
+                if (acceptPicker == 2){
+                    self.$('input[id=timepicker-24]').val(dateTimeNowExtend.getHours() + ':' + (dateTimeNowExtend.getMinutes() < 10 ? '0' + dateTimeNowExtend.getMinutes() : dateTimeNowExtend.getMinutes()));
+                }
+
+                console.log('startDateTime', startDateTime);
+                console.log('endDateTime', endDateTime);
+                console.log('pickerDateTime', pickerDateTime);
+                console.log('startDateTimeExtend', startDateTimeExtend);
+            },
         },
         on: {
             pageInit: function () {
@@ -602,19 +737,42 @@
                 let orderDateTemp = JSON.parse(localStorage.getItem('listOrderDate'));
                 console.log('sessionTemp', sessionTemp);
                 console.log('orderDateTemp', orderDateTemp);
-                self.$('input[id=timepicker-24]').change(function (){
-                    let arrDate = orderDateTemp.split('/');
-                    let newDate = arrDate[1] + '/' + arrDate[0] + '/' + arrDate[2];
-                    let newDateTime = newDate + ' ' + self.$('input[id=timepicker-24]').val();
-                    let newDT = new Date(newDateTime);
-                    newDT.setTime(newDT.getTime() + (sessionTemp.preparationTime * 60 * 1000) + (sessionTemp.bufferTime * 60 * 1000));
-                    console.log('newDT', newDT);
-                    newDT = new Date(newDT);
-                    console.log('newDate',newDate);
-                    console.log('Time picker',self.$('input[id=timepicker-24]').val());
-                    console.log('newDT',newDT);
-                    let selectTime = self.$('input[id=timepicker-24]').val() 
+
+                self.$('input[id=timepicker-24]').click(function (){
+                    self.$setState({
+                        disableCloseButton: true,
+                    })
                 });
+                // self.$('input[id=timepicker-24]').change(function (){
+                //     // Ngay hien tai
+                //     let nowDateTime = new Date();
+                //     var nowHours = nowDateTime.getHours();
+                //     var nowMinutes = nowDateTime.getMinutes(); 
+                //     // Ngay lay tu session
+                //     let arrDate = orderDateTemp.split('/');
+                //     let sessionDate = arrDate[1] + '/' + arrDate[0] + '/' + arrDate[2];
+                //     // Gan ngay lay tu session voi startime
+                //     let startDateTime = sessionDate + ' ' + sessionTemp.startTime;
+                //     startDateTime = new Date(startDateTime);
+                //     // Gan ngay lay tu session voi endtime
+                //     let endDateTime = sessionDate + ' ' + sessionTemp.endTime;
+                //     endDateTime = new Date(endDateTime);
+                //     // Gan ngay lay tu session voi timepicker
+                //     let pickerDateTime = sessionDate + ' ' + self.$('input[id=timepicker-24]').val();
+                //     pickerDateTime = new Date(pickerDateTime);
+                //     if (pickerDateTime < nowDateTime){
+                //         self.$('input[id=timepicker-24]').val(nowHours + ':' + nowMinutes);
+                //     }
+                    
+                //     // sessionDateTime.setTime(pickerDateTime.getTime() + (sessionTemp.preparationTime * 60 * 1000) + (sessionTemp.bufferTime * 60 * 1000));
+                //     // console.log('sessionDateTime', sessionDateTime);
+                //     // let sessionDateTimeExpand = new Date(sessionDateTime);
+                //     // console.log('newDate',sessionDateTime);
+                //     // console.log('Time picker',self.$('input[id=timepicker-24]').val());
+                //     // console.log('sessionDateTime',sessionDateTime);
+                //     // console.log('nowDT',nowDT);
+                //     let selectTime = self.$('input[id=timepicker-24]').val() 
+                // });
 
                 if (cartTemp != null) {
                     self.$setState({
