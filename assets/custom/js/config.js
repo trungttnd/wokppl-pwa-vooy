@@ -279,4 +279,4 @@ window.config.url = 'https://wokpplapi.konbi.cloud/';
 
 window.config.upload = 'https://wokpplapi.konbi.cloud/uploads/'
 
-window.config.appServerPublicKey = 'BGjDoQIlXlVAhLwEiwPM3NQsNXX0qz-gKx8pFV8pYx8gWyDUKk7A8zZiF6Mt1vaKTOGKGOPfQ3rzM92X3_R7Rms'
+window.config.appServerPublicKey = 'BB9U4DQ5jqQQQoCqRvLcoyajrFrha1qY75UaNykTLW52mbgMz3T_cIjB-Tf9tXBMQTwY6Inzchc_X30HfhrMqOQ'

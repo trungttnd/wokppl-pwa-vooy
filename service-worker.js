@@ -9,9 +9,9 @@ workbox.setConfig({
 /* Cache HTML */
 workbox.routing.registerRoute(
   /.*\.html/,
-	workbox.strategies.networkFirst({
+  workbox.strategies.networkFirst({
     cacheName: 'cache-html',
-		networkTimeoutSeconds: 3
+    networkTimeoutSeconds: 3
   })
 );
 
@@ -48,26 +48,26 @@ workbox.routing.registerRoute(
 );
 
 /*Notify*/
-self.addEventListener('push', function(event) {
+self.addEventListener('push', function (event) {
   //console.log('[Service Worker] Push Received.');
   //console.log(`[Service Worker] Push had this data: "${event.data.text()}"`);
   let dataContent = JSON.parse(event.data.text());
   const title = dataContent.title;
   const options = {
     body: dataContent.message,
-    icon: 'assets/custom/img/konbini-logo-white.svg',
-    badge: 'images/badge.png'
+    icon: 'assets/custom/favicon/android-chrome-icon-96x96.png',
+    badge: 'assets/custom/favicon/android-chrome-icon-96x96.png'
   };
   //localStorage.setItem('Konbini_popup', dataContent.title)
   event.waitUntil(self.registration.showNotification(title, options));
 });
 
-self.addEventListener('notificationclick', function(event) {
+self.addEventListener('notificationclick', function (event) {
   console.log('[Service Worker] Notification click Received.');
 
   event.notification.close();
 
   event.waitUntil(
-    clients.openWindow('http://localhost:81/cusPWA/wokppl-pwa-vooy/')
+    clients.openWindow('https://preorder-pwa.netlify.com/')
   );
 });

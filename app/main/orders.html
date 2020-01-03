@@ -24,7 +24,7 @@
 							<select name="session">
 								{{#if session}}
 								{{#each session}}
-								<option value="{{this.id}}">{{this.name}}: {{this.startTime}} - {{this.endTime}}
+								<option value="{{this.id}}">{{this.name}}: {{this.startTime.substr(0,5)}} - {{this.endTime.substr(0,5)}}
 								</option>
 								{{/each}}
 								{{/if}}
@@ -76,7 +76,13 @@
 									{{/each}}
 								</div> -->
 								<div class="item-subtitle"><a href="#" @click="selectOption('{{this.id}}')"
-										class="item-link">Available numbers: {{this.quantity}}</a></div>
+										class="item-link">
+										{{#if this.isAvailable}}
+										Available numbers: {{this.quantity}}
+										{{else}}
+										Not Available
+										{{/if}}
+									</a></div>
 								<div class="item-row">
 									<div class="item-text"><a href="#" @click="selectOption('{{this.id}}')"
 											class="item-link">{{this.description}}</a>
@@ -94,11 +100,10 @@
 											title="Sold Out" src="assets/custom/img/sold.png" height="35" alt="" />
 									</div>
 									{{/js_if}}
-									{{else}}
-									<div class="item-after" style="color: red; font-weight: bold;">
+									<!-- <div class="item-after" style="color: red; font-weight: bold;">
 										<img class="theme-light-only" title="Not Available"
 											src="assets/custom/img/notavailable.png" height="24" alt="" />
-									</div>
+									</div> -->
 									{{/if}}
 								</div>
 							</div>
@@ -470,13 +475,13 @@
 					newDate = changeDate;
 				}
 				//console.log('newDate', newDate);
-				self.session=[];
+				self.session = [];
 				let arr = [];
 				for (let i = 0; i < listSession.length; i++) {
 					if (Date.parse(newDate + ' ' + listSession[i].startTime) < Date.parse(dateInput + ' ' + timeNow) && Date.parse(dateInput + ' ' + timeNow) > Date.parse(newDate + ' ' + listSession[i].endTime)) {
 						count++;
 					}
-					else{
+					else {
 						arr.push(listSession[i])
 					}
 				}
@@ -492,27 +497,7 @@
 				});
 				console.log(listSession);
 			},
-			logout: function () {
-				var self = this;
-				localStorage.removeItem('WOKPPL_OldUser');
-				localStorage.removeItem('WOKPPL_accessToken');
-				localStorage. removeItem('WOKPPL_expireInSeconds');
-				localStorage.removeItem('WOKPPL_expired');
-				localStorage.removeItem('WOKPPL_refreshToken');
-				localStorage.removeItem('WOKPPL_mobile');
-				localStorage.removeItem('WOKPPL_name');
-				localStorage.removeItem('WOKPPL_email');
-				localStorage.removeItem('WOKPPL_username');
-				localStorage.removeItem('WOKPPL_userId');
-				localStorage.removeItem('WOKPPL_passcode');
-				localStorage.removeItem('addProduct');
-				localStorage.removeItem('cartItems');
-				localStorage.removeItem('listOrderSession');
-				localStorage.removeItem('listOrderDate');
-				localStorage.removeItem('categories');
-				localStorage.removeItem('editProduct');
-				localStorage.removeItem('sessions');
-			},
+			
 			openDialog: function () {
 				var dialog = app.dialog.create({
 					title: '',
@@ -571,7 +556,10 @@
 					let response = JSON.parse(suc)
 					console.log(response.result.user)
 					if (response.result.user == null || response.result.user == 'null')
-						self.logout();
+						{
+							app.utils.custom.removeCookie();
+							app.views.current.router.navigate('/signin');
+						}
 				},
 				function (err) {
 					console.log(err)
