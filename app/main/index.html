@@ -94,7 +94,7 @@
                 //     })
                 setTimeout(function () {
                     if (!localStorage.getItem('WOKPPL_OldUser')) {
-                        app.utils.custom.removeCookie();
+                        self.logout();
                         app.views.current.router.navigate('/signin');
                     };
                 }, 0);

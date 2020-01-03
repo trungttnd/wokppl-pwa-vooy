@@ -24,6 +24,7 @@ Framework7.utils.custom = {
   },
 
   removeCookie: function () {
+    var self = this;
     localStorage.removeItem('WOKPPL_OldUser');
     localStorage.removeItem('WOKPPL_accessToken');
     localStorage.removeItem('WOKPPL_expireInSeconds');
