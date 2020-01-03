@@ -32,11 +32,11 @@
                     </div>
                 </div>
             </div> -->
-            <div class="block text-align-left"></div>
+            <div class="block text-align-left" style="margin: 10px;"></div>
             <div class="content-block block-card text-align-left">
                 <div class="your-cart">All orders</div>
             </div>
-            <div class="list">
+            <div class="list" style="margin: 10px;">
                 <div id="list-infinite-scroll" class="list-group">
                     <ul>
                         <!-- {{#each items}}
@@ -158,7 +158,7 @@
                                 html += '<span class="fas fa-shopping-cart fa-stack-1x fa-inverse"></span></i></div>'
                                 html += '<div class="item-inner"><div class="item-title"><span>' + self.items[i].orderNumber + '</span>'
                                 html += '<div class="item-header">' + self.items[i].orderTime + '</div> </div>'
-                                html += '<div class="item-title" style="text-align: right;"><div class="item-header text-color-red">'
+                                html += '<div class="item-title" style="text-align: right;"><div class="item-header text-color-red">$'
                                 html += self.items[i].totalPrice.toFixed(2) + '</div>'
                                 html += self.items[i].status == 5 ? '<span class="badge color-green">' + self.items[i].statusName + '</span>' : self.items[i].status == 3 ? '<span class="badge color-yellow">' + self.items[i].statusName + '</span>' : '<span class="badge color-red">' + self.items[i].statusName + '</span>'
                                 html += '</div> </div></div></a>'
