@@ -178,6 +178,29 @@ window.routes = [
 						}
 					},
 					methods: {
+						removeCookie: function () {
+							var self = this;
+							localStorage.removeItem('WOKPPL_OldUser');
+							localStorage.removeItem('WOKPPL_accessToken');
+							localStorage.removeItem('WOKPPL_expireInSeconds');
+							localStorage.removeItem('WOKPPL_expired');
+							localStorage.removeItem('WOKPPL_refreshToken');
+							localStorage.removeItem('WOKPPL_mobile');
+							localStorage.removeItem('WOKPPL_name');
+							localStorage.removeItem('WOKPPL_email');
+							localStorage.removeItem('WOKPPL_username');
+							localStorage.removeItem('WOKPPL_userId');
+							localStorage.removeItem('WOKPPL_passcode');
+							localStorage.removeItem('addProduct');
+							localStorage.removeItem('cartItems');
+							localStorage.removeItem('listOrderSession');
+							localStorage.removeItem('listOrderDate');
+							localStorage.removeItem('categories');
+							localStorage.removeItem('editProduct');
+							localStorage.removeItem('sessions');
+							localStorage.removeItem('detTransactions');
+							localStorage.removeItem('cartAvailable');
+						  },
 						loadData: function () {
 							var self = this;
 							app.request.setup({
@@ -188,16 +211,17 @@ window.routes = [
 							});
 							console.log('2-getcurrent-home')
 							app.request.get(window.config.url + 'api/services/app/Session/GetCurrentLoginInformations',
-							function (suc) {
-								let response = JSON.parse(suc)
-								console.log(response.result.user)
-								if (response.result.user == null || response.result.user == 'null') 
-								//console.log(response.result.user)
-								 self.logout();
-							},
-							function (err) {
-								console.log(err)
-							})
+								function (suc) {
+									let response = JSON.parse(suc)
+									console.log(response.result.user)
+									if (response.result.user == null || response.result.user == 'null') {
+										self.removeCookie();
+										app.views.current.router.navigate('/signin');
+									}
+								},
+								function (err) {
+									console.log(err)
+								})
 
 							app.request.json(
 								'assets/custom/dataset/business.json',
@@ -290,27 +314,7 @@ window.routes = [
 									console.log('get category error', err)
 								})
 						},
-						logout: function () {
-							var self = this;
-							localStorage.removeItem('WOKPPL_OldUser');
-							localStorage.removeItem('WOKPPL_accessToken');
-							localStorage.removeItem('WOKPPL_expireInSeconds');
-							localStorage.removeItem('WOKPPL_expired');
-							localStorage.removeItem('WOKPPL_refreshToken');
-							localStorage.removeItem('WOKPPL_mobile');
-							localStorage.removeItem('WOKPPL_name');
-							localStorage.removeItem('WOKPPL_email');
-							localStorage.removeItem('WOKPPL_username');
-							localStorage.removeItem('WOKPPL_userId');
-							localStorage.removeItem('WOKPPL_passcode');
-							localStorage.removeItem('addProduct');
-							localStorage.removeItem('cartItems');
-							localStorage.removeItem('listOrderSession');
-							localStorage.removeItem('listOrderDate');
-							localStorage.removeItem('categories');
-							localStorage.removeItem('editProduct');
-							localStorage.removeItem('sessions');
-						}
+
 					},
 					mounted() {
 						var self = this;
@@ -473,25 +477,8 @@ window.routes = [
 							var self = this;
 							app.searchbar.clear('.searchbar');
 						},
-						logout: function () {
-							var self = this;
-
-							// app.request.get(window.config.url + 'api/TokenAuth/LogOut',
-							// 	function (suc) {
-							// 		console.log('Logout success')
-							// 		console.log(suc);
-							// 	},
-							// 	function (err) {
-							// 		console.log('Logout error')
-							// 		console.log(err);
-							// 	});
-							self.removeCookie();
-							app.views.current.router.navigate('/signin');
-						},
-						exitApp: function () {
-							navigator.app.exitApp();
-						},
 						removeCookie: function () {
+							var self = this;
 							localStorage.removeItem('WOKPPL_OldUser');
 							localStorage.removeItem('WOKPPL_accessToken');
 							localStorage.removeItem('WOKPPL_expireInSeconds');
@@ -510,7 +497,29 @@ window.routes = [
 							localStorage.removeItem('categories');
 							localStorage.removeItem('editProduct');
 							localStorage.removeItem('sessions');
-						}
+							localStorage.removeItem('detTransactions');
+							localStorage.removeItem('cartAvailable');
+						  },
+						logout: function () {
+							var self = this;
+
+							// app.request.get(window.config.url + 'api/TokenAuth/LogOut',
+							// 	function (suc) {
+							// 		console.log('Logout success')
+							// 		console.log(suc);
+							// 	},
+							// 	function (err) {
+							// 		console.log('Logout error')
+							// 		console.log(err);
+							// 	});
+							//self.removeCookie();
+							self.removeCookie();
+							app.views.current.router.navigate('/signin');
+						},
+						exitApp: function () {
+							navigator.app.exitApp();
+						},
+
 					},
 					mounted() {
 						var self = this;

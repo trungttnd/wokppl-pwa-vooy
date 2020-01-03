@@ -32,11 +32,11 @@
                     </div>
                 </div>
             </div> -->
-            <div class="block text-align-left"></div>
+            <div class="block text-align-left" style="margin: 10px;"></div>
             <div class="content-block block-card text-align-left">
                 <div class="your-cart">All orders</div>
             </div>
-            <div class="list">
+            <div class="list" style="margin: 10px;">
                 <div id="list-infinite-scroll" class="list-group">
                     <ul>
                         <!-- {{#each items}}
@@ -150,19 +150,20 @@
                         console.log(tempItem)
                         var html = '';
                         for (var i = 0; i < self.itemsPerLoad; i++) {
-                            //html += '<li>Item ' + i + '</li>';
-                            html += '<li>'
-                            html += '<a href="#" @click="loadDetails(' + self.items[i].id + ')" class="item-link">'
-                            html += '<div class="item-content"><div class="item-media"><i class="fa-stack">'
-                            html += '<span class="fas fa-circle fa-stack-2x text-color-red"></span>'
-                            html += '<span class="fas fa-shopping-cart fa-stack-1x fa-inverse"></span></i></div>'
-                            html += '<div class="item-inner"><div class="item-title"><span>' + self.items[i].orderNumber + '</span>'
-                            html += '<div class="item-header">' + self.items[i].orderTime + '</div> </div>'
-                            html += '<div class="item-title" style="text-align: right;"><div class="item-header text-color-red">'
-                            html += self.items[i].totalPrice.toFixed(2) + '</div>'
-                            html += self.items[i].status == 5 ? '<span class="badge color-green">' + self.items[i].statusName + '</span>' : self.items[i].status == 3 ? '<span class="badge color-yellow">' + self.items[i].statusName + '</span>' : '<span class="badge color-red">' + self.items[i].statusName + '</span>'
-                            html += '</div> </div></div></a>'
-                            html += '</li>'
+                            if (i < self.totalCount) {
+                                html += '<li>'
+                                    html += '<a href="/inbox-detail/'+ self.items[i].orderNumber + '" class="item-link">'
+                                html += '<div class="item-content"><div class="item-media"><i class="fa-stack">'
+                                html += '<span class="fas fa-circle fa-stack-2x text-color-red"></span>'
+                                html += '<span class="fas fa-shopping-cart fa-stack-1x fa-inverse"></span></i></div>'
+                                html += '<div class="item-inner"><div class="item-title"><span>' + self.items[i].orderNumber + '</span>'
+                                html += '<div class="item-header">' + self.items[i].orderTime + '</div> </div>'
+                                html += '<div class="item-title" style="text-align: right;"><div class="item-header text-color-red">$'
+                                html += self.items[i].totalPrice.toFixed(2) + '</div>'
+                                html += self.items[i].status == 5 ? '<span class="badge color-green">' + self.items[i].statusName + '</span>' : self.items[i].status == 3 ? '<span class="badge color-yellow">' + self.items[i].statusName + '</span>' : '<span class="badge color-red">' + self.items[i].statusName + '</span>'
+                                html += '</div> </div></div></a>'
+                                html += '</li>'
+                            }
                         }
                         self.$('#list-infinite-scroll ul').append(html);
                         self.lastItemIndex = 10;
@@ -172,7 +173,7 @@
                     })
             },
             loadDetails: function (id) {
-                //console.log(id)
+                console.log(id)
                 let self = this;
                 let det = self.items.find(function (el) {
                     return el.id == id;
@@ -222,27 +223,7 @@
                 var self = this;
                 console.log(id)
             },
-            logout: function () {
-                var self = this;
-                localStorage.removeItem('WOKPPL_OldUser');
-                localStorage.removeItem('WOKPPL_accessToken');
-                localStorage.removeItem('WOKPPL_expireInSeconds');
-                localStorage.removeItem('WOKPPL_expired');
-                localStorage.removeItem('WOKPPL_refreshToken');
-                localStorage.removeItem('WOKPPL_mobile');
-                localStorage.removeItem('WOKPPL_name');
-                localStorage.removeItem('WOKPPL_email');
-                localStorage.removeItem('WOKPPL_username');
-                localStorage.removeItem('WOKPPL_userId');
-                localStorage.removeItem('WOKPPL_passcode');
-                localStorage.removeItem('addProduct');
-                localStorage.removeItem('cartItems');
-                localStorage.removeItem('listOrderSession');
-                localStorage.removeItem('listOrderDate');
-                localStorage.removeItem('categories');
-                localStorage.removeItem('editProduct');
-                localStorage.removeItem('sessions');
-            },
+
             onInfiniteScroll: function () {
                 var self = this;
                 if (!self.allowInfinite) {
@@ -264,7 +245,7 @@
                     for (var i = self.lastItemIndex; i < self.lastItemIndex + self.itemsPerLoad; i++) {
                         if (i < self.totalCount) {
                             html += '<li>'
-                            html += '<a href="#" @click="loadDetails(' + self.items[i].id + ')" class="item-link">'
+                                html += '<a href="/inbox-detail/'+ self.items[i].orderNumber + '" class="item-link">'
                             html += '<div class="item-content"><div class="item-media"><i class="fa-stack">'
                             html += '<span class="fas fa-circle fa-stack-2x text-color-red"></span>'
                             html += '<span class="fas fa-shopping-cart fa-stack-1x fa-inverse"></span></i></div>'
@@ -284,6 +265,29 @@
                 }, 1500);
             }
         },
+        removeCookie: function () {
+            var self = this;
+            localStorage.removeItem('WOKPPL_OldUser');
+            localStorage.removeItem('WOKPPL_accessToken');
+            localStorage.removeItem('WOKPPL_expireInSeconds');
+            localStorage.removeItem('WOKPPL_expired');
+            localStorage.removeItem('WOKPPL_refreshToken');
+            localStorage.removeItem('WOKPPL_mobile');
+            localStorage.removeItem('WOKPPL_name');
+            localStorage.removeItem('WOKPPL_email');
+            localStorage.removeItem('WOKPPL_username');
+            localStorage.removeItem('WOKPPL_userId');
+            localStorage.removeItem('WOKPPL_passcode');
+            localStorage.removeItem('addProduct');
+            localStorage.removeItem('cartItems');
+            localStorage.removeItem('listOrderSession');
+            localStorage.removeItem('listOrderDate');
+            localStorage.removeItem('categories');
+            localStorage.removeItem('editProduct');
+            localStorage.removeItem('sessions');
+            localStorage.removeItem('detTransactions');
+            localStorage.removeItem('cartAvailable');
+        },
         mounted() {
             var self = this;
 
@@ -292,9 +296,10 @@
                 function (suc) {
                     let response = JSON.parse(suc)
                     console.log(response.result.user)
-                    if (response.result.user == null || response.result.user == 'null')
-                        //console.log(response.result.user)
-                        self.logout();
+                    if (response.result.user == null || response.result.user == 'null') {
+                        self.removeCookie();
+                        app.views.current.router.navigate('/signin');
+                    }
                 },
                 function (err) {
                     console.log(err)

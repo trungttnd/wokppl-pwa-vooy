@@ -21,5 +21,29 @@ Framework7.utils.custom = {
       outputArray[i] = rawData.charCodeAt(i);
     }
     return outputArray;
+  },
+
+  removeCookie: function () {
+    var self = this;
+    localStorage.removeItem('WOKPPL_OldUser');
+    localStorage.removeItem('WOKPPL_accessToken');
+    localStorage.removeItem('WOKPPL_expireInSeconds');
+    localStorage.removeItem('WOKPPL_expired');
+    localStorage.removeItem('WOKPPL_refreshToken');
+    localStorage.removeItem('WOKPPL_mobile');
+    localStorage.removeItem('WOKPPL_name');
+    localStorage.removeItem('WOKPPL_email');
+    localStorage.removeItem('WOKPPL_username');
+    localStorage.removeItem('WOKPPL_userId');
+    localStorage.removeItem('WOKPPL_passcode');
+    localStorage.removeItem('addProduct');
+    localStorage.removeItem('cartItems');
+    localStorage.removeItem('listOrderSession');
+    localStorage.removeItem('listOrderDate');
+    localStorage.removeItem('categories');
+    localStorage.removeItem('editProduct');
+    localStorage.removeItem('sessions');
+    localStorage.removeItem('detTransactions');
+    localStorage.removeItem('cartAvailable');
   }
 }

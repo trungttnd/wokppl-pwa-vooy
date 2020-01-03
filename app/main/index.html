@@ -72,6 +72,8 @@
                 localStorage.removeItem('categories');
                 localStorage.removeItem('editProduct');
                 localStorage.removeItem('sessions');
+                localStorage.removeItem('detTransactions');
+                localStorage.removeItem('cartAvailable');
             }
         },
         on: {
@@ -92,25 +94,25 @@
                 //     })
                 setTimeout(function () {
                     if (!localStorage.getItem('WOKPPL_OldUser')) {
-                        console.log('main')
+                        self.logout();
                         app.views.current.router.navigate('/signin');
                     };
                 }, 0);
 
                 console.log('index')
                 app.request.get(window.config.url + 'api/services/app/Notification/GetUserNotifications',
-                {MaxResultCount: 1000},
-                function (suc){
-                    let response = JSON.parse(suc);
-                    //console.log('inbox', response); 
-                    self.$setState({
-                        //inboxResult : response.result,
-                        inboxNumber : response.result.unreadCount
-                    }) 
-                },
-                function (err){
-                    console.log(err)
-                })
+                    { MaxResultCount: 1000 },
+                    function (suc) {
+                        let response = JSON.parse(suc);
+                        //console.log('inbox', response); 
+                        self.$setState({
+                            //inboxResult : response.result,
+                            inboxNumber: response.result.unreadCount
+                        })
+                    },
+                    function (err) {
+                        console.log(err)
+                    })
             },
             pageAfterIn() {
                 var self = this;
