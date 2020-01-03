@@ -472,20 +472,25 @@
 					newDate = changeDate;
 				}
 				//console.log('newDate', newDate);
+				self.session=[];
+				let arr = [];
 				for (let i = 0; i < listSession.length; i++) {
 					if (Date.parse(newDate + ' ' + listSession[i].startTime) < Date.parse(dateInput + ' ' + timeNow) && Date.parse(dateInput + ' ' + timeNow) > Date.parse(newDate + ' ' + listSession[i].endTime)) {
 						count++;
 					}
+					else{
+						arr.push(listSession[i])
+					}
 				}
-				listSession.splice(0, count);
-				for (let i = 0; i < listSession.length; i++) {
-					let arrStart = listSession[i].startTime.split(':');
-					let arrEnd = listSession[i].endTime.split(':');
-					listSession[i].startTime = arrStart[0] + ':' + arrStart[1];
-					listSession[i].endTime = arrEnd[0] + ':' + arrEnd[1];
-				}
+				// listSession.splice(0, count);
+				// for (let i = 0; i < listSession.length; i++) {
+				// 	let arrStart = listSession[i].startTime.split(':');
+				// 	let arrEnd = listSession[i].endTime.split(':');
+				// 	listSession[i].startTime = arrStart[0] + ':' + arrStart[1];
+				// 	listSession[i].endTime = arrEnd[0] + ':' + arrEnd[1];
+				// }
 				self.$setState({
-					session: listSession,
+					session: arr,
 				});
 				console.log(listSession);
 			},
@@ -493,7 +498,7 @@
 				var self = this;
 				localStorage.removeItem('WOKPPL_OldUser');
 				localStorage.removeItem('WOKPPL_accessToken');
-				localStorage.removeItem('WOKPPL_expireInSeconds');
+				localStorage. removeItem('WOKPPL_expireInSeconds');
 				localStorage.removeItem('WOKPPL_expired');
 				localStorage.removeItem('WOKPPL_refreshToken');
 				localStorage.removeItem('WOKPPL_mobile');
