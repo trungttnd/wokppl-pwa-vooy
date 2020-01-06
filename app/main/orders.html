@@ -557,7 +557,7 @@
 							color: 'green',
 							onClick: function () {
 								self.clearCartWhenSessionExpired();
-								location.reload();
+								app.views.current.router.navigate('/tab-order/');
 							}
 						},
 						{
