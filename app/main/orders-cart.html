@@ -535,6 +535,18 @@
                         },
                         function (err) {
                             console.log('err', err)
+                            let response = JSON.parse(err.response)
+                            var dialog = app.dialog.create({
+                            content: '<div class="block no-margin margin-top text-align-center"><i class="fa-stack fa-3x"><span class="fas fa-stack-2x fa-circle text-color-red"></span><span class="fas fa-stack-1x fa-inverse fa-times"></span></i><p>' + response.error.message + '.</p></div>',
+                            buttons: [
+                                {
+                                    text: 'Retry',
+                                    bold: true,
+                                    color: 'red'
+                                }
+                            ]
+                        });
+                        dialog.open();
                         })
                 }
             },
