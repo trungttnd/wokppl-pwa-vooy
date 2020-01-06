@@ -330,7 +330,8 @@
                         listOrderDate: null,
                         orderSessionName: null,
                         orderSessionTime: null,
-                    })
+                    });
+                    app.views.current.router.navigate('/tab-order/');
                 }
                 for (let i = 0; i < self.updateCartList.items.length; i++) {
                     if (self.updateCartList.items[i].id == id) {
@@ -625,7 +626,8 @@
             },
             checkCollectionTime: function (values) {
                 var self = this;
-                if (values == null) {
+                var messageTime = '';
+                if (values == null){
                     var timePicker = self.$('input[id=timepicker-24]').val();
                 }
                 else {
@@ -662,15 +664,20 @@
                 dateTimeNowExtend = new Date(dateTimeNowExtend);
 
                 if (pickerDateTime < startDateTimeExtend || pickerDateTime < dateTimeNowPlus){
-                    console.log(pickerDateTime, startDateTimeExtend, dateTimeNowPlus)
-                    let message = "Collection time is not smaller start time!";
+                    if (startDateTimeExtend > dateTimeNowPlus){
+                        messageTime = startDateTimeExtend.getHours() + ':' + (startDateTimeExtend.getMinutes() < 10 ? '0' + startDateTimeExtend.getMinutes() : startDateTimeExtend.getMinutes());
+                    }
+                    else{
+                        messageTime = dateTimeNowPlus.getHours() + ':' + (dateTimeNowPlus.getMinutes() < 10 ? '0' + dateTimeNowPlus.getMinutes() : dateTimeNowPlus.getMinutes());
+                    }
+                    let message = "Collection time is not smaller "+ messageTime +"!";
                     self.openDialog(message).open();
                 }
                 else {
                     acceptPicker = acceptPicker + 1;
                 }
-                if (pickerDateTime > endDateTime) {
-                    let message = "Collection time is not bigger end time!";
+                if (pickerDateTime > endDateTime){
+                    let message = "Collection time is not bigger "+ endDateTime.getHours() + ':' + (endDateTime.getMinutes() < 10 ? '0' + endDateTime.getMinutes() : endDateTime.getMinutes()) +"!";
                     self.openDialog(message).open();
                 }
                 else {
