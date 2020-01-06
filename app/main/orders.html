@@ -529,9 +529,8 @@
 							onClick: function () {
 								self.clearCartWhenSessionExpired();
 								localStorage.setItem('listOrderDate', JSON.stringify(self.listOrderDate));
-								localStorage.setItem('listOrderSession', JSON.stringify(self.listOrderSession));
-								app.views.current.router.navigate('/orders-options');							
-								//location.reload();
+								localStorage.setItem('listOrderSession', JSON.stringify(self.listOrderSession));							
+								app.views.current.router.navigate('/orders-options');
 							}
 						},
 						{
@@ -558,7 +557,7 @@
 							color: 'green',
 							onClick: function () {
 								self.clearCartWhenSessionExpired();
-								location.reload();
+								app.views.current.router.navigate('/tab-order/');
 							}
 						},
 						{
