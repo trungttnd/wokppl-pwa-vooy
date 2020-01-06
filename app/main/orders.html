@@ -59,11 +59,19 @@
 					{{#each productList}}
 					<li>
 						<div class="item-content">
+							{{#if this.isNoImage}}
+							<div class="item-media"><a href="#" @click="selectOption('{{this.id}}')"
+								class="item-link"><img
+									src="assets/custom/img/{{this.imageFileName}}"
+									width="80" /></a>
+							</div>
+							{{else}}
 							<div class="item-media"><a href="#" @click="selectOption('{{this.id}}')"
 									class="item-link"><img
 										src="https://wokpplapi.konbi.cloud/uploads/{{this.imageFileName}}"
 										width="80" /></a>
 							</div>
+							{{/if}}
 							<div class="item-inner">
 								<div class="row">
 									<div class="item-title col-80">
@@ -436,6 +444,13 @@
 							else {
 								response.result.items[i].isSoldOut = false;
 							}
+							if (response.result.items[i].imageFileName == '' || response.result.items[i].imageFileName == null){
+								response.result.items[i].imageFileName = 'noimage.png';
+								response.result.items[i].isNoImage = true;
+							}
+							else{
+								response.result.items[i].isNoImage = false;
+							}
 						}
 						console.log('get product success', response)
 						self.$setState({
@@ -502,39 +517,46 @@
 				console.log(listSession);
 			},
 			openDialog: function () {
+				var self = this;
 				var dialog = app.dialog.create({
 					title: '',
 					content: '<div class="block no-margin no-padding text-align-center" style="font-size: 14px;"><img src="' + window.config.app.logo + '" width="84" alt="" /><p><b>Your cart is not empty!</b></p><p>Please checkout or empty your cart before continue!.</p></div>',
 					verticalButtons: true,
 					buttons: [
 						{
-							text: 'Open cart!',
+							text: 'Yes!',
 							bold: true,
 							color: 'green',
 							onClick: function () {
-								app.views.current.router.navigate('/orders-cart');
+								self.clearCartWhenSessionExpired();
+								location.reload();
 							}
 						},
 						{
 							text: 'No!',
-							color: 'gray'
+							color: 'gray',
+							onClick: function () {
+								app.views.current.router.navigate('/tab-order/');
+							}
 						}
 					]
 				});
 				return dialog;
 			},
 			goCartDialog: function () {
+				var self = this;
 				var dialog = app.dialog.create({
 					title: '',
 					content: '<div class="block no-margin no-padding text-align-center" style="font-size: 14px;"><img src="' + window.config.app.logo + '" width="84" alt="" /><p><b>Over time!</b></p><p>Please empty your cart before continue!.</p></div>',
 					verticalButtons: true,
 					buttons: [
 						{
-							text: 'Open cart!',
+							text: 'Empty cart!',
 							bold: true,
 							color: 'green',
 							onClick: function () {
-								app.views.current.router.navigate('/orders-cart');
+								self.clearCartWhenSessionExpired();
+								location.reload();
 							}
 						},
 						{
@@ -548,6 +570,12 @@
 					]
 				});
 				return dialog;
+			},
+			clearCartWhenSessionExpired: function (){
+				localStorage.removeItem('listOrderSession');
+				localStorage.removeItem('listOrderDate');
+				localStorage.removeItem('disableCheckout');
+				localStorage.removeItem('cartItems');
 			}
 		},
 		removeCookie: function () {
@@ -603,9 +631,11 @@
 			else {
 				let arrFirstDay = orderDateTemp.split('/');
 				firstLoadDay = arrFirstDay[1] + '/' + arrFirstDay[0] + '/' + arrFirstDay[2];
+				console.log('Ngay session', firstLoadDay + ' ' + sessionTemp.endTime);
+				console.log('Ngay hien tai', dateInput + ' ' + timeNow);
 				if (Date.parse(firstLoadDay + ' ' + sessionTemp.endTime) < Date.parse(dateInput + ' ' + timeNow)) {
-					//localStorage.setItem('disableCheckout', JSON.stringify('true'))
-					//self.goCartDialog().open();
+					localStorage.setItem('disableCheckout', JSON.stringify('true'))
+					self.goCartDialog().open();
 				}
 			}
 

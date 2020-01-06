@@ -77,9 +77,15 @@
                         {{#each productList}}
                         <li>
                             <div class="item-content">
+                                {{#if this.isNoImage}}
+                                <div class="item-media"><img
+                                    src="assets/custom/img/{{this.imageFileName}}" width="80" />
+                                </div>
+                                {{else}}
                                 <div class="item-media"><img
                                         src="https://wokpplapi.konbi.cloud/uploads/{{this.imageFileName}}" width="80" />
                                 </div>
+                                {{/if}}
                                 <div class="item-inner">
                                     <div class="item-title-row">
                                         <div class="item-title">{{this.name}}</div>
@@ -317,8 +323,8 @@
                     // Neu nhin o ben tab order ma van con luu ngay cua lan add cart cuoi cung thi van dang sai
                     // Comment nay chi mang tinh chat luu note chu khong de lam gi ca
                     localStorage.removeItem('listOrderSession');
-                    // localStorage.removeItem('listOrderDate');
-                    // localStorage.removeItem('disableCheckout');
+                    localStorage.removeItem('listOrderDate');
+                    localStorage.removeItem('disableCheckout');
                     localStorage.removeItem('cartItems');
                     self.$setState({
                         listOrderDate: null,
@@ -628,6 +634,7 @@
                 let startDateTimeExtend = new Date();
                 let dateTimeNow = new Date();
                 let dateTimeNowExtend = new Date();
+                let dateTimeNowPlus = new Date();
                 let dayNow = (dateTimeNow.getMonth() + 1) + '/' + dateTimeNow.getDate() + '/' + dateTimeNow.getFullYear();
                 let acceptPicker = 0;
                 let sessionTemp = JSON.parse(localStorage.getItem('listOrderSession'));
@@ -650,10 +657,11 @@
                 // Gan ngay hien tai voi timepicker
                 let tempDateTimeNow = dayNow + ' ' + timePicker;
                 tempDateTimeNow = new Date(tempDateTimeNow);
-                dateTimeNowExtend.setTime(tempDateTimeNow.getTime() + (sessionTemp.preparationTime * 60 * 1000) + (sessionTemp.bufferTime * 60 * 1000));
+                dateTimeNowPlus.setTime(dateTimeNow.getTime() + (sessionTemp.preparationTime * 60 * 1000) + (sessionTemp.bufferTime * 60 * 1000));
+                dateTimeNowExtend.setTime(tempDateTimeNow.getTime());
                 dateTimeNowExtend = new Date(dateTimeNowExtend);
 
-                if (pickerDateTime < startDateTimeExtend || pickerDateTime < dateTimeNow) {
+                if (pickerDateTime < startDateTimeExtend || pickerDateTime < dateTimeNowPlus){
                     let message = "Collection time is not smaller start time!";
                     self.openDialog(message).open();
                 }
@@ -666,6 +674,9 @@
                 }
                 else {
                     acceptPicker = acceptPicker + 1;
+                }
+                if ((endDateTime == dateTimeNow)){
+
                 }
                 // if (pickerDateTime < dateTimeNow){
                 //     let message = "Collection time is not smaller time now!";
@@ -683,7 +694,8 @@
                 console.log('endDateTime', endDateTime);
                 console.log('pickerDateTime', pickerDateTime);
                 console.log('startDateTimeExtend', startDateTimeExtend);
-            }
+                console.log('dateTimeNowPlus', dateTimeNowPlus);
+            },
         },
         on: {
             pageInit: function () {
