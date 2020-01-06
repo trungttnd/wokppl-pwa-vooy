@@ -291,7 +291,7 @@
 				}
 				else {
 					if (det.isAvailable && det.quantity > 0) self.openDialog().open();
-					app.views.current.router.navigate('/orders-options');
+					app.views.current.router.navigate('/details-only');
 				}
 
 			},
@@ -530,7 +530,7 @@
 								self.clearCartWhenSessionExpired();
 								localStorage.setItem('listOrderDate', JSON.stringify(self.listOrderDate));
 								localStorage.setItem('listOrderSession', JSON.stringify(self.listOrderSession));							
-								location.reload();
+								app.views.current.router.navigate('/orders-options');
 							}
 						},
 						{
