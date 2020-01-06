@@ -662,6 +662,7 @@
                 dateTimeNowExtend = new Date(dateTimeNowExtend);
 
                 if (pickerDateTime < startDateTimeExtend || pickerDateTime < dateTimeNowPlus){
+                    console.log(pickerDateTime, startDateTimeExtend, dateTimeNowPlus)
                     let message = "Collection time is not smaller start time!";
                     self.openDialog(message).open();
                 }
