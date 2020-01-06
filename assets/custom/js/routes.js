@@ -386,21 +386,7 @@ window.routes = [
 							</div>
 						</a>
 					</li>
-					<li>
-						<a href="/more/feedback" class="item-link">
-							<div class="item-content">
-								<div class="item-media">
-									<i class="fa-stack">
-										<span class="fas fa-circle fa-stack-2x color-violet-5"></span>
-										<span class="fas fa-comment fa-stack-1x fa-inverse"></span>
-									</i>
-								</div>
-								<div class="item-inner">
-									<div class="item-title">Feedback</div>
-								</div>
-							</div>
-						</a>
-					</li>
+					
 					<li>
 						<a href="/more/account" class="item-link">
 							<div class="item-content">
@@ -629,10 +615,7 @@ window.routes = [
 				path: '/setting',
 				componentUrl: './app/main/setting.html'
 			},
-			{
-				path: '/feedback',
-				componentUrl: './app/main/feedback.html'
-			}
+			
 		]
 	},
 	{
