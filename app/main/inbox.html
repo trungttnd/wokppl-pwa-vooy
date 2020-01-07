@@ -37,7 +37,8 @@
                                         {{this.notification.data.properties.Message}}                                        
                                     </div>
                                     <div class="item-after" style="font-size: smaller;">
-                                        {{this.notification.creationTime.substr(8,2)}}-{{this.notification.creationTime.substr(5,2)}}-{{this.notification.creationTime.substr(0,4)}}
+                                        <!-- {{this.notification.creationTime.substr(8,2)}}-{{this.notification.creationTime.substr(5,2)}}-{{this.notification.creationTime.substr(0,4)}} -->
+                                        {{this.notification.creationTimeDisplay}}
                                     </div>
                                     <!-- <div class="item-title">
                                         <span>Order {{this.notification.data.properties.orderNumber}}</span>
@@ -203,6 +204,10 @@
                 { MaxResultCount: 1000 },
                 function (suc) {
                     let response = JSON.parse(suc);
+                    
+                    response.result.items.forEach(element => {
+                        element.notification.creationTimeDisplay = moment(element.notification.creationTime).fromNow();
+                    });
                     console.log('inbox', response);
                     self.$setState({
                         inboxItems: response.result.items,
