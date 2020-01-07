@@ -75,11 +75,11 @@ self.addEventListener('notificationclick', function (event) {
   event.notification.close();
   if (orderNumber == null || orderNumber == 'null') {
     event.waitUntil(
-      clients.openWindow('https://preorder-pwa.netlify.com/#!/inbox-detail/'+orderNumber.subtring(1))
+      clients.openWindow('https://preorder-pwa.netlify.com/')
     );
   }
   else
-    event.waitUntil(
-      clients.openWindow('https://preorder-pwa.netlify.com/')
+    event.waitUntil(      
+      clients.openWindow('https://preorder-pwa.netlify.com/#!/inbox-detail/'+orderNumber.subtring(1))
     );
 });
