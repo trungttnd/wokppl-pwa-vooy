@@ -135,7 +135,7 @@
                         for (let i = 0; i < tempItem.length; i++) {
                             let orderTime = new Date(tempItem[i].orderTimeDisplay);
                             let tempTotalPrice = 0;
-                            tempItem[i].orderTime = orderTime.getDate() + "/" + (orderTime.getMonth() + 1) + "/" + orderTime.getFullYear() + " " + orderTime.getHours() + ":" + orderTime.getMinutes();
+                            tempItem[i].orderTime = ("0" + orderTime.getDate()).slice(-2) + "/" + ("0" + orderTime.getMonth() + 1).slice(-2) + "/" + orderTime.getFullYear() + " " + ("0" + orderTime.getHours()).slice(-2) + ":" + ("0" + orderTime.getMinutes()).slice(-2);
                             for (let j = 0; j < tempItem[i].orderItems.length; j++) {
                                 tempTotalPrice += tempItem[i].orderItems[j].price;
                                 console.log(tempTotalPrice)
