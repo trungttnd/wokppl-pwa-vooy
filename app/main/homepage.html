@@ -1,0 +1,360 @@
+<template>
+    <div class="page no-swipeback">
+        <div class="navbar" style="height: 80px;">
+            <div class="navbar-inner">
+                <div class="left"></div>
+                <div class="center">
+                    <img class="theme-light-only" src="{{this.logo}}" height="80px" alt="" />
+                </div>
+                <div class="right"></div>    
+            </div>
+        </div>	
+        <div class="page-content" style="padding-top: 80px;">
+            <div class="content-block text-align-center">
+            <!-- <div class="block text-align-center"> -->
+                <div class="welcome">Welcome to <b>{{this.canteenName}}</b></div>
+            </div>
+            <div class="content-block text-align-left">
+                <span class="title-box">Promotions</span>
+            </div>
+            <div class="slider-hero">
+                <div class="swiper-container">
+                    <div class="swiper-wrapper">
+                        {{#each bannerArr}}
+                        <div class="swiper-slide">
+                            <!-- <div class="imgBtn"> -->
+                            <div class="bannerImg">
+                                <img src="./assets/custom/food/{{imgFileName}}">
+                            </div>
+                            <!-- <div class="details">
+                                <h3>Product Name</h3>
+                                <span>$15.00</span>
+                            </div> -->
+                        </div>
+                        {{/each}}
+                    </div>
+                    <!-- Add Pagination -->
+                    <div class="swiper-pagination"></div>
+                </div>
+            </div>
+            {{#if business}}
+            <div class="card">
+                <div class="card-header justify-content-space-between">
+                    <span class="title-card">Best Sellers</span>
+                </div>
+                <div class="card-content card-content-padding">
+                    <div class="photo-gallery">
+                        <div class="swiper-container">
+                            <div class="swiper-wrapper">
+                                {{#each business.products}}
+                                <div class="swiper-slide">
+                                    <div class="slide-media">
+                                        <div class="slide-img">
+                                            <img class="img-responsive" src="https://wokpplapi.konbi.cloud/uploads/{{this.imgFileName}}" alt="" />
+                                        </div>
+                                        <div class="details">
+                                            <h3>{{this.name}}</h3>
+                                            <span>${{this.price}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{/each}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header justify-content-space-between">
+                    <span class="title-card">New Products</span>
+                </div>
+                <div class="card-content card-content-padding">
+                    <div class="photo-gallery">
+                        <div class="swiper-container">
+                            <div class="swiper-wrapper">
+                                {{#each business.products}}
+                                <div class="swiper-slide">
+                                    <div class="slide-media">
+                                        <div class="slide-img">
+                                            <img class="img-responsive" src="https://wokpplapi.konbi.cloud/uploads/{{this.imgFileName}}" alt="" />
+                                        </div>
+                                        <div class="details">
+                                            <h3>{{this.name}}</h3>
+                                            <span>${{this.price}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{/each}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/if}}
+            <div class="block text-align-center">
+                <p class="row">
+                    <span></span>
+                    <a class="col button button-big button-fill color-red" style="width: 200px;" href="/tab-order/">Click to begin order</a>
+                    <span></span>
+                </p>
+            </div>
+        </div>
+    </div>
+</template>
+<style>
+    body {
+        color: #000;
+    }
+
+    .welcome {
+        padding-top: 20px;
+        padding-bottom: 10px;
+        font-size: 30px;
+    }
+
+    .title-box{
+        padding-top: 30px;
+        padding-left: 25px;
+        font-size: 20px;
+        font-weight: bold;
+    }
+    .title-card{
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .slider-hero .swiper-container {
+        /* height: 352px;
+        height: 50vh; */
+        width: 100%;
+        padding-top: 5px;
+        /* padding-bottom: 30px; */
+    }
+
+    .slider-hero .swiper-slide {
+        /* box-sizing: border-box;
+        padding: 16px; */
+        background-position: center;
+        background-size: cover;
+        width: 100%;
+        height: 180px;
+    }
+
+    /* .swiper-slide .imgBtn {
+        width: 100%;
+        height: 200;
+        overflow: hidden;
+    }
+
+    .swiper-slide .imgBtn img {
+        width: 100%;
+    } */
+
+    .swiper-slide .details {
+        box-sizing: border-box;
+        padding: 0px;
+        margin-top: 0px;
+    }
+
+    .swiper-slide .details h3 {
+        margin: 0;
+        padding-top: 10px;
+        font-size: 16px;
+        line-height: 20px;
+    }
+
+    .swiper-slide .details span {
+        color: red;
+    }
+</style>
+<script>
+    return{
+        data: function () {
+            return {
+                sliderHero: null,
+                business: null,
+                bannerArr: null,
+                canteenName: 'Default',
+                logo: '',
+            }
+        },
+        methods: {
+            removeCookie: function () {
+                var self = this;
+                localStorage.removeItem('WOKPPL_OldUser');
+                localStorage.removeItem('WOKPPL_accessToken');
+                localStorage.removeItem('WOKPPL_expireInSeconds');
+                localStorage.removeItem('WOKPPL_expired');
+                localStorage.removeItem('WOKPPL_refreshToken');
+                localStorage.removeItem('WOKPPL_mobile');
+                localStorage.removeItem('WOKPPL_name');
+                localStorage.removeItem('WOKPPL_email');
+                localStorage.removeItem('WOKPPL_username');
+                localStorage.removeItem('WOKPPL_userId');
+                localStorage.removeItem('WOKPPL_passcode');
+                localStorage.removeItem('addProduct');
+                localStorage.removeItem('cartItems');
+                localStorage.removeItem('listOrderSession');
+                localStorage.removeItem('listOrderDate');
+                localStorage.removeItem('categories');
+                localStorage.removeItem('editProduct');
+                localStorage.removeItem('sessions');
+                localStorage.removeItem('detTransactions');
+                localStorage.removeItem('cartAvailable');
+                },
+            loadData: function () {
+                var self = this;
+                app.request.setup({
+                    headers: {
+                        'Authorization': 'bearer ' + localStorage.getItem('WOKPPL_accessToken'),
+                        'Content-Type': 'application/json'
+                    }
+                });
+                console.log('2-getcurrent-home')
+                app.request.get(window.config.url + 'api/services/app/Session/GetCurrentLoginInformations',
+                    function (suc) {
+                        let response = JSON.parse(suc)
+                        console.log(response.result.user)
+                        if (response.result.user == null || response.result.user == 'null') {
+                            self.removeCookie();
+                            app.views.current.router.navigate('/signin');
+                        }
+                    },
+                    function (err) {
+                        console.log(err)
+                    })
+
+                app.request.json(
+                    'assets/custom/dataset/getcurrentlogin.json',
+                    function (data) {
+                        if (data) {
+                            console.log('getcurrentlogin',data);
+                            self.$setState({
+                                canteenName: data.result.canteen.name,
+                                logo: data.result.canteen.logoUrl
+                            });
+                        }
+                    }
+                );
+
+                app.request.json(
+                    'assets/custom/dataset/business.json',
+                    function (data) {
+                        if (data) {
+                            self.$setState({
+                                business: data
+                            });
+                            self.initializePhotos();
+                        }
+                    }
+                );
+                app.request.json(
+                    'assets/custom/dataset/banner.json',
+                    function (data) {
+                        if (data) {
+                            self.$setState({
+                                bannerArr: data.items
+                            });
+                            self.initializeSliderHero();
+                        }
+                    }
+                );
+            },
+            initializePhotos: function () {
+                var self = this;
+                var listImg = [];
+                app.swiper.create('.photo-gallery .swiper-container', {
+                    centeredSlides: true,
+                    grabCursor: true,
+                    initialSlide: 3,
+                    loop: true,
+                    slidesPerView: 2,
+                    spaceBetween: 16
+                });
+                for (let i = 0; i < self.business.products.length; i++){
+                    listImg.push("https://wokpplapi.konbi.cloud/uploads/" + self.business.products[i].imgFileName);
+                }
+                self.$('.photo-gallery .slide-media img').on('click', function () {
+                    var currentSlide = self.$('.photo-gallery .slide-media img').parent().parent('.swiper-slide-active').data('swiper-slide-index');
+                    var photoBrowser = app.photoBrowser.create({
+                        photos: listImg,
+                        swiper: {
+                            initialSlide: currentSlide
+                        },
+                        theme: app.utils.theme.getLayout()
+                    });
+                    photoBrowser.open();
+                });
+            },
+            initializeSliderHero: function () {
+                var self = this;
+                self.sliderHero = app.swiper.create('.slider-hero .swiper-container', {
+                    autoplay: {
+                        delay: 3000,
+                        disableOnInteraction: false
+                    },
+                    centeredSlides: true,
+                    effect: 'coverflow',
+                    coverflowEffect: {
+                        rotate: 50,
+                        stretch: 0,
+                        depth: 100,
+                        modifier: 1,
+                        slideShadows: true
+                    },
+                    pagination: {
+                        el: '.swiper-container .swiper-pagination',
+                        type: 'bullets',
+                        clickable: true
+                    },
+                    grabCursor: true,
+                    loop: true,
+                    slidesPerView: 'auto'
+                });
+            },
+            loadSession: function () {
+                var self = this;
+
+                app.request.get(window.config.url + 'api/services/app/Preorder/GetSessions',
+                    function (suc) {
+                        let response = JSON.parse(suc)
+                        console.log('get session success', response)
+                        // self.$setState({
+                        // 	session: response.result.items
+                        // })
+                        localStorage.setItem('sessions', JSON.stringify(response.result.items))
+                    },
+                    function (err) {
+                        console.log('get session error', err)
+                    })
+            },
+            loadCategory: function () {
+                var self = this;
+                app.request.get(window.config.url + 'api/services/app/Preorder/GetCategories',
+                    function (suc) {
+                        let response = JSON.parse(suc)
+                        console.log('get category success', response)
+                        // self.$setState({
+                        // 	categories: response.result.items
+                        // })
+                        localStorage.setItem('categories', JSON.stringify(response.result.items))
+                    },
+                    function (err) {
+                        console.log('get category error', err)
+                    })
+            },
+
+        },
+        mounted() {
+            var self = this;
+            self.loadData();
+            self.loadSession();
+            self.loadCategory();
+        },
+        on: {
+			pageInit: function () {
+				console.log('pageInit');
+			}
+		}
+    }
+</script>
