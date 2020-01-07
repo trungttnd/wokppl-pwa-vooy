@@ -37,33 +37,24 @@
                             </li>
                             <li>
                                 <div class="item-content">
-                                    <div class="item-inner">
-                                        <div class="item-title">Collection Time:
-                                            <!-- <input type="text" id="timepicker-24" placeholder="Select" readonly /> -->
-                                        </div>
-                                        <div class="item-content">
-                                            <div class="item-media"><img class="theme-light-only" src="assets/custom/img/clock.png" height="24" alt="" /></div>
-                                            <div class="item-inner">
-                                                <div class="item-input">
-                                                    <input type="text" placeholder="Select" readonly="readonly" id="timepicker-24"/>
-                                                    <!-- <input type="text" id="timepicker-24" placeholder="Select" readonly /> -->
-                                                </div>
-                                            </div>
+                                    <div class="item-media">Collection Time: <i class="icon material-icons text-color-red" style="margin-left: 13px;">access_time</i>&nbsp;</div>
+                                    <div class="item-inner" style="margin-left: unset;">
+                                        <div class="item-input">
+                                            <input type="text" placeholder="Select" readonly="readonly" id="timepicker-24"/>
                                         </div>
                                     </div>
-                                </div>
                             </li>
                             <li>
                                 <div class="item-content">
                                     <div class="item-inner">
                                         <div class="item-title">Receive Method: &nbsp;
                                             <label class="radio">
-                                                <input type="radio" name="radio" value="3" checked/>
+                                                <input type="radio" name="radio" value="3" checked />
                                                 <i class="icon-radio"></i>
                                             </label>
                                             &nbsp;Dine In&nbsp;&nbsp;
                                             <label class="radio color-red">
-                                                <input type="radio" name="radio" value="2"/>
+                                                <input type="radio" name="radio" value="2" />
                                                 <i class="icon-radio"></i>
                                             </label>
                                             &nbsp;Take Away
@@ -123,7 +114,8 @@
                                                             class="item-link tooltip-init"
                                                             data-tooltip="Edit Your Cart">
                                                             <i class="fas fa-fw fa-lg fa-edit text-color-red"></i></a>
-                                                        <a href="#" @click="deleteProduct('{{this.indexProduct}}', '{{this.id}}')"
+                                                        <a href="#"
+                                                            @click="deleteProduct('{{this.indexProduct}}', '{{this.id}}')"
                                                             class="item-link tooltip-init"
                                                             data-tooltip="Remove from Cart">
                                                             <i class="fas fa-fw fa-lg fa-trash text-color-red"></i></a>
@@ -315,7 +307,7 @@
                         self.updateCartList.total = self.updateCartList.total - self.updateCartList.items[i].price * self.updateCartList.items[i].orderQuantity;
                         tempGrandTotal = self.grandTotal - self.updateCartList.items[i].price * self.updateCartList.items[i].orderQuantity;
                         tempAvailableNumbers = self.updateCartList.items[i].orderQuantity;
-                        console.log('tempAvailableNumbers',tempAvailableNumbers);
+                        console.log('tempAvailableNumbers', tempAvailableNumbers);
                         self.updateCartList.items.splice(i, 1);
                     }
                 }
@@ -340,10 +332,10 @@
                         orderSessionTime: null,
                     })
                 }
-                for (let i = 0; i < self.updateCartList.items.length; i++){
-                    if (self.updateCartList.items[i].id == id){
+                for (let i = 0; i < self.updateCartList.items.length; i++) {
+                    if (self.updateCartList.items[i].id == id) {
                         self.updateCartList.items[i].availableNumbers += tempAvailableNumbers;
-                        console.log('self.updateCartList.items[i].availableNumbers',self.updateCartList.items[i].availableNumbers);
+                        console.log('self.updateCartList.items[i].availableNumbers', self.updateCartList.items[i].availableNumbers);
                     }
                 }
                 console.log(self.updateCartList);
@@ -538,14 +530,14 @@
                         function (suc) {
                             console.log('suc', suc)
                             localStorage.removeItem('cartItems')
-                            app.views.current.router.navigate('/orders-finish?order=' + suc.result.orderNumber);  
+                            app.views.current.router.navigate('/orders-finish?order=' + suc.result.orderNumber);
                         },
                         function (err) {
                             console.log('err', err)
                         })
                 }
             },
-            showTimePicker: function(){
+            showTimePicker: function () {
                 var self = this;
                 var today = new Date();
                 let sessionTemp = JSON.parse(localStorage.getItem('listOrderSession'))
@@ -553,74 +545,74 @@
                 console.log('today', today);
                 today = new Date(today);
                 var pickerInline = app.picker.create({
-                //containerEl: '#demo-picker-date-container',
-                inputEl: '#timepicker-24',
-                toolbar: false,
-                rotateEffect: true,
-                value: [
-                    today.getHours(),
-                    today.getMinutes() < 10 ? '0' + today.getMinutes() : today.getMinutes()
-                ],
-                formatValue: function (values) {
-                    return values[0] + ':' + values[1];
-                },
-                cols: [
-                    // Hours
-                    {
-                    values: (function () {
-                        var arr = [];
-                        for (var i = 0; i <= 23; i++) { arr.push(i); }
-                        return arr;
-                    })(),
+                    //containerEl: '#demo-picker-date-container',
+                    inputEl: '#timepicker-24',
+                    toolbar: false,
+                    rotateEffect: true,
+                    value: [
+                        today.getHours(),
+                        today.getMinutes() < 10 ? '0' + today.getMinutes() : today.getMinutes()
+                    ],
+                    formatValue: function (values) {
+                        return values[0] + ':' + values[1];
                     },
-                    // Divider
-                    {
-                    divider: true,
-                    content: ':'
-                    },
-                    // Minutes
-                    {
-                    values: (function () {
-                        var arr = [];
-                        for (var i = 0; i <= 59; i++) { arr.push(i < 10 ? '0' + i : i); }
-                        return arr;
-                    })(),
+                    cols: [
+                        // Hours
+                        {
+                            values: (function () {
+                                var arr = [];
+                                for (var i = 0; i <= 23; i++) { arr.push(i); }
+                                return arr;
+                            })(),
+                        },
+                        // Divider
+                        {
+                            divider: true,
+                            content: ':'
+                        },
+                        // Minutes
+                        {
+                            values: (function () {
+                                var arr = [];
+                                for (var i = 0; i <= 59; i++) { arr.push(i < 10 ? '0' + i : i); }
+                                return arr;
+                            })(),
+                        }
+                    ],
+                    on: {
+                        change: function (picker, values) {
+                            //console.log('values', values);
+                        },
+                        close: function (picker) {
+                            console.log('picker', picker);
+                            self.checkCollectionTime(picker.value);
+                            self.$setState({
+                                disableCloseButton: false,
+                            })
+                        }
                     }
-                ],
-                on: {
-                    change: function (picker, values) {
-                        //console.log('values', values);
-                    },
-                    close: function (picker){
-                        console.log('picker', picker);
-                        self.checkCollectionTime(picker.value);
-                        self.$setState({
-                            disableCloseButton: false,
-                        })
-                    }
-                }
                 });
             },
             openDialog: function (message) {
                 var self = this;
-				var dialog = app.dialog.create({
-					title: '',
-					content: '<div class="block no-margin no-padding text-align-center" style="font-size: 14px;"><img src="' + window.config.app.logo + '" width="84" alt="" /><p>'+ message +'</p></div>',
-					verticalButtons: true,
-					buttons: [
-						{
-							text: 'Ok',
-							bold: true,
-							color: 'green',
-							onClick: function () {
+                var dialog = app.dialog.create({
+                    title: '',
+                    content: '<div class="block no-margin no-padding text-align-center" style="font-size: 14px;"><img src="' + window.config.app.logo + '" width="84" alt="" /><p>' + message + '</p></div>',
+                    verticalButtons: true,
+                    buttons: [
+                        {
+                            text: 'Ok',
+                            bold: true,
+                            color: 'green',
+                            onClick: function () {
                                 self.$('input[id=timepicker-24]').val(self.setTimeNow());
-							}
-						},
-					]
-				});
-				return dialog;
+                            }
+                        },
+                    ]
+                });
+                return dialog;
             },
-            setTimeNow: function(){
+            setTimeNow: function () {
                 var self = this;
                 let nowDateTime = new Date();
                 let sessionTemp = JSON.parse(localStorage.getItem('listOrderSession'));
@@ -631,13 +623,13 @@
                 var timeNow = nowHours + ':' + nowMinutes;
                 return timeNow;
             },
-            checkCollectionTime: function(values){
+            checkCollectionTime: function (values) {
                 var self = this;
                 var messageTime = '';
                 if (values == null){
                     var timePicker = self.$('input[id=timepicker-24]').val();
                 }
-                else{
+                else {
                     var timePicker = values[0] + ':' + values[1];
                 }
                 let startDateTimeExtend = new Date();
@@ -680,14 +672,14 @@
                     let message = "Collection time is not smaller "+ messageTime +"!";
                     self.openDialog(message).open();
                 }
-                else{
+                else {
                     acceptPicker = acceptPicker + 1;
                 }
                 if (pickerDateTime > endDateTime){
                     let message = "Collection time is not bigger "+ endDateTime.getHours() + ':' + (endDateTime.getMinutes() < 10 ? '0' + endDateTime.getMinutes() : endDateTime.getMinutes()) +"!";
                     self.openDialog(message).open();
                 }
-                else{
+                else {
                     acceptPicker = acceptPicker + 1;
                 }
                 if ((endDateTime == dateTimeNow)){
@@ -701,7 +693,7 @@
                 //     acceptPicker = acceptPicker + 1;
                 // }
 
-                if (acceptPicker == 2){
+                if (acceptPicker == 2) {
                     self.$('input[id=timepicker-24]').val(dateTimeNowExtend.getHours() + ':' + (dateTimeNowExtend.getMinutes() < 10 ? '0' + dateTimeNowExtend.getMinutes() : dateTimeNowExtend.getMinutes()));
                 }
 
@@ -718,12 +710,12 @@
                 //self.initializeTimepicker24()
                 let cartTemp = JSON.parse(localStorage.getItem('cartItems'));
                 let disableCheckout = JSON.parse(localStorage.getItem('disableCheckout'));
-                if (disableCheckout != null){
+                if (disableCheckout != null) {
                     self.$setState({
                         disableCheckout: false,
-                    })  
+                    })
                 }
-                else{
+                else {
                     self.$setState({
                         disableCheckout: true,
                     })
@@ -751,7 +743,7 @@
                         })
                     }
                 })
-                self.$('input[type=radio]').change(function (){
+                self.$('input[type=radio]').change(function () {
                     console.log($(this).val())
                     self.newOrder.type = $(this).val();
                 });
@@ -761,7 +753,7 @@
                 console.log('sessionTemp', sessionTemp);
                 console.log('orderDateTemp', orderDateTemp);
 
-                self.$('input[id=timepicker-24]').click(function (){
+                self.$('input[id=timepicker-24]').click(function () {
                     self.$setState({
                         disableCloseButton: true,
                     })
@@ -786,7 +778,7 @@
                 //     if (pickerDateTime < nowDateTime){
                 //         self.$('input[id=timepicker-24]').val(nowHours + ':' + nowMinutes);
                 //     }
-                    
+
                 //     // sessionDateTime.setTime(pickerDateTime.getTime() + (sessionTemp.preparationTime * 60 * 1000) + (sessionTemp.bufferTime * 60 * 1000));
                 //     // console.log('sessionDateTime', sessionDateTime);
                 //     // let sessionDateTimeExpand = new Date(sessionDateTime);
@@ -811,7 +803,7 @@
                     })
                 }
                 console.log('productList', self.productList)
-                self.showTimePicker();    
+                self.showTimePicker();
             }
         }
     }

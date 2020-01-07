@@ -22,24 +22,21 @@
                         {{else}}
                     <li class="swipeout">
                         {{/if}}
+                        {{#js_if "this.notification.notificationName == 'OrderStatusChanged'"}}
                         <a href="/inbox-detail/{{this.notification.data.properties.orderNumber}}"
-                            @click="markAsRead('{{this.id}}'))" class="item-link item-content swipeout-content" style="padding-left: unset;">
-                            <div class="item-content"  style="padding-left: unset;">
+                            @click="markAsRead('{{this.id}}'))" class="item-link item-content swipeout-content"
+                            style="padding-left: unset;">
+                            <div class="item-content" style="padding-left: unset; width: 100%;">
                                 <div class="item-media text-color-red">
                                     <i class="fa-stack">
                                         <span class="far fa-bell fa-stack-1x"></span>
                                     </i>
                                 </div>
-                                <div class="item-inner">
-                                    <div class="item-text text-color-black">
-                                        {{#if this.notification.data.properties.orderNumber}}
-                                        Order {{this.notification.data.properties.orderNumber}}:
-                                        {{this.notification.data.properties.Message}}
-                                        {{else}}
-                                        {{this.notification.data.properties.Message}}
-                                        {{/if}}
+                                <div class="item-inner" style="margin-left: unset; padding-right:5px; background-image:unset;">
+                                    <div class="item-text text-color-black" style="-webkit-line-clamp: unset;">                                        
+                                        {{this.notification.data.properties.Message}}                                        
                                     </div>
-                                    <div class="item-after">
+                                    <div class="item-after" style="font-size: smaller;">
                                         {{this.notification.creationTime.substr(8,2)}}-{{this.notification.creationTime.substr(5,2)}}-{{this.notification.creationTime.substr(0,4)}}
                                     </div>
                                     <!-- <div class="item-title">
@@ -54,9 +51,25 @@
                                         </div>
                                     </div> -->
                                 </div>
-                                
                             </div>
                         </a>
+                        {{else}}
+                        <div class="item-content" style="padding-left: unset; width: 100%;">
+                            <div class="item-media text-color-red">
+                                <i class="fa-stack">
+                                    <span class="far fa-bell fa-stack-1x"></span>
+                                </i>
+                            </div>
+                            <div class="item-inner" style="margin-left: unset; padding-right:5px; background-image:unset;">
+                                <div class="item-text text-color-black"  style="-webkit-line-clamp: unset;">                                    
+                                    {{this.notification.data.properties.Message}}                                    
+                                </div>
+                                <div class="item-after" style="font-size: smaller;">
+                                    {{this.notification.creationTime.substr(8,2)}}-{{this.notification.creationTime.substr(5,2)}}-{{this.notification.creationTime.substr(0,4)}}
+                                </div>
+                            </div>
+                        </div>
+                        {{/js_if}}
                         <div class="swipeout-actions swipeout-actions-left">
                             <a href="#" @click="deleteNoti('{{this.id}}')"
                                 class="swipeout-action swipeout-close swipeout-delete color-red">
