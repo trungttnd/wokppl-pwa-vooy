@@ -1,0 +1,17 @@
+{
+	"result": {
+		"user": {
+			"name": "Trung Vooy",
+			"surname": "",
+			"userName": "+84944503384",
+			"emailAddress": "+84944503384@konbinisg.com",
+			"profilePictureId": null,
+			"id": 18
+			},
+		"canteen": {
+			"id": 1,
+			"name":"Canteen No.1",
+			"logoUrl": "assets/custom/img/wokppllogo.png"
+		}
+	}
+}
