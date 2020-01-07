@@ -14,10 +14,17 @@
 
         <div class="page-content">
             {{#if detail}}
+            {{#if detail.isNoImage}}
             <div class="block">
-                <img id="img-product" class="img-center"
-                    src="https://wokpplapi.konbi.cloud/uploads/{{detail.imageFileName}}" height="{{orgHeight}}" width="{{orgWidth}}" alt="" />
+                <img class="img-center"
+                    src="assets/custom/img/{{detail.imageFileName}}" height="{{orgHeight}}px" width="{{orgWidth}}" alt="" />
             </div>
+            {{else}}
+            <div class="block">
+                <img class="img-center"
+                    src="https://wokpplapi.konbi.cloud/uploads/{{detail.imageFileName}}" height="{{orgHeight}}px" width="{{orgWidth}}" alt="" />
+            </div>
+            {{/if}}
             <div class="block">
                 <div class="row">
                     <div class="col" style="width: 70%;">
@@ -413,7 +420,12 @@
                 // });
                 // console.log('chay den cuoi 2');
                 var tmpImg = new Image();
-                tmpImg.src= window.config.upload + self.detail.imageFileName; //or  document.images[i].src;
+                if (self.detail.isNoImage == true){
+                    tmpImg.src="assets/custom/img/" + self.detail.imageFileName;
+                }
+                else{
+                    tmpImg.src="https://wokpplapi.konbi.cloud/uploads/" + self.detail.imageFileName; //or  document.images[i].src;
+                }
                 $(tmpImg).one('load',function(){  
                     if ((($(window).height() / 2) < tmpImg.height) && (tmpImg.width < (($(window).width() * 80) / 100))){
                         console.log('Vao 1')
