@@ -330,7 +330,8 @@
                         listOrderDate: null,
                         orderSessionName: null,
                         orderSessionTime: null,
-                    })
+                    });
+                    app.views.current.router.navigate('/tab-order/');
                 }
                 for (let i = 0; i < self.updateCartList.items.length; i++) {
                     if (self.updateCartList.items[i].id == id) {
