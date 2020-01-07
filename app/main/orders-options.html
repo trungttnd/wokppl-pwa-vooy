@@ -206,6 +206,8 @@
             },
             closeButton: function () {
                 localStorage.removeItem('isEdit');
+                localStorage.removeItem('listOrderDate');
+                localStorage.removeItem('listOrderSession');
             },
             updateCart: function () {
                 var self = this;
@@ -332,7 +334,7 @@
                 
                 // localStorage.setItem('cartAvailable', JSON.stringify(cartAvailable))
                 // console.log('cartAvailable', cartAvailable);
-                console.log(self.cartItems);
+                console.log('self.cartItems',self.cartItems);
                 app.toast.show({
                     icon: '<i class="fas fa-fw fa-lg fa-cart-plus"></i>',
                     text: 'Added to Cart',
