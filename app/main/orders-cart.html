@@ -320,9 +320,13 @@
                     self.updateCartList.listOrderSession.endTime = '';
                     self.updateCartList.quantity = 0;
                     self.updateCartList.total = 0;
+                    // Cho nay dat remove luon 2 cai session ngay va gio
+                    // Nhu the moi dam bao cho viec xoa cai product cuoi cung cung la tuong duong voi clear cart
+                    // Neu nhin o ben tab order ma van con luu ngay cua lan add cart cuoi cung thi van dang sai
+                    // Comment nay chi mang tinh chat luu note chu khong de lam gi ca
                     localStorage.removeItem('listOrderSession');
-                    localStorage.removeItem('listOrderDate');
-                    localStorage.removeItem('disableCheckout');
+                    // localStorage.removeItem('listOrderDate');
+                    // localStorage.removeItem('disableCheckout');
                     localStorage.removeItem('cartItems');
                     self.$setState({
                         listOrderDate: null,
