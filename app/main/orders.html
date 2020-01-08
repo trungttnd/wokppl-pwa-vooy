@@ -605,7 +605,7 @@
 		mounted() {
 			localStorage.removeItem('isEdit');
 			var self = this;
-			console.log('3-getcurrent-order')
+			console.log('3-getcurrent-order');
 			app.request.get(window.config.url + 'api/services/app/Session/GetCurrentLoginInformations',
 				function (suc) {
 					let response = JSON.parse(suc)

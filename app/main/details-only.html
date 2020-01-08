@@ -17,12 +17,12 @@
             {{#if detail.isNoImage}}
             <div class="block">
                 <img class="img-center"
-                    src="assets/custom/img/{{detail.imageFileName}}" height="{{orgHeight}}px" width="{{orgWidth}}" alt="" />
+                    src="assets/custom/img/{{detail.imageFileName}}" height="{{orgHeight}}" width="{{orgWidth}}" alt="" />
             </div>
             {{else}}
             <div class="block">
                 <img class="img-center"
-                    src="https://wokpplapi.konbi.cloud/uploads/{{detail.imageFileName}}" height="{{orgHeight}}px" width="{{orgWidth}}" alt="" />
+                    src="https://wokpplapi.konbi.cloud/uploads/{{detail.imageFileName}}" height="{{orgHeight}}" width="{{orgWidth}}" alt="" />
             </div>
             {{/if}}
             <div class="block">
@@ -389,10 +389,20 @@
                     }
                     else if ((($(window).height() / 2) < tmpImg.height) && ((($(window).width() * 80) / 100) < tmpImg.width)){
                         console.log('Vao 3')
-                        self.$setState({
-                            orgWidth: $(window).width() * 80 / 100 + 'px',
-                            orgHeight: '',
-                        });
+                        if (tmpImg.height > tmpImg.width){
+                            console.log('Vao 3.1')
+                            self.$setState({
+                                orgWidth: '',
+                                orgHeight: $(window).height() / 2 + 'px',
+                            });
+                        }
+                        else{
+                            console.log('Vao 3.2')
+                            self.$setState({
+                                orgWidth: $(window).width() * 80 / 100 + 'px',
+                                orgHeight: '',
+                            });
+                        }
                     }
                     else{
                         console.log('Khong vao dau')

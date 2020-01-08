@@ -557,7 +557,12 @@
                                     {
                                         text: 'Retry',
                                         bold: true,
-                                        color: 'red'
+                                        color: 'red',
+                                        onClick: function () {
+                                            self.$setState({
+                                                disableCloseButton: false,
+                                            })
+                                        }
                                     }
                                 ]
                             });
