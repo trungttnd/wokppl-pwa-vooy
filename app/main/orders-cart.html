@@ -634,6 +634,9 @@
                             color: 'green',
                             onClick: function () {
                                 self.$('input[id=timepicker-24]').val(self.setTimeNow());
+                                self.$setState({
+                                    disableCloseButton: false,
+                                })
                             }
                         },
                     ]
