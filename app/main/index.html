@@ -96,23 +96,44 @@
                     if (!localStorage.getItem('WOKPPL_OldUser')) {
                         self.logout();
                         app.views.current.router.navigate('/signin');
+                    }
+                    else {
+                        app.request.get(window.config.url + 'api/services/app/Session/GetCurrentLoginInformations',
+                            function (suc) {
+                                let response = JSON.parse(suc)
+                                console.log(response.result.user)
+                                if (response.result.user == null || response.result.user == 'null') {
+                                    self.removeCookie();
+                                    app.views.current.router.navigate('/signin');
+                                }
+                                else {
+                                    localStorage.setItem('WOKPPL_mobile', response.result.user.userName);
+                                    localStorage.setItem('WOKPPL_name', response.result.user.name);
+                                    localStorage.setItem('WOKPPL_email', response.result.user.emailAddress);
+                                    app.request.get(window.config.url + 'api/services/app/Notification/GetUserNotifications',
+                                        { MaxResultCount: 1000 },
+                                        function (suc) {
+                                            let response = JSON.parse(suc);
+                                            //console.log('inbox', response); 
+                                            self.$setState({
+                                                //inboxResult : response.result,
+                                                inboxNumber: response.result.unreadCount
+                                            })
+                                        },
+                                        function (err) {
+                                            console.log(err)
+                                        })
+                                }
+                            },
+                            function (err) {
+                                console.log(err)
+                            })
+
                     };
                 }, 0);
 
                 console.log('index')
-                app.request.get(window.config.url + 'api/services/app/Notification/GetUserNotifications',
-                    { MaxResultCount: 1000 },
-                    function (suc) {
-                        let response = JSON.parse(suc);
-                        //console.log('inbox', response); 
-                        self.$setState({
-                            //inboxResult : response.result,
-                            inboxNumber: response.result.unreadCount
-                        })
-                    },
-                    function (err) {
-                        console.log(err)
-                    })
+
             },
             pageAfterIn() {
                 var self = this;

@@ -132,15 +132,15 @@
 						logout: function () {
 							var self = this;
 
-							// app.request.get(window.config.url + 'api/TokenAuth/LogOut',
-							// 	function (suc) {
-							// 		console.log('Logout success')
-							// 		console.log(suc);
-							// 	},
-							// 	function (err) {
-							// 		console.log('Logout error')
-							// 		console.log(err);
-							// 	});
+							app.request.get(window.config.url + 'api/TokenAuth/LogOut',
+								function (suc) {
+									console.log('Logout success')
+									console.log(suc);
+								},
+								function (err) {
+									console.log('Logout error')
+									console.log(err);
+								});
 							//self.removeCookie();
 							self.removeCookie();
 							app.views.current.router.navigate('/signin');

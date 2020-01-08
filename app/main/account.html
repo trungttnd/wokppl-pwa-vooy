@@ -110,7 +110,7 @@
 
         </div>
         <div class="fab fab-right-top color-orange">
-            <a href="#" class="link back">
+            <a href="/tab-more/" class="link item">
                 <i class="icon material-icons">close</i>
             </a>
         </div>
@@ -140,25 +140,31 @@
                         'Content-Type': 'application/json'
                     }
                 });
-                app.request.get(window.config.url + 'api/services/app/Session/GetCurrentLoginInformations',
-                    function (suc) {
-                        let response = JSON.parse(suc)
-                        console.log('current login', response);
-                        if (response.result) {
-                            self.$setState({
-                                name: response.result.user.name,
-                                mobile: response.result.user.userName,
-                                canteenName: response.result.tenant.name,
-                                canteenId: response.result.tenant.id
-                            })
-                            localStorage.setItem('WOKPPL_mobile', response.result.user.userName);
-                            localStorage.setItem('WOKPPL_name', response.result.user.name);
-                            localStorage.setItem('WOKPPL_email', response.result.user.emailAddress);
-                        }
-                    },
-                    function (err) {
-                        console.log('err', err);
-                    })
+                self.$setState({
+                    name: localStorage.getItem('WOKPPL_name'),
+                    mobile: localStorage.getItem('WOKPPL_mobile'),
+                    canteenName: 'Default',
+                    canteenId: '1'
+                })
+                // app.request.get(window.config.url + 'api/services/app/Session/GetCurrentLoginInformations',
+                //     function (suc) {
+                //         let response = JSON.parse(suc)
+                //         console.log('current login', response);
+                //         if (response.result) {
+                //             self.$setState({
+                //                 name: response.result.user.name,
+                //                 mobile: response.result.user.userName,
+                //                 canteenName: response.result.tenant.name,
+                //                 canteenId: response.result.tenant.id
+                //             })
+                //             localStorage.setItem('WOKPPL_mobile', response.result.user.userName);
+                //             localStorage.setItem('WOKPPL_name', response.result.user.name);
+                //             localStorage.setItem('WOKPPL_email', response.result.user.emailAddress);
+                //         }
+                //     },
+                //     function (err) {
+                //         console.log('err', err);
+                //     })
             }
         }
     }

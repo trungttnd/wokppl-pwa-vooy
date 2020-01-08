@@ -152,7 +152,7 @@
                         for (var i = 0; i < self.itemsPerLoad; i++) {
                             if (i < self.totalCount) {
                                 html += '<li>'
-                                    html += '<a href="/transaction-detail/'+ self.items[i].orderNumber + '" class="item-link">'
+                                html += '<a href="/transaction-detail/' + self.items[i].orderNumber + '" class="item-link">'
                                 html += '<div class="item-content"><div class="item-media"><i class="fa-stack">'
                                 html += '<span class="fas fa-circle fa-stack-2x text-color-red"></span>'
                                 html += '<span class="fas fa-shopping-cart fa-stack-1x fa-inverse"></span></i></div>'
@@ -245,7 +245,7 @@
                     for (var i = self.lastItemIndex; i < self.lastItemIndex + self.itemsPerLoad; i++) {
                         if (i < self.totalCount) {
                             html += '<li>'
-                                html += '<a href="/transaction-detail/'+ self.items[i].orderNumber + '" class="item-link">'
+                            html += '<a href="/transaction-detail/' + self.items[i].orderNumber + '" class="item-link">'
                             html += '<div class="item-content"><div class="item-media"><i class="fa-stack">'
                             html += '<span class="fas fa-circle fa-stack-2x text-color-red"></span>'
                             html += '<span class="fas fa-shopping-cart fa-stack-1x fa-inverse"></span></i></div>'
@@ -299,6 +299,11 @@
                     if (response.result.user == null || response.result.user == 'null') {
                         self.removeCookie();
                         app.views.current.router.navigate('/signin');
+                    }
+                    else {
+                        localStorage.setItem('WOKPPL_mobile', response.result.user.userName);
+                        localStorage.setItem('WOKPPL_name', response.result.user.name);
+                        localStorage.setItem('WOKPPL_email', response.result.user.emailAddress);
                     }
                 },
                 function (err) {
