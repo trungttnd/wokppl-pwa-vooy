@@ -5,9 +5,9 @@
             <div class="navbar-inner">
                 <img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="36" alt="" />
                 <div class="right">
-                    <a href="#" class="link back">
+                    <!-- <a href="#" class="link back">
                         <span>Back</span>
-                    </a>
+                    </a> -->
                 </div>
             </div>
         </div>
@@ -68,7 +68,11 @@
             </form>
 
         </div>
-
+        <div class="fab fab-right-top color-orange">
+            <a href="#" class="link back">
+                <i class="icon material-icons">close</i>
+            </a>
+        </div>
     </div>
 </template>
 
@@ -79,6 +83,99 @@
                 _mobile: localStorage.getItem('WOKPPL_mobile'),
                 _name: localStorage.getItem('WOKPPL_name'),
                 _email: localStorage.getItem('WOKPPL_email'),
+            }
+        },
+        methods: {
+            initializeFormValidator: function () {
+                var self = this;
+                self.formValidator = jQuery('form[name=profile]').validate({
+                    rules: {
+                        name: {
+                            required: true
+                        },
+                    },
+                    messages: {
+                        name: {
+                            required: 'Please enter name.'
+                        },
+                    },
+                    submitHandler: function (form) {
+                        self.submitForm(form);
+                    }
+                });
+            },
+            submitForm: function (form) {
+                var self = this;
+                console.log(form.name.value, form.email.value, form.mobile.value)
+                //call api update profile
+                app.request({
+                    url: window.config.url + 'api/services/app/Profile/UpdateCurrentUserProfile',
+                    dataType: 'json',
+                    contentType: "application/json",
+                    method: 'PUT',
+                    data: { name: form.name.value, surname: form.name.value, userName: form.mobile.value, emailAddress: form.email.value },
+                    statusCode: {
+                        404: function (xhr) {
+                            console.log("URL not found");
+                        },
+                        400: function (xhr) {
+                            console.log("Bad request. Some of the inputs provided to the request aren't valid.");
+                        },
+                        401: function (xhr) {
+                            console.log("Not authenticated. The user session isn't valid.");
+                        },
+                        403: function (xhr) {
+                            console.log("The user isn't authorized to perform the specified request.");
+                        },
+                        500: function (xhr) {
+                            console.log("Internal server error. Additional details will be contained on the server logs.");
+                        },
+                        201: function (xhr) {
+                            console.log("The requested resource has been created.");
+                        }
+                    },
+                    success: function (data, status, xhr) {
+                        console.log('update profile success');
+                        console.log(data);
+                        if (data.success) {
+                            app.toast.show({
+                                text: 'Change password successful.',
+                                position: 'bottom',
+                                cssClass: 'toast-round bg-color-green'
+                            });
+                        }
+                        localStorage.setItem('WOKPPL_name', form.name.value);
+                        localStorage.setItem('WOKPPL_email', form.email.value);
+
+                        //app.views.current.router.navigate('/more/account');
+                    },
+                    error: function (xhr, status) {
+                        console.log('update profile error');
+
+                        let response = JSON.parse(xhr.response);
+                        console.log(response);
+                        var dialog = app.dialog.create({
+                            content: '<div class="block no-margin margin-top text-align-center"><i class="fa-stack fa-3x"><span class="fas fa-stack-2x fa-circle text-color-red"></span><span class="fas fa-stack-1x fa-inverse fa-times"></span></i><p>' + response.error.details + '.</p></div>',
+                            buttons: [
+                                {
+                                    text: 'Retry',
+                                    bold: true,
+                                    color: 'red'
+                                }
+                            ]
+                        });
+                        dialog.open();
+                        //console.log(JSON.stringify(xhr));
+                        //console.log(status);
+                    }
+                });
+            },
+
+        },
+        on: {
+            pageInit: function () {
+                var self = this;
+                self.initializeFormValidator();
             }
         }
     }

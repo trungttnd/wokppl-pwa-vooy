@@ -5,17 +5,17 @@
             <div class="navbar-inner">
                 <img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="36" alt="" />
                 <div class="right">
-                    <a href="#" class="link back">
+                    <!-- <a href="#" class="link back">
                         <span>Back</span>
-                    </a>
+                    </a> -->
                 </div>
             </div>
         </div>
 
         <div class="page-content">
 
-            <div class="block-title">Payment Methods</div>
-            <div class="list inset">
+            <div class="block-title" style="margin: 20px;">Payment Methods</div>
+            <div class="list inset" style="margin-left: unset; margin-right: unset;">
                 <ul>
                     {{#if listCard}}
                     {{#each listCard}}
@@ -81,7 +81,11 @@
             </div>
 
         </div>
-
+        <div class="fab fab-right-top color-orange" style="margin-top: 30px;">
+            <a href="#" class="link back">
+                <i class="icon material-icons">close</i>
+            </a>
+        </div>
     </div>
 </template>
 

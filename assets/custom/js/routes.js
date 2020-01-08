@@ -256,7 +256,7 @@ window.routes = [
 		componentUrl: './app/main/inbox-detail.html',
 	},
 	{
-		path: '/transactions-detail',
+		path: '/transactions-detail/:id',
 		componentUrl: './app/main/transactions-detail.html',
 	},
 	{
