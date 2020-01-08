@@ -37,10 +37,13 @@
                             </li>
                             <li>
                                 <div class="item-content">
-                                    <div class="item-media">Collection Time: <i class="icon material-icons text-color-red" style="margin-left: 13px;">access_time</i>&nbsp;</div>
+                                    <div class="item-media">Collection Time: <i
+                                            class="icon material-icons text-color-red"
+                                            style="margin-left: 13px;">access_time</i>&nbsp;</div>
                                     <div class="item-inner" style="margin-left: unset;">
                                         <div class="item-input">
-                                            <input type="text" placeholder="Select" readonly="readonly" id="timepicker-24"/>
+                                            <input type="text" placeholder="Select" readonly="readonly"
+                                                id="timepicker-24" />
                                         </div>
                                     </div>
                             </li>
@@ -78,8 +81,8 @@
                         <li>
                             <div class="item-content">
                                 {{#if this.isNoImage}}
-                                <div class="item-media"><img
-                                    src="assets/custom/img/{{this.imageFileName}}" width="80" />
+                                <div class="item-media"><img src="assets/custom/img/{{this.imageFileName}}"
+                                        width="80" />
                                 </div>
                                 {{else}}
                                 <div class="item-media"><img
@@ -218,7 +221,7 @@
         {{/if}}
         {{#if disableCheckout}}
         <div class="fab fab-extended fab-center-bottom color-red" style="width: 120px;">
-            <a href="#" class="link item" @click="checkout">
+            <a href="#" class="link item" @click="validate">
                 <span style="font-family: cabin regular;">CHECKOUT</span>
             </a>
         </div>
@@ -282,6 +285,8 @@
                 },
                 disableCheckout: true,
                 disableCloseButton: false,
+                messageTime: '',
+                validateOk: true
             }
         },
         methods: {
@@ -432,6 +437,16 @@
                     gst: tempGST,
                 });
             },
+            validate: function(){
+                var self = this;
+                self.validateOk = true;
+                console.log(self.$('input[id=timepicker-24]').val())
+                let arrTime = self.$('input[id=timepicker-24]').val().split(':')
+                self.checkCollectionTime(arrTime)
+                console.log(self.validateOk)
+                if (self.validateOk == true)
+                    self.checkout();
+            },
             checkout: function () {
                 var self = this;
                 let cartTemp = JSON.parse(localStorage.getItem('cartItems'));
@@ -475,7 +490,7 @@
                     // }
                     let today = new Date();
                     var offset = -(today.getTimezoneOffset() / 60);
-                    console.log(self.$('input[id=timepicker-24]').val())
+                    
                     let arr = self.listOrderDate.split('/');
                     let time = self.$('input[id=timepicker-24]').val().split(':');
                     let dat = new Date(arr[2], arr[1] - 1, arr[0], time[0], time[1]);
@@ -537,16 +552,16 @@
                             console.log('err', err)
                             let response = JSON.parse(err.response)
                             var dialog = app.dialog.create({
-                            content: '<div class="block no-margin margin-top text-align-center"><i class="fa-stack fa-3x"><span class="fas fa-stack-2x fa-circle text-color-red"></span><span class="fas fa-stack-1x fa-inverse fa-times"></span></i><p>' + response.error.message + '.</p></div>',
-                            buttons: [
-                                {
-                                    text: 'Retry',
-                                    bold: true,
-                                    color: 'red'
-                                }
-                            ]
-                        });
-                        dialog.open();
+                                content: '<div class="block no-margin margin-top text-align-center"><i class="fa-stack fa-3x"><span class="fas fa-stack-2x fa-circle text-color-red"></span><span class="fas fa-stack-1x fa-inverse fa-times"></span></i><p>' + response.error.message + '.</p></div>',
+                                buttons: [
+                                    {
+                                        text: 'Retry',
+                                        bold: true,
+                                        color: 'red'
+                                    }
+                                ]
+                            });
+                            dialog.open();
                         })
                 }
             },
@@ -638,8 +653,8 @@
             },
             checkCollectionTime: function (values) {
                 var self = this;
-                var messageTime = '';
-                if (values == null){
+
+                if (values == null) {
                     var timePicker = self.$('input[id=timepicker-24]').val();
                 }
                 else {
@@ -675,27 +690,32 @@
                 dateTimeNowExtend.setTime(tempDateTimeNow.getTime());
                 dateTimeNowExtend = new Date(dateTimeNowExtend);
 
-                if (pickerDateTime < startDateTimeExtend || pickerDateTime < dateTimeNowPlus){
-                    if (startDateTimeExtend > dateTimeNowPlus){
-                        messageTime = startDateTimeExtend.getHours() + ':' + (startDateTimeExtend.getMinutes() < 10 ? '0' + startDateTimeExtend.getMinutes() : startDateTimeExtend.getMinutes());
-                    }
-                    else{
-                        messageTime = dateTimeNowPlus.getHours() + ':' + (dateTimeNowPlus.getMinutes() < 10 ? '0' + dateTimeNowPlus.getMinutes() : dateTimeNowPlus.getMinutes());
-                    }
-                    let message = "Collection time is not smaller "+ messageTime +"!";
+                if (startDateTimeExtend > dateTimeNowPlus) {
+                    self.messageTime = startDateTimeExtend.getHours() + ':' + (startDateTimeExtend.getMinutes() < 10 ? '0' + startDateTimeExtend.getMinutes() : startDateTimeExtend.getMinutes());
+                }
+                else {
+                    self.messageTime = dateTimeNowPlus.getHours() + ':' + (dateTimeNowPlus.getMinutes() < 10 ? '0' + dateTimeNowPlus.getMinutes() : dateTimeNowPlus.getMinutes());
+                }
+
+                let message = "Collection time is invalid. Collection time shoud be range from " + self.messageTime + " to " + endDateTime.getHours() + ':' + (endDateTime.getMinutes() < 10 ? '0' + endDateTime.getMinutes() : endDateTime.getMinutes()) + "!";
+
+                if (pickerDateTime < startDateTimeExtend || pickerDateTime < dateTimeNowPlus) {
+                    //let message = "Collection time is not smaller " + self.messageTime + "!";
                     self.openDialog(message).open();
+                    self.validateOk = false;
                 }
                 else {
                     acceptPicker = acceptPicker + 1;
                 }
-                if (pickerDateTime > endDateTime){
-                    let message = "Collection time is not bigger "+ endDateTime.getHours() + ':' + (endDateTime.getMinutes() < 10 ? '0' + endDateTime.getMinutes() : endDateTime.getMinutes()) +"!";
+                if (pickerDateTime > endDateTime) {
+
                     self.openDialog(message).open();
+                    self.validateOk = false;
                 }
                 else {
                     acceptPicker = acceptPicker + 1;
                 }
-                if ((endDateTime == dateTimeNow)){
+                if ((endDateTime == dateTimeNow)) {
 
                 }
                 // if (pickerDateTime < dateTimeNow){

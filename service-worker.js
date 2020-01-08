@@ -59,27 +59,15 @@ self.addEventListener('push', function (event) {
     badge: 'assets/custom/favicon/android-chrome-icon-96x96.png'
   };
 
-  //localStorage.setItem('Konbini_popup', dataContent.title)
   event.waitUntil(self.registration.showNotification(title, options));
 });
 
 self.addEventListener('notificationclick', function (event) {
   console.log('[Service Worker] Notification click Received.');
-  console.log(JSON.parse(event.data.text()))
-  let dataContent = JSON.parse(event.data.text());
-  const message = dataContent.message;
-  let arr = message.split(' ');
-  let orderNumber = arr.filter(function (el) {
-    return el.substr(0, 1) == '#'
-  })
-  event.notification.close();
-  if (orderNumber == null || orderNumber == 'null') {
+
+    event.notification.close();
+
     event.waitUntil(
-      clients.openWindow('https://preorder-pwa.netlify.com/')
-    );
-  }
-  else
-    event.waitUntil(      
-      clients.openWindow('https://preorder-pwa.netlify.com/#!/inbox-detail/'+orderNumber.subtring(1))
+      clients.openWindow('https://customer-pwa.netlify.com/')
     );
 });
