@@ -1,13 +1,13 @@
 <template>
 	<div class="page no-swipeback">
-		<div class="navbar">
+		<div class="navbar" style="height: 72px;">
 			<div class="navbar-inner">
-				<img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="36" alt="" />
+				<img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="60" alt="" />
 				<div class="right">
 					<a href="#" @click="goCart" class="link icon-only">
-						<i class="icon material-icons">shopping_cart<span
-								class="badge color-red">{{cartItems.quantity}}</span></i></a>
-					<span class="text-color-red">${{cartItems.total.toFixed(2)}}</span>
+						<i class="icon material-icons" style="font-size: 40px;">shopping_cart<span
+								class="badge color-red" style="font-size: 13px;">{{cartItems.quantity}}</span></i></a>
+					<span class="text-color-red" style="font-size: 20px;">${{cartItems.total.toFixed(2)}}</span>
 				</div>
 				<div class="subnavbar">
 					<div class="subnavbar-inner" style="justify-content: center;">
@@ -35,7 +35,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="page-content" style="padding-top: 44px;">
+		<div class="page-content" style="padding-top: 72px;">
 			{{#if categories}}
 			<div id="menuCats" class="toolbar tabbar tabbar-scrollable tabbar-sticky">
 				<div class="toolbar-inner categoriesFont">
@@ -87,7 +87,7 @@
 								<div class="item-subtitle"><a href="#" @click="selectOption('{{this.id}}')"
 										class="item-link">
 										{{#if this.isAvailable}}
-										Available numbers: {{this.quantity}}
+										<!-- Available numbers: {{this.quantity}} -->
 										{{else}}
 										Not Available
 										{{/if}}

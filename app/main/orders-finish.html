@@ -60,8 +60,7 @@
         methods: {
             closeApp: function(){
                 var self = this;
-                //app.exitApp();
-                app.views.current.router.navigate('/tab-order/');
+                navigator.app.exitApp();
             },
             getUrlVars: function()
             {

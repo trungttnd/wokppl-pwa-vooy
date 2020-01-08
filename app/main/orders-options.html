@@ -51,39 +51,6 @@
             {{#if detail.modifierGroups.length}}
             <div class="block-title text-color-black">Modifications</div>
             <div class="list">
-                <!-- <div class="list-group">
-                    <ul>
-                        <li class="list-group-title">Size (Require)</li>
-                        <li>
-                            <label class="item-radio item-content">
-                                <div class="item-inner">
-                                    <div class="item-title">Size S ($1.00)</div>
-                                </div>
-                                <input type="radio" name="size" value="1" />
-                                <i class="icon icon-radio"></i>
-                            </label>
-                        </li>
-                        <li>
-                            <label class="item-radio item-content">
-                                <div class="item-inner">
-                                    <div class="item-title">Size M ($2.00)</div>
-                                </div>
-                                <input type="radio" name="size" value="2" />
-                                <i class="icon icon-radio"></i>
-                            </label>
-                        </li>
-                        <li>
-                            <label class="item-radio item-content">
-                                <div class="item-inner">
-                                    <div class="item-title">Size L ($3.00)</div>
-                                </div>
-                                <input type="radio" name="size" value="3" />
-                                <i class="icon icon-radio"></i>
-                            </label>
-                        </li>
-                    </ul>
-                </div> -->
-
                 {{#each detail.modifierGroups}}
                 <div class="list-group">
                     <ul>
@@ -297,8 +264,7 @@
                 console.log('self.cartItems.quantity: ', self.cartItems.quantity);
                 self.detail.price += self.modPrice;
                 self.detail.orderQuantity = quan;
-                console.log('self.detail.orderQuantity: ', self.detail.orderQuantity);
-                console.log('self.detail.price: ', self.detail.price);
+                console.log('self.detail', self.detail);
                 // var self = this;
                 // let quan = +self.$('input[name=addQuantity]').val()
                 // let selectItem = self.detail;
@@ -337,7 +303,7 @@
                 console.log('self.cartItems',self.cartItems);
                 app.toast.show({
                     icon: '<i class="fas fa-fw fa-lg fa-cart-plus"></i>',
-                    text: 'Added to Cart',
+                    text: self.detail.name + ' is added to Cart',
                     position: 'bottom',
                     cssClass: 'toast-round bg-color-green'
                 });
