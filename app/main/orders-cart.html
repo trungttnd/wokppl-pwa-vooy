@@ -1,18 +1,15 @@
 <template>
     <div class="page">
-        <div class="navbar">
+        <div class="navbar" style="height: 72px;">
             <div class="navbar-inner">
-                <img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="36" alt="" />
-                <div class="right">
-                    <!-- <a href="/orders-cart" class="link icon-only">
-                        <i class="icon material-icons">shopping_cart<span
-                                class="badge color-red">{{quantity}}</span></i></a>
-                    <span class="text-color-red">${{total.toFixed(2)}}</span> -->
+                <img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="60px" alt="" />
+                <div class="right" >
+                    
                 </div>
             </div>
         </div>
 
-        <div class="page-content">
+        <div class="page-content" style="padding-top: 44px;">
             <div class="block text-align-left"></div>
             <div class="content-block block-card text-align-left">
                 <div class="your-cart">Order Details:</div>
@@ -207,14 +204,14 @@
             </div>
         </div>
         {{#if disableCloseButton}}
-        <div class="fab fab-right-top color-orange">
+        <div class="fab fab-right-top color-orange" style="padding-top: 20px;">
             <a class="link item">
                 <i class="icon material-icons">close</i>
             </a>
         </div>
         {{else}}
-        <div class="fab fab-right-top color-orange">
-            <a href="/tab-order/" class="link item" @click="closeButton()">
+        <div class="fab fab-right-top color-orange" style="padding-top: 20px;">
+            <a href="#" class="link back" @click="closeButton()">
                 <i class="icon material-icons">close</i>
             </a>
         </div>

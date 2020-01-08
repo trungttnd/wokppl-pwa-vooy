@@ -2,14 +2,14 @@
 	<div class="page no-swipeback">
 		<div class="navbar" style="height: 72px;">
 			<div class="navbar-inner">
-				<img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="60" alt="" />
+				<img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="60px" alt="" />
 				<div class="right">
 					<a href="#" @click="goCart" class="link icon-only">
 						<i class="icon material-icons" style="font-size: 40px;">shopping_cart<span
 								class="badge color-red" style="font-size: 13px;">{{cartItems.quantity}}</span></i></a>
 					<span class="text-color-red" style="font-size: 20px;">${{cartItems.total.toFixed(2)}}</span>
 				</div>
-				<div class="subnavbar">
+				<div class="subnavbar" style="top: 72px; bottom: 0px;">
 					<div class="subnavbar-inner" style="justify-content: center;">
 						<a href="#" @click="prev" class="item-link">
 							<i class="fas fa-caret-left" style="margin-right: 8px"></i>

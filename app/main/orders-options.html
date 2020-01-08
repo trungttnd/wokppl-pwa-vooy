@@ -1,18 +1,18 @@
 <template>
     <div class="page">
-        <div class="navbar">
+        <div class="navbar" style="height: 72px;">
             <div class="navbar-inner">
-                <img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="36" alt="" />
+                <img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="60px" alt="" />
                 <div class="right">
                     <a href="#" @click="goCart" class="link icon-only">
-                        <i class="icon material-icons">shopping_cart<span
-                                class="badge color-red">{{cartItems.quantity}}</span></i></a>
-                    <span class="text-color-red">${{cartItems.total.toFixed(2)}}</span>
+                        <i class="icon material-icons" style="font-size: 40px;">shopping_cart<span
+                                class="badge color-red" style="font-size: 13px;">{{cartItems.quantity}}</span></i></a>
+                    <span class="text-color-red" style="font-size: 20px;">${{cartItems.total.toFixed(2)}}</span>
                 </div>
             </div>
         </div>
 
-        <div class="page-content">
+        <div class="page-content" style="padding-top: 44px;">
             {{#if detail}}
             {{#if detail.isNoImage}}
             <div class="block">
@@ -82,13 +82,13 @@
             {{/if}}
         </div>
         {{#if editButton}}
-        <div class="fab fab-right-top color-orange">
-            <a href="/orders-cart" class="link item" @click="closeButton()">
+        <div class="fab fab-right-top color-orange" style="padding-top: 20px;">
+            <a href="#" class="link back" @click="closeButton()">
                 <i class="icon material-icons">close</i>
             </a>
         </div>
         {{else}}
-        <div class="fab fab-right-top color-orange">
+        <div class="fab fab-right-top color-orange" style="padding-top: 20px;">
             <a href="#" class="link back" @click="closeButton()">
                 <i class="icon material-icons">close</i>
             </a>
