@@ -3,8 +3,8 @@
         <div class="navbar" style="height: 72px;">
             <div class="navbar-inner">
                 <img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="60px" alt="" />
-                <div class="right" >
-                    
+                <div class="right">
+
                 </div>
             </div>
         </div>
@@ -283,7 +283,11 @@
                 disableCheckout: true,
                 disableCloseButton: false,
                 messageTime: '',
-                validateOk: true
+                validateOk: true,
+                hourStart: 0,
+                hourEnd: 23,
+                minuteStart: 0,
+                minuteEnd: 59
             }
         },
         methods: {
@@ -434,7 +438,7 @@
                     gst: tempGST,
                 });
             },
-            validate: function(){
+            validate: function () {
                 var self = this;
                 self.validateOk = true;
                 console.log(self.$('input[id=timepicker-24]').val())
@@ -487,7 +491,7 @@
                     // }
                     let today = new Date();
                     var offset = -(today.getTimezoneOffset() / 60);
-                    
+
                     let arr = self.listOrderDate.split('/');
                     let time = self.$('input[id=timepicker-24]').val().split(':');
                     let dat = new Date(arr[2], arr[1] - 1, arr[0], time[0], time[1]);
@@ -571,6 +575,8 @@
             showTimePicker: function () {
                 var self = this;
                 var today = new Date();
+                let minStart = 0;
+                let minEnd = 59;
                 let sessionTemp = JSON.parse(localStorage.getItem('listOrderSession'))
                 today.setTime(today.getTime() + (sessionTemp.preparationTime * 60 * 1000) + (sessionTemp.bufferTime * 60 * 1000));
                 console.log('today', today);
@@ -592,7 +598,7 @@
                         {
                             values: (function () {
                                 var arr = [];
-                                for (var i = 0; i <= 23; i++) { arr.push(i); }
+                                for (var i = self.hourStart; i <= self.hourEnd; i++) { arr.push(i); }
                                 return arr;
                             })(),
                         },
@@ -605,14 +611,16 @@
                         {
                             values: (function () {
                                 var arr = [];
-                                for (var i = 0; i <= 59; i++) { arr.push(i < 10 ? '0' + i : i); }
+                                for (var i = minStart; i <= minEnd; i++) { arr.push(i < 10 ? '0' + i : i); }
                                 return arr;
                             })(),
                         }
                     ],
                     on: {
                         change: function (picker, values) {
-                            //console.log('values', values);
+                            // console.log('values', values);
+                            // if (values[0]==self.hourEnd) minEnd = self.minuteEnd;
+                            // if (values[0]==self.hourStart) minStart = self.minStart;
                         },
                         close: function (picker) {
                             console.log('picker', picker);
@@ -705,8 +713,12 @@
 
                 let message = "Collection time is invalid. Collection time shoud be range from " + self.messageTime + " to " + endDateTime.getHours() + ':' + (endDateTime.getMinutes() < 10 ? '0' + endDateTime.getMinutes() : endDateTime.getMinutes()) + "!";
 
-                if (pickerDateTime < startDateTimeExtend || pickerDateTime < dateTimeNowPlus) {
+                if (pickerDateTime < startDateTimeExtend) {
                     //let message = "Collection time is not smaller " + self.messageTime + "!";
+                    self.openDialog(message).open();
+                    self.validateOk = false;
+                } else if (pickerDateTime < dateTimeNowPlus){
+                    message = "There is no longer enough time to order this session. Please try again with a later session!"
                     self.openDialog(message).open();
                     self.validateOk = false;
                 }
@@ -794,7 +806,8 @@
 
                 self.$('input[id=timepicker-24]').click(function () {
                     self.$setState({
-                        disableCloseButton: true,
+                        //tắt tạm cái này. Thi thoảng vẫn ko bấm close đc: true >> false
+                        disableCloseButton: false,
                     })
                 });
                 // self.$('input[id=timepicker-24]').change(function (){
@@ -827,7 +840,8 @@
                 //     // console.log('nowDT',nowDT);
                 //     let selectTime = self.$('input[id=timepicker-24]').val() 
                 // });
-
+                let arrStarTime = sessionTemp.startTime.split(':');
+                let arrEndTime = sessionTemp.endTime.split(':')
                 if (cartTemp != null) {
                     self.$setState({
                         updateCartList: cartTemp,
@@ -839,9 +853,14 @@
                         orderSessionName: cartTemp.listOrderSession.name,
                         orderSessionTime: cartTemp.listOrderSession.startTime + " - " + cartTemp.listOrderSession.endTime,
                         grandTotal: cartTemp.total - Number(self.discount) + Number(self.gst),
+                        hourStart: arrStarTime[0],
+                        hourEnd: arrEndTime[0],
+                        minuteStart: arrStarTime[1],
+                        minuteEnd: arrEndTime[1]
                     })
                 }
-                console.log('productList', self.productList)
+                console.log('productList', self.productList);
+
                 self.showTimePicker();
             }
         }
