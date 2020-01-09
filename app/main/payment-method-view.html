@@ -1,13 +1,13 @@
 <template>
     <div class="page">
 
-        <div class="navbar">
+        <div class="navbar" style="height: 72px;">
             <div class="navbar-inner">
-                <img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="36" alt="" />
+                <img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="60px" alt="" />
                 <div class="right">
-                    <a href="#" class="link back">
+                    <!-- <a href="#" class="link back">
                         <span>Back</span>
-                    </a>
+                    </a> -->
                 </div>
             </div>
         </div>
@@ -36,7 +36,7 @@
                                 <div class="item-title item-floating-label">Credit Card Number</div>
                                 <div class="item-input-wrap">
                                     <input type="text" name="credit_card" data-encrypt="cardnumber" maxlength="16" value="{{cardNumber}}"
-                                        required />
+                                        disabled />
                                     <span class="input-clear-button"></span>
                                     <div class="item-input-info input-error-message"></div>
                                 </div>
@@ -48,8 +48,8 @@
                                     <div class="item-inner">
                                         <div class="item-title item-floating-label">MM</div>
                                         <div class="item-input-wrap">
-                                            <input type="text" name="month" data-encrypt="month" maxlength="2"
-                                                required />
+                                            <input type="text" name="month" data-encrypt="month" maxlength="2" placeholder="xx"
+                                            disabled />
                                             <div class="item-input-info input-error-message"></div>
                                         </div>
                                     </div>
@@ -58,7 +58,7 @@
                                     <div class="item-inner">
                                         <div class="item-title item-floating-label">YYYY</div>
                                         <div class="item-input-wrap">
-                                            <input type="text" name="year" data-encrypt="year" maxlength="4" required />
+                                            <input type="text" name="year" data-encrypt="year" maxlength="4" placeholder="xxxx" disabled/>
                                             <div class="item-input-info input-error-message"></div>
                                         </div>
                                     </div>
@@ -67,8 +67,8 @@
                                     <div class="item-inner">
                                         <div class="item-title item-floating-label">CVV2</div>
                                         <div class="item-input-wrap">
-                                            <input type="password" name="cvv" data-encrypt="cvv" maxlength="4"
-                                                required />
+                                            <input type="password" name="cvv" data-encrypt="cvv" maxlength="4" disabled
+                                                placeholder="xxx" />
                                             <div class="item-input-info input-error-message"></div>
                                         </div>
                                     </div>
@@ -79,36 +79,13 @@
                             <div class="item-inner">
                                 <div class="item-title item-floating-label">Card Holder's Name</div>
                                 <div class="item-input-wrap">
-                                    <input type="text" name="name" value="{{cardHolderName}}" />
+                                    <input type="text" name="name" value="{{cardHolderName}}" disabled />
                                     <span class="input-clear-button"></span>
                                     <div class="item-input-info input-error-message"></div>
                                 </div>
                             </div>
                         </li>
-                        <!-- {{#if countries}}
-                            <li class="item-content item-input">
-                                <div class="item-inner">
-                                    <div class="item-title item-label">Issuing Bank Country</div>
-                                    <div class="item-input-wrap input-dropdown-wrap">
-                                        <select name="country">
-                                            {{#each countries}}
-                                            <option value="this.id">{{this.name}}</option>
-                                            {{/each}}
-                                        </select>
-                                    </div>
-                                </div>
-                            </li>
-                            {{/if}}
-                            <li class="item-content item-input item-input-with-info">
-                                <div class="item-inner">
-                                    <div class="item-title item-floating-label">Card Holder's Email</div>
-                                    <div class="item-input-wrap">
-                                        <input type="email" name="email" />
-                                        <span class="input-clear-button"></span>
-                                        <div class="item-input-info input-error-message"></div>
-                                    </div>
-                                </div>
-                            </li> -->
+
                     </ul>
                 </div>
                 <div class="block">
@@ -118,7 +95,11 @@
                 </div>
             </form>
         </div>
-
+        <div class="fab fab-right-top color-orange">
+            <a href="#" class="link back">
+                <i class="icon material-icons">close</i>
+            </a>
+        </div>
     </div>
 </template>
 

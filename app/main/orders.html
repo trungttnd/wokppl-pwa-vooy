@@ -1,15 +1,15 @@
 <template>
 	<div class="page no-swipeback">
-		<div class="navbar">
+		<div class="navbar" style="height: 72px;">
 			<div class="navbar-inner">
-				<img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="36" alt="" />
+				<img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="60px" alt="" />
 				<div class="right">
 					<a href="#" @click="goCart" class="link icon-only">
-						<i class="icon material-icons">shopping_cart<span
-								class="badge color-red">{{cartItems.quantity}}</span></i></a>
-					<span class="text-color-red">${{cartItems.total.toFixed(2)}}</span>
+						<i class="icon material-icons" style="font-size: 40px;">shopping_cart<span
+								class="badge color-red" style="font-size: 13px;">{{cartItems.quantity}}</span></i></a>
+					<span class="text-color-red" style="font-size: 20px;">${{cartItems.total.toFixed(2)}}</span>
 				</div>
-				<div class="subnavbar">
+				<div class="subnavbar" style="top: 72px; bottom: 0px;">
 					<div class="subnavbar-inner" style="justify-content: center;">
 						<a href="#" @click="prev" class="item-link">
 							<i class="fas fa-caret-left" style="margin-right: 8px"></i>
@@ -35,7 +35,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="page-content" style="padding-top: 44px;">
+		<div class="page-content" style="padding-top: 72px;">
 			{{#if categories}}
 			<div id="menuCats" class="toolbar tabbar tabbar-scrollable tabbar-sticky">
 				<div class="toolbar-inner categoriesFont">
@@ -87,7 +87,7 @@
 								<div class="item-subtitle"><a href="#" @click="selectOption('{{this.id}}')"
 										class="item-link">
 										{{#if this.isAvailable}}
-										Available numbers: {{this.quantity}}
+										<!-- Available numbers: {{this.quantity}} -->
 										{{else}}
 										Not Available
 										{{/if}}
@@ -351,19 +351,21 @@
 				}
 			},
 			loadSession: function () {
-				var self = this;
-				app.request.get(window.config.url + 'api/services/app/Preorder/GetSessions',
-					function (suc) {
-						let response = JSON.parse(suc)
-						console.log('get session success', response);
-						self.$setState({
-							session: response.result.items
-						})
-					},
-					function (err) {
-						console.log('get session error', err)
-					})
-			},
+                var self = this;
+
+                app.request.get(window.config.url + 'api/services/app/Preorder/GetSessions',
+                    function (suc) {
+                        let response = JSON.parse(suc)
+                        console.log('get session success', response)
+                        // self.$setState({
+                        // 	session: response.result.items
+                        // })
+                        localStorage.setItem('sessions', JSON.stringify(response.result.items))
+                    },
+                    function (err) {
+                        console.log('get session error', err)
+                    })
+            },
 			loadCategory: function () {
 				var self = this;
 				app.request.get(window.config.url + 'api/services/app/Preorder/GetCategories',
@@ -482,9 +484,7 @@
 				var count = 0;
 				var newDate = '';
 				let listSession = JSON.parse(localStorage.getItem('sessions'));
-				// console.log('dateInput',dateInput);
-				// console.log('timeNow',Date.parse(dateInput + ' ' + timeNow));
-				// console.log('startTime',Date.parse(dateInput + ' ' + listSession[0].startTime));
+
 				if (changeDate == '') {
 					newDate = dateInput;
 				}
@@ -639,10 +639,7 @@
 					self.goCartDialog().open();
 				}
 			}
-
-			// console.log('orderDateTemp', orderDateTemp);
-			// console.log('dateInput', dateInput);
-
+			self.loadSession();
 			self.checkListSession(dateInput, timeNow, firstLoadDay);
 
 			self.$setState({
@@ -668,7 +665,7 @@
 				closeOnSelect: true
 			});
 
-			//self.loadSession();
+			
 			// self.loadCategory();
 			// self.loadProduct(dateInput, self.session[0].id, '');
 

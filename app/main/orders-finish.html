@@ -1,8 +1,8 @@
 <template>
     <div class="page">
-        <div class="navbar">
+        <div class="navbar" style="height: 72px;">
             <div class="navbar-inner">
-                <img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="36" alt="" />
+                <img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="60px" alt="" />
                 <div class="right">
 
                 </div>
@@ -17,7 +17,7 @@
                 <span style="font-size: 24px">Payment Success</span>
             </div>
             <div class="block text-align-center">
-                <span>Your order <span style="color: red;"><a href="/inbox-detail/{{orderId}}">#{{orderId}}</a></span> has been placed. A notification will be sent to you when it's ready to collect!</span>
+                <span>Your order <span style="color: red;"><a href="/transactions-detail/{{orderId}}">#{{orderId}}</a></span> has been placed. A notification will be sent to you when it's ready to collect!</span>
             </div>
             <div class="block text-align-center">
                 <p class="row">
@@ -60,8 +60,7 @@
         methods: {
             closeApp: function(){
                 var self = this;
-                //app.exitApp();
-                app.views.current.router.navigate('/tab-order/');
+                navigator.app.exitApp();
             },
             getUrlVars: function()
             {

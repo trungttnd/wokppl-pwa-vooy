@@ -1,11 +1,11 @@
 <template>
     <div class="page">
-        <div class="navbar">
+        <div class="navbar" style="height: 72px;">
             <div class="navbar-inner">
-                <img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="36" alt="" />
+                <img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="60px" alt="" />
             </div>
         </div>
-        <div class="page-content  infinite-scroll-content" style="padding-top: 44px;">
+        <div class="page-content  infinite-scroll-content" style="padding-top: 72px;">
             <!-- <div class="block">
                 <div class="row">
                     <div class="col-25">
@@ -138,7 +138,7 @@
                             tempItem[i].orderTime = ("0" + orderTime.getDate()).slice(-2) + "/" + ("0" + orderTime.getMonth() + 1).slice(-2) + "/" + orderTime.getFullYear() + " " + ("0" + orderTime.getHours()).slice(-2) + ":" + ("0" + orderTime.getMinutes()).slice(-2);
                             for (let j = 0; j < tempItem[i].orderItems.length; j++) {
                                 tempTotalPrice += tempItem[i].orderItems[j].price;
-                                console.log(tempTotalPrice)
+                                //console.log(tempTotalPrice)
                             }
                             tempItem[i].totalPrice = tempTotalPrice;
                         }
@@ -152,7 +152,7 @@
                         for (var i = 0; i < self.itemsPerLoad; i++) {
                             if (i < self.totalCount) {
                                 html += '<li>'
-                                    html += '<a href="/inbox-detail/'+ self.items[i].orderNumber + '" class="item-link">'
+                                html += '<a href="/transactions-detail/' + self.items[i].orderNumber + '" class="item-link">'
                                 html += '<div class="item-content"><div class="item-media"><i class="fa-stack">'
                                 html += '<span class="fas fa-circle fa-stack-2x text-color-red"></span>'
                                 html += '<span class="fas fa-shopping-cart fa-stack-1x fa-inverse"></span></i></div>'
@@ -245,7 +245,7 @@
                     for (var i = self.lastItemIndex; i < self.lastItemIndex + self.itemsPerLoad; i++) {
                         if (i < self.totalCount) {
                             html += '<li>'
-                                html += '<a href="/inbox-detail/'+ self.items[i].orderNumber + '" class="item-link">'
+                            html += '<a href="/transactions-detail/' + self.items[i].orderNumber + '" class="item-link">'
                             html += '<div class="item-content"><div class="item-media"><i class="fa-stack">'
                             html += '<span class="fas fa-circle fa-stack-2x text-color-red"></span>'
                             html += '<span class="fas fa-shopping-cart fa-stack-1x fa-inverse"></span></i></div>'
@@ -299,6 +299,11 @@
                     if (response.result.user == null || response.result.user == 'null') {
                         self.removeCookie();
                         app.views.current.router.navigate('/signin');
+                    }
+                    else {
+                        localStorage.setItem('WOKPPL_mobile', response.result.user.userName);
+                        localStorage.setItem('WOKPPL_name', response.result.user.name);
+                        localStorage.setItem('WOKPPL_email', response.result.user.emailAddress);
                     }
                 },
                 function (err) {

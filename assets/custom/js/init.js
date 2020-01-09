@@ -6,6 +6,7 @@
 |------------------------------------------------------------------------------
 */
 var swRegistration = null;
+var inboxNumber = 0;
 Framework7.use(Framework7Keypad);
 
 /*

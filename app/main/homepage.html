@@ -223,6 +223,11 @@
                             self.removeCookie();
                             app.views.current.router.navigate('/signin');
                         }
+                        else {
+                            localStorage.setItem('WOKPPL_mobile', response.result.user.userName);
+                            localStorage.setItem('WOKPPL_name', response.result.user.name);
+                            localStorage.setItem('WOKPPL_email', response.result.user.emailAddress);
+                        }
                     },
                     function (err) {
                         console.log(err)

@@ -1,12 +1,12 @@
 <template>
     <div class="page">
-        <div class="navbar">
-            <div class="navbar-inner">               
-                <img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="24" alt="" />
+        <div class="navbar" style="height: 72px;">
+            <div class="navbar-inner">
+                <img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="60px" alt="" />
                 <div class="right">
-                    <a href="#" class="link back">
+                    <!-- <a href="#" class="link back">
                         <span>Back</span>
-                    </a>
+                    </a> -->
                 </div>
             </div>
         </div>
@@ -19,6 +19,9 @@
                     <div class="item-title">
                         <span class="transaction-id">Order Id: {{detail.orderNumber}}</span>
                     </div>
+                    <!-- <div class="item-subtitle">
+                        <span class="collection-time">Session: {{collectionTimeDisplay}}</span>
+                    </div> -->
                     <div class="item-subtitle">
                         <span class="collection-time">Collection time: {{collectionTimeDisplay}}</span>
                     </div>
@@ -28,25 +31,25 @@
                 </div>
             </div>
             <div class="data-table card">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th class="label-cell">Your cart</th>
-                                <th class="numeric-cell" style="text-align: center;">Quantity</th>
-                                <th class="numeric-cell">Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {{#each orderItems}}
-                            <tr>
-                                <td class="label-cell">{{this.productName}}</td>
-                                <td class="label-cell" style="text-align: center;">{{this.quantity}}</td>
-                                <td class="numeric-cell">${{this.price.toFixed(2)}}</td>
-                            </tr>
-                            {{/each}}
-                        </tbody>
-                    </table>
-                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="label-cell">Your cart</th>
+                            <th class="numeric-cell" style="text-align: center;">Quantity</th>
+                            <th class="numeric-cell">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each orderItems}}
+                        <tr>
+                            <td class="label-cell">{{this.productName}}</td>
+                            <td class="label-cell" style="text-align: center;">{{this.quantity}}</td>
+                            <td class="numeric-cell">${{this.price.toFixed(2)}}</td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
             <div class="card">
                 <div class="card-content card-content-padding">
                     <div class="list no-hairlines no-hairlines-between">
@@ -88,16 +91,22 @@
                 </div>
             </div>
         </div>
+        <div class="fab fab-right-top color-orange" style="padding-top: 20px;">
+            <a href="/tab-transaction/" class="link item">
+                <i class="icon material-icons">close</i>
+            </a>
+        </div>
     </div>
 </template>
 <style>
-.collection-time{
-    font-size: 15px;
-    color: gray;
-}
-.transaction-id{
-    font-size: 20px;
-}
+    .collection-time {
+        font-size: 15px;
+        color: gray;
+    }
+
+    .transaction-id {
+        font-size: 20px;
+    }
 </style>
 <script>
     return {
@@ -107,38 +116,59 @@
                 orderItems: [],
                 total: 0,
                 collectionTimeDisplay: '',
+                id: this.$route.params.id,
+                listOrders: null,
+                det: null,
                 statusName: ''
             }
         },
         methods: {
             loadData: function () {
                 var self = this;
-                let tempTotal = 0;
-                let det = JSON.parse(localStorage.getItem('detTransactions'));
-                for (let i = 0; i < det.orderItems.length; i++){
-                    tempTotal += det.orderItems[i].price
-                }
-                //det.collectionTime = new Date(det.collectionTime);
-                //det.collectionTime = det.collectionTime.getMonth()+1 + "/" + det.collectionTime.getDate() + "/" + det.collectionTime.getFullYear() + " " + det.collectionTime.getHours() + ":" + det.collectionTime.getMinutes();
-                //console.log(det.payments[0].amount);
-                //let colTime = new Date(det.collectionTime+'.000Z')
-                let colTime = new Date(det.collectionTimeDisplay);
-                //self.collectionTimeDisplay = colTime.toLocaleTimeString().substring(0,5) + ', ' + colTime.toLocaleDateString();
-                self.collectionTimeDisplay = colTime.getHours()+':'+colTime.getMinutes()+', '+colTime.getDate()+'/'+(colTime.getMonth()+1)+'/'+colTime.getFullYear();
-                self.statusName = det.statusName;
-                self.$setState({
-                    detail: det,
-                    orderItems: det.orderItems,
-                    total: det.payments[0].amount,
-                });                
+
+                //list orders
+                app.request.getJSON(window.config.url + 'api/services/app/Preorder/GetTransactions',
+                    { MaxResultCount: 1000 },
+                    function (suc) {
+                        console.log('suc.result', suc.result)
+
+                        self.$setState({
+                            listOrders: suc.result.items,
+                            det: suc.result.items.find(function (el) {
+                                return el.orderNumber == self.id;
+                            })
+                        });
+                        // console.log('listorders', self.listOrders);
+                        console.log('det', self.det)
+
+                        let tempTotal = 0;
+                        for (let i = 0; i < self.det.orderItems.length; i++) {
+                            tempTotal += self.det.orderItems[i].price
+                        }
+                        let colTime = new Date(self.det.collectionTimeDisplay);
+                        //self.collectionTimeDisplay = colTime.toLocaleTimeString().substring(0,5) + ', ' + colTime.toLocaleDateString();
+                        self.collectionTimeDisplay = colTime.getHours() + ':' + colTime.getMinutes() + ', ' + colTime.getDate() + '/' + (colTime.getMonth() + 1) + '/' + colTime.getFullYear()
+                        self.statusName = self.det.statusName;
+                        self.$setState({
+                            detail: self.det,
+                            orderItems: self.det.orderItems,
+                            total: self.det.payments[0].amount,
+                        });
+                    },
+                    function (err) {
+                        console.log(err)
+                    })
             },
+            
         },
         on: {
             pageInit: function () {
                 var self = this;
+                console.log(self.id)
                 self.loadData();
-                console.log('self.detail', self.detail)
-                console.log('self.detail.orderNumber: ', self.detail.orderNumber) 
+                
+                console.log('transaction-detail')
+
             }
         }
     }

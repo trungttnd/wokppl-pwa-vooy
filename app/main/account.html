@@ -1,13 +1,13 @@
 <template>
     <div class="page">
 
-        <div class="navbar">
+        <div class="navbar" style="height: 72px;">
             <div class="navbar-inner">
-                <img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="36" alt="" />
+                <img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="60px" alt="" />
                 <div class="right">
-                    <a href="#" class="link back">
+                    <!-- <a href="#" class="link back">
                         <span>Back</span>
-                    </a>
+                    </a> -->
                 </div>
             </div>
         </div>
@@ -26,7 +26,7 @@
                                 </i>
                             </div>
                             <div class="item-inner">
-                                <div class="item-title">{{canteenName}}</div>
+                                <div class="item-title">Canteen name: {{canteenName}}</div>
                                 <div class="item-after">({{canteenId}})</div>
                             </div>
                         </div>
@@ -109,7 +109,11 @@
             </div>
 
         </div>
-
+        <div class="fab fab-right-top color-orange">
+            <a href="/tab-more/" class="link item">
+                <i class="icon material-icons">close</i>
+            </a>
+        </div>
     </div>
 </template>
 
@@ -136,26 +140,31 @@
                         'Content-Type': 'application/json'
                     }
                 });
-                app.request.get(window.config.url + 'api/services/app/Session/GetCurrentLoginInformations',
-                    function (suc) {
-                        let response = JSON.parse(suc)
-                        console.log('current login', response);
-                        if (response.result) {
-                            self.$setState({
-                                name: response.result.user.name,
-                                mobile: response.result.user.userName,
-                                canteenName: response.result.tenant.name,
-                                canteenId: response.result.tenant.id
-                            })
-                            localStorage.setItem('WOKPPL_mobile', response.result.user.userName);
-                            localStorage.setItem('WOKPPL_name', response.result.user.name);
-                            localStorage.setItem('WOKPPL_email', response.result.user.emailAddress);
-                        }
-
-                    },
-                    function (err) {
-                        console.log('err', err);
-                    })
+                self.$setState({
+                    name: localStorage.getItem('WOKPPL_name'),
+                    mobile: localStorage.getItem('WOKPPL_mobile'),
+                    canteenName: 'Default',
+                    canteenId: '1'
+                })
+                // app.request.get(window.config.url + 'api/services/app/Session/GetCurrentLoginInformations',
+                //     function (suc) {
+                //         let response = JSON.parse(suc)
+                //         console.log('current login', response);
+                //         if (response.result) {
+                //             self.$setState({
+                //                 name: response.result.user.name,
+                //                 mobile: response.result.user.userName,
+                //                 canteenName: response.result.tenant.name,
+                //                 canteenId: response.result.tenant.id
+                //             })
+                //             localStorage.setItem('WOKPPL_mobile', response.result.user.userName);
+                //             localStorage.setItem('WOKPPL_name', response.result.user.name);
+                //             localStorage.setItem('WOKPPL_email', response.result.user.emailAddress);
+                //         }
+                //     },
+                //     function (err) {
+                //         console.log('err', err);
+                //     })
             }
         }
     }
