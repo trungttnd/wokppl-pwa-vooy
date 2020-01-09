@@ -333,13 +333,13 @@
                 var tempHeight = 0;
                 for (let i = 0; i < imageList.length; i++){
                     $('.slider'+ i).on('load', function(event) {
-                        // Lay ti le 16:9
-                        // 177.78 la ti le % cua width va height
+                        // Kich thuoc pop under tu IAB (720x300)
+                        // 240 la ti le % cua width va height
                         tempWidth = $('.slider' + i).prop('naturalWidth');
                         tempHeight = $('.slider' + i).prop('naturalHeight');
-                        if (tempWidth > $(window).width() || ((tempWidth * 100 / tempHeight).toFixed(2) != 177.78)){
+                        if (tempWidth > $(window).width() || ((tempWidth * 100 / tempHeight).toFixed(2) != 240)){
                             $('.slider' + i).width($(window).width());
-                            $('.slider' + i).height(($(window).width() * 100 / 177.78).toFixed(0));
+                            $('.slider' + i).height(($(window).width() * 100 / 240).toFixed(0));
                         }
                     });
                 }
