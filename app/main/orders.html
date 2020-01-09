@@ -39,10 +39,10 @@
 			{{#if categories}}
 			<div id="menuCats" class="toolbar tabbar tabbar-scrollable tabbar-sticky">
 				<div class="toolbar-inner categoriesFont">
-					<a href="#" id="undefined" class="cat-link tab-link-active"
-						style="padding-left: 5px; padding-right: 5px;" @click="selectCat(undefined)">ALL</a>
+					<a href="#" id="undefined" class="cat-link tab-link-active" style="margin-left: 10px; padding-right: 10px"
+						@click="selectCat(undefined)">ALL</a>
 					{{#each categories}}
-					<a href="#" id="{{this.id}}" class="cat-link" style="padding-left: 5px; padding-right: 5px;"
+					<a href="#" id="{{this.id}}" class="cat-link" style="margin-left: 10px; padding-right: 10px;"
 						@click="selectCat('{{this.id}}')">{{this.name}}</a>
 					{{/each}}
 				</div>
@@ -646,7 +646,7 @@
 		mounted() {
 			localStorage.removeItem('isEdit');
 			var self = this;
-			console.log('3-getcurrent-order')
+			console.log('3-getcurrent-order');
 			app.request.get(window.config.url + 'api/services/app/Session/GetCurrentLoginInformations',
 				function (suc) {
 					let response = JSON.parse(suc)

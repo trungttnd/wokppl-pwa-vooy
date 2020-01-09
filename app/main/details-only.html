@@ -5,24 +5,24 @@
                 <img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="60px" alt="" />
                 <div class="right">
                     <a href="#" @click="goCart" class="link icon-only">
-                        <i class="icon material-icons">shopping_cart<span
-                                class="badge color-red">{{cartItems.quantity}}</span></i></a>
-                    <span class="text-color-red">${{cartItems.total.toFixed(2)}}</span>
+                        <i class="icon material-icons" style="font-size: 40px;">shopping_cart<span
+                                class="badge color-red" style="font-size: 13px;">{{cartItems.quantity}}</span></i></a>
+                    <span class="text-color-red" style="font-size: 20px;">${{cartItems.total.toFixed(2)}}</span>
                 </div>
             </div>
         </div>
 
-        <div class="page-content">
+        <div class="page-content" style="padding-top: 44px;">
             {{#if detail}}
             {{#if detail.isNoImage}}
             <div class="block">
                 <img class="img-center"
-                    src="assets/custom/img/{{detail.imageFileName}}" height="{{orgHeight}}px" width="{{orgWidth}}" alt="" />
+                    src="assets/custom/img/{{detail.imageFileName}}" height="{{orgHeight}}" width="{{orgWidth}}" alt="" />
             </div>
             {{else}}
             <div class="block">
                 <img class="img-center"
-                    src="https://wokpplapi.konbi.cloud/uploads/{{detail.imageFileName}}" height="{{orgHeight}}px" width="{{orgWidth}}" alt="" />
+                    src="https://wokpplapi.konbi.cloud/uploads/{{detail.imageFileName}}" height="{{orgHeight}}" width="{{orgWidth}}" alt="" />
             </div>
             {{/if}}
             <div class="block">
@@ -151,6 +151,8 @@
             },
             closeButton: function () {
                 localStorage.removeItem('isEdit');
+                localStorage.removeItem('listOrderDate');
+                localStorage.removeItem('listOrderSession');
             },
             updateCart: function () {
                 var self = this;
@@ -389,10 +391,20 @@
                     }
                     else if ((($(window).height() / 2) < tmpImg.height) && ((($(window).width() * 80) / 100) < tmpImg.width)){
                         console.log('Vao 3')
-                        self.$setState({
-                            orgWidth: $(window).width() * 80 / 100 + 'px',
-                            orgHeight: '',
-                        });
+                        if (tmpImg.height > tmpImg.width){
+                            console.log('Vao 3.1')
+                            self.$setState({
+                                orgWidth: '',
+                                orgHeight: $(window).height() / 2 + 'px',
+                            });
+                        }
+                        else{
+                            console.log('Vao 3.2')
+                            self.$setState({
+                                orgWidth: $(window).width() * 80 / 100 + 'px',
+                                orgHeight: '',
+                            });
+                        }
                     }
                     else{
                         console.log('Khong vao dau')

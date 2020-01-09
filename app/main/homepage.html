@@ -24,7 +24,7 @@
                         <div class="swiper-slide">
                             <!-- <div class="imgBtn"> -->
                             <div class="bannerImg">
-                                <img src="./assets/custom/food/{{imgFileName}}">
+                                <img class="slider{{number}}" src="./assets/custom/food/{{imgFileName}}">
                             </div>
                             <!-- <div class="details">
                                 <h3>Product Name</h3>
@@ -50,7 +50,7 @@
                                 <div class="swiper-slide">
                                     <div class="slide-media">
                                         <div class="slide-img">
-                                            <img class="img-responsive" src="https://wokpplapi.konbi.cloud/uploads/{{this.imgFileName}}" alt="" />
+                                            <img class="img-responsive imgGallery{{this.number}}" src="https://wokpplapi.konbi.cloud/uploads/{{this.imgFileName}}" alt="" />
                                         </div>
                                         <div class="details">
                                             <h3>{{this.name}}</h3>
@@ -76,7 +76,8 @@
                                 <div class="swiper-slide">
                                     <div class="slide-media">
                                         <div class="slide-img">
-                                            <img class="img-responsive" src="https://wokpplapi.konbi.cloud/uploads/{{this.imgFileName}}" alt="" />
+                                            <!-- <img class="img-responsive" src="https://wokpplapi.konbi.cloud/uploads/{{this.imgFileName}}" alt="" /> -->
+                                            <img class="img-responsive imgGallery{{this.number}}" src="https://wokpplapi.konbi.cloud/uploads/{{this.imgFileName}}" alt="" />
                                         </div>
                                         <div class="details">
                                             <h3>{{this.name}}</h3>
@@ -90,14 +91,17 @@
                     </div>
                 </div>
             </div>
-            {{/if}}
+            {{/if}}           
             <div class="block text-align-center">
                 <p class="row">
                     <span></span>
-                    <a class="col button button-big button-fill color-red" style="width: 200px;" href="/tab-order/">Click to begin order</a>
-                    <span></span>
                 </p>
             </div>
+        </div>
+        <div class="fab fab-extended fab-center-bottom color-red" style="width: 200px;">
+            <a class="col button button-big button-fill color-red" href="/tab-order/">
+                <span style="font-family: cabin regular;">Click to begin order</span>
+            </a>
         </div>
     </div>
 </template>
@@ -136,16 +140,16 @@
         padding: 16px; */
         background-position: center;
         background-size: cover;
-        width: 100%;
-        height: 180px;
+        /* width: 100%; */
+        height: 100%;
     }
 
-    /* .swiper-slide .imgBtn {
-        width: 100%;
-        height: 200;
+    /* .swiper-slide .bannerImg img {
+        min-width: 1024px;
+        min-height: 576px;
         overflow: hidden;
-    }
-
+    } */
+    /* 
     .swiper-slide .imgBtn img {
         width: 100%;
     } */
@@ -249,7 +253,7 @@
                             self.$setState({
                                 business: data
                             });
-                            self.initializePhotos();
+                            self.loadGalleryImage(data);
                         }
                     }
                 );
@@ -257,30 +261,62 @@
                     'assets/custom/dataset/banner.json',
                     function (data) {
                         if (data) {
-                            self.$setState({
-                                bannerArr: data.items
-                            });
-                            self.initializeSliderHero();
+                            self.loadBannerImage(data.items);
+                           
                         }
                     }
                 );
             },
-            initializePhotos: function () {
+            loadGalleryImage: function (data){
+                var self = this;
+                for (let i = 0; i < data.products.length; i++){
+                    data.products[i].number = i;
+                }
+                self.$setState({
+                    bannerArr: data,
+                });
+                self.initializePhotos(data);
+            },
+            loadBannerImage: function (imageList){
+                var self = this;
+                for (let i = 0; i < imageList.length; i++){
+                    imageList[i].number = i;
+                }
+                self.$setState({
+                    bannerArr: imageList,
+                });
+                self.initializeSliderHero(imageList);
+            },
+            initializePhotos: function (data) {
                 var self = this;
                 var listImg = [];
+                var tempWidth = 0;
+                var tempHeight = 0;
+                for (let i = 0; i < data.products.length; i++){
+                    $('.imgGallery' + i).on('load', function(event) {
+                        // Lay ti le 4:3
+                        // 133.33 la ti le % cua width va height
+                        tempWidth =  $('.imgGallery' + i).prop('naturalWidth');
+                        tempHeight =  $('.imgGallery' + i).prop('naturalHeight');
+                        if (tempWidth > $(window).width() || ((tempWidth * 100 / tempHeight).toFixed(2) != 133.33)){
+                            //$('.imgGallery' + i).width((($(window).width() - 10) / 3).toFixed(0));
+                            $('.imgGallery' + i).height((($(window).width() / 2).toFixed(0) * 100 / 133.33).toFixed(0));
+                        }
+                    });
+                }
                 app.swiper.create('.photo-gallery .swiper-container', {
                     centeredSlides: true,
                     grabCursor: true,
                     initialSlide: 3,
                     loop: true,
                     slidesPerView: 2,
-                    spaceBetween: 16
+                    spaceBetween: 5
                 });
                 for (let i = 0; i < self.business.products.length; i++){
                     listImg.push("https://wokpplapi.konbi.cloud/uploads/" + self.business.products[i].imgFileName);
                 }
                 self.$('.photo-gallery .slide-media img').on('click', function () {
-                    var currentSlide = self.$('.photo-gallery .slide-media img').parent().parent('.swiper-slide-active').data('swiper-slide-index');
+                    var currentSlide = self.$('.photo-gallery .slide-media img').parent().parent().parent('.swiper-slide-active').data('swiper-slide-index');
                     var photoBrowser = app.photoBrowser.create({
                         photos: listImg,
                         swiper: {
@@ -291,8 +327,22 @@
                     photoBrowser.open();
                 });
             },
-            initializeSliderHero: function () {
+            initializeSliderHero: function (imageList) {
                 var self = this;
+                var tempWidth = 0;
+                var tempHeight = 0;
+                for (let i = 0; i < imageList.length; i++){
+                    $('.slider'+ i).on('load', function(event) {
+                        // Kich thuoc pop under tu IAB (720x300)
+                        // 240 la ti le % cua width va height
+                        tempWidth = $('.slider' + i).prop('naturalWidth');
+                        tempHeight = $('.slider' + i).prop('naturalHeight');
+                        if (tempWidth > $(window).width() || ((tempWidth * 100 / tempHeight).toFixed(2) != 240)){
+                            $('.slider' + i).width($(window).width());
+                            $('.slider' + i).height(($(window).width() * 100 / 240).toFixed(0));
+                        }
+                    });
+                }
                 self.sliderHero = app.swiper.create('.slider-hero .swiper-container', {
                     autoplay: {
                         delay: 3000,
