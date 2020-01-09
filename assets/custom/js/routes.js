@@ -80,10 +80,6 @@ window.routes = [
 		componentUrl: './app/main/orders-options.html'
 	},
 	{
-		path: '/orders-checkout',
-		componentUrl: './app/main/orders-checkout.html'
-	},
-	{
 		path: '/orders-finish',
 		componentUrl: './app/main/orders-finish.html'
 	},
