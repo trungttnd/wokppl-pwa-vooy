@@ -39,10 +39,10 @@
 			{{#if categories}}
 			<div id="menuCats" class="toolbar tabbar tabbar-scrollable tabbar-sticky">
 				<div class="toolbar-inner categoriesFont">
-					<a href="#" id="undefined" class="cat-link tab-link-active" style="margin-left: 10px"
+					<a href="#" id="undefined" class="cat-link tab-link-active" style="margin-left: 10px; padding-right: 10px"
 						@click="selectCat(undefined)">ALL</a>
 					{{#each categories}}
-					<a href="#" id="{{this.id}}" class="cat-link" style="margin-left: 10px"
+					<a href="#" id="{{this.id}}" class="cat-link" style="margin-left: 10px; padding-right: 10px;"
 						@click="selectCat('{{this.id}}')">{{this.name}}</a>
 					{{/each}}
 				</div>
