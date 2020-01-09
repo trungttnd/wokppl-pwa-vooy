@@ -705,19 +705,19 @@
                 dateTimeNowExtend = new Date(dateTimeNowExtend);
 
                 if (startDateTimeExtend > dateTimeNowPlus) {
-                    self.messageTime = startDateTimeExtend.getHours() + ':' + (startDateTimeExtend.getMinutes() < 10 ? '0' + startDateTimeExtend.getMinutes() : startDateTimeExtend.getMinutes());
+                    self.messageTime = startDateTimeExtend.getHours() + ':' + (startDateTimeExtend.getMinutes() + 1 < 10 ? '0' + (startDateTimeExtend.getMinutes()+1) : startDateTimeExtend.getMinutes()+1);
                 }
                 else {
-                    self.messageTime = dateTimeNowPlus.getHours() + ':' + (dateTimeNowPlus.getMinutes() < 10 ? '0' + dateTimeNowPlus.getMinutes() : dateTimeNowPlus.getMinutes());
+                    self.messageTime = dateTimeNowPlus.getHours() + ':' + (dateTimeNowPlus.getMinutes()+1 < 10 ? '0' + (dateTimeNowPlus.getMinutes()+1) : dateTimeNowPlus.getMinutes()+1);
                 }
 
                 let message = "Collection time is invalid. Collection time shoud be range from " + self.messageTime + " to " + endDateTime.getHours() + ':' + (endDateTime.getMinutes() < 10 ? '0' + endDateTime.getMinutes() : endDateTime.getMinutes()) + "!";
 
-                if (pickerDateTime < startDateTimeExtend) {
+                if (pickerDateTime < startDateTimeExtend || pickerDateTime < dateTimeNowPlus) {
                     //let message = "Collection time is not smaller " + self.messageTime + "!";
                     self.openDialog(message).open();
                     self.validateOk = false;
-                } else if (pickerDateTime < dateTimeNowPlus){
+                } else if (pickerDateTime > dateTimeNow && pickerDateTime < endDateTime && dateTimeNowPlus > endDateTime) {
                     message = "There is no longer enough time to order this session. Please try again with a later session!"
                     self.openDialog(message).open();
                     self.validateOk = false;
