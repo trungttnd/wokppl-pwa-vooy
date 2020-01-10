@@ -578,7 +578,7 @@
 							text: 'No!',
 							color: 'gray',
 							onClick: function () {
-								app.views.current.router.navigate('/tab-order/');
+								app.views.current.router.refreshPage();
 							}
 						}
 					]
@@ -598,7 +598,7 @@
 							color: 'green',
 							onClick: function () {
 								self.clearCartWhenSessionExpired();
-								app.views.current.router.navigate('/tab-order/');
+								app.views.current.router.refreshPage();
 							}
 						},
 						{
