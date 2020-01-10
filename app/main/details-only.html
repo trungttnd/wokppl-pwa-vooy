@@ -315,7 +315,8 @@
                 }
                 // else let det = JSON.parse(localStorage.getItem('addProduct'));
                 let listOrderDate = JSON.parse(localStorage.getItem('listOrderDate'))
-                let listOrderSession = JSON.parse(localStorage.getItem('listOrderSession'))
+                let listOrderSession = JSON.parse(localStorage.getItem('listOrderSession'));
+                console.log('listOrderDate', listOrderDate)
                 self.$setState({
                     detail: det,
                     cartItems: JSON.parse(localStorage.getItem('cartItems')) == undefined ? { quantity: 0, total: 0.00, items: [] } : JSON.parse(localStorage.getItem('cartItems')),
