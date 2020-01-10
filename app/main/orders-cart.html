@@ -91,15 +91,10 @@
                                 <div class="item-inner">
                                     <div class="item-title-row">
                                         <div class="item-title">{{this.name}}</div>
-                                        {{#js_if "this.gstType=='exclusive'"}}
                                         <div class="item-title">
-                                            <!-- ${{this.price.toFixed(2)}} x {{this.orderQuantity}} -->
+                                            ${{this.price.toFixed(2)}} x {{this.orderQuantity}}
                                         </div>
-                                        {{else}}
-                                        <div class="item-title">
-                                            <!-- ${{this.price * (1-this.gst/100)}} x {{this.orderQuantity}} -->
-                                        </div>
-                                        {{/js_if}}
+
                                     </div>
                                     <div class="item-text">
                                         <div class="row">
@@ -290,7 +285,7 @@
                 updateCartList: [],
                 discount: 0,
                 gst: 7,
-                gstType: 'exclusive', //type: inclusive/exclusive
+                gstType: 'inclusive', //type: inclusive/exclusive
                 grandTotal: 0,
                 redeem: 2,
                 checkToggle: false,
@@ -756,7 +751,7 @@
                         self.$setState({
                             checkToggle: true,
                             //discount: self.discount - self.redeem,
-                            grandTotal: cartTemp.total * (1 + Number(self.gst) / 100) - Number(self.redeem),
+                            grandTotal: self.gstType == 'inclusive' ? cartTemp.total - self.redeem : cartTemp.total * (1 + Number(self.gst) / 100) - self.redeem,
                         })
 
                     }
@@ -764,7 +759,7 @@
                         self.$setState({
                             checkToggle: false,
                             //discount: self.discount + self.redeem,
-                            grandTotal: cartTemp.total * (1 + Number(self.gst) / 100),
+                            grandTotal: self.gstType == 'inclusive' ? cartTemp.total : cartTemp.total * (1 + Number(self.gst) / 100)
                         })
                     }
                     console.log(self.checkToggle)
@@ -788,25 +783,39 @@
 
                 let arrStarTime = sessionTemp.startTime.split(':');
                 let arrEndTime = sessionTemp.endTime.split(':')
+
                 if (cartTemp != null) {
                     self.$setState({
                         updateCartList: cartTemp,
-                        productList: cartTemp.items,
+
                         quantity: cartTemp.quantity,
-                        total: cartTemp.total,
+                        total: self.gstType == 'inclusive' ? cartTemp.total * (1 - self.gst / 100) : cartTemp.total,
                         listOrderDate: cartTemp.listOrderDate,
                         listOrderSession: cartTemp.listOrderSession,
                         orderSessionName: cartTemp.listOrderSession.name,
                         orderSessionTime: cartTemp.listOrderSession.startTime + " - " + cartTemp.listOrderSession.endTime,
-                        grandTotal: self.gstType == 'exclusive' ? cartTemp.total * (1 + Number(self.gst) / 100) - Number(self.discount) : cartTemp.total,
+                        grandTotal: self.gstType == 'inclusive' ? cartTemp.total : cartTemp.total * (1 + Number(self.gst) / 100),
                         hourStart: arrStarTime[0],
                         hourEnd: arrEndTime[0],
                         minuteStart: arrStarTime[1],
                         minuteEnd: arrEndTime[1]
                     })
                 }
-                console.log('productList', self.productList);
+                console.log(cartTemp.items)
 
+                if (self.gstType == 'inclusive') {
+                    let temp = cartTemp.items;
+                    temp.forEach(function (el) {
+                        el.price = el.price * (1 - self.gst / 100);
+                    })
+                    self.$setState({
+                        productList: temp
+                    })
+                }
+                else self.$setState({
+                    productList: cartTemp.items
+                })
+                console.log('productList', self.productList, self.total, self.grandTotal);
                 self.showTimePicker();
             }
         }
