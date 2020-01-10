@@ -14,9 +14,15 @@
 						<a href="#" @click="prev" class="item-link">
 							<i class="fas fa-caret-left" style="margin-right: 8px"></i>
 						</a>
-						<div class="item-input-wrap">
-							<input type="text" value="{{today}}" readonly="readonly" id="date" style="width: 6.5rem;" />
-						</div>
+
+							<div class="item-media"><i class="icon f7-icons color-red" style="font-size: 25px;">calendar</i></div>
+							<div class="item-inner" style="margin-left: unset;">
+								<div class="item-input">
+									<input type="text" value="{{today}}" readonly="readonly" id="date" style="width: 3.5rem; padding-left: 5px;" />
+								</div>
+							</div>
+							
+						
 						<a href="#" @click="next" class="item-link">
 							<i class="fas fa-caret-right" style="margin-left: 8px"></i>
 						</a>
@@ -193,6 +199,7 @@
 				listOrderSession: null,
 				sessChoose: null,
 				isNoProduct: false,
+				yearNow: null,
 			}
 		},
 		methods: {
@@ -218,16 +225,19 @@
 				let prevtimeNow = tempDate.getHours() + ":" + tempDate.getMinutes();
 				console.log('now', now.toLocaleDateString())
 				console.log('dt', dt)
-				if (dt != self.formatDate(now, 'en')) {
+				if (dt + "/" + self.yearNow != self.formatDate(now, 'en')) {
 					let arr = dt.split('/');
-					dt = arr[2] + '/' + arr[1] + '/' + arr[0]
+					dt = self.yearNow + '/' + arr[1] + '/' + arr[0]
 					let date = new Date(dt);
 					date.setTime(date.getTime() - (1000 * 60 * 60 * 24))
 					self.$setState({
-						today: self.formatDate(date, 'en')
+						today: self.getDayMonthOnly(self.formatDate(date, 'en')),
+						yearNow: date.getFullYear(),
 					});
 					changePrevDate = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
 				}
+				console.log('today', self.today);
+				console.log('yearNow', self.yearNow);
 				let orderDateTemp = JSON.parse(localStorage.getItem('listOrderDate'));
 				//if (self.cartItems.quantity > 0){
 				// if (self.today != orderDateTemp){
@@ -261,13 +271,14 @@
 				let nextDateInput = (tempDate.getMonth() + 1) + '/' + tempDate.getDate() + '/' + tempDate.getFullYear();
 				let nexttimeNow = tempDate.getHours() + ":" + tempDate.getMinutes();
 				console.log('dt1', dt)
-				dt = arr[2] + '/' + arr[1] + '/' + arr[0]
+				dt = self.yearNow + '/' + arr[1] + '/' + arr[0]
 				console.log('dt2', dt)
 				let date = new Date(dt);
 				date.setTime(date.getTime() + (1000 * 60 * 60 * 24))
 				console.log('date', date)
 				self.$setState({
-					today: self.formatDate(date, 'en')
+					today: self.getDayMonthOnly(self.formatDate(date, 'en')),
+					yearNow: date.getFullYear(),
 				});
 				let changeNextDate = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
 				let orderDateTemp = JSON.parse(localStorage.getItem('listOrderDate'));
@@ -298,6 +309,7 @@
 			selectOption: function (id) {
 				var self = this;
 				let orderDate = $('#date').val();
+				orderDate = orderDate + "/" + self.yearNow;
 				let orderSession = self.$('select[name=session]').val();
 				console.log(id, orderDate, orderSession);
 				console.log(self.cartItems);
@@ -349,7 +361,7 @@
 
 				let sess = self.$('select[name=session]').val();
 				let arr = $('#date').val().split('/');
-				let dateInput = arr[1] + '/' + arr[0] + '/' + arr[2]
+				let dateInput = arr[1] + '/' + arr[0] + '/' + self.yearNow
 				if (selected == undefined) {
 					// self.loadProduct(dateInput, sess, '')
 
@@ -510,7 +522,7 @@
 				var self = this;
 				let sess = self.$('select[name=session]').val();
 				let arr = $('#date').val().split('/');
-				let dt = arr[1] + '/' + arr[0] + '/' + arr[2]
+				let dt = arr[1] + '/' + arr[0] + '/' + self.yearNow;
 				$('a').attr('id', function (i, id) {
 					if (id == undefined) {
 						$('a[id=' + id + ']').addClass('tab-link-active');
@@ -618,7 +630,17 @@
 				localStorage.removeItem('listOrderDate');
 				localStorage.removeItem('disableCheckout');
 				localStorage.removeItem('cartItems');
-			}
+			},
+			getDayMonthOnly: function(fullDate){
+				let arrDate = fullDate.split('/');
+				let onlyDayMonth = arrDate[0] + '/' + arrDate[1];
+				return onlyDayMonth;
+			},
+			yearNow: function(){
+				var d = new Date();
+				var y = d.getFullYear();
+				return y;
+			},
 		},
 		removeCookie: function () {
 			var self = this;
@@ -684,7 +706,8 @@
 			self.checkListSession(dateInput, timeNow, firstLoadDay);
 
 			self.$setState({
-				today: self.formatDate(date, 'en'),
+				today: self.getDayMonthOnly(self.formatDate(date, 'en')),
+				yearNow: self.yearNow(),
 				cartItems: JSON.parse(localStorage.getItem('cartItems')) == undefined ? { quantity: 0, total: 0.00, items: [] } : JSON.parse(localStorage.getItem('cartItems')),
 				//session: JSON.parse(localStorage.getItem('sessions')),
 				//session: listSession,
@@ -701,11 +724,23 @@
 			dateNow.setDate(dateNow.getDate() - 1);
 			var calendarDateFormat = app.calendar.create({
 				inputEl: '#date',
-				dateFormat: 'dd/mm/yyyy',
+				// dateFormat: 'dd/mm/yyyy',
+				dateFormat: 'dd/mm',
 				minDate: dateNow,
-				closeOnSelect: true
+				closeOnSelect: true,
+				toolbar: false,
+				touchMove: true,
+				url: "/tab-order/",
+				on: {
+					change: function (picker, values) {
+						console.log('values', values);
+						self.$setState({
+							yearNow: values[0].getFullYear(),
+						});
+						console.log('values', self.yearNow);
+					},
+				}
 			});
-
 
 			// self.loadCategory();
 			// self.loadProduct(dateInput, self.session[0].id, '');
@@ -719,7 +754,7 @@
 			}
 			if (orderDateTemp != null) {
 				self.$setState({
-					today: orderDateTemp,
+					today: self.getDayMonthOnly(orderDateTemp),
 				});
 			}
 			// else self.$('select[name=session]').val(self.session[0].id);
@@ -749,7 +784,8 @@
 
 			self.$('#date').change(function () {
 				let arrDate = $('#date').val().split('/');
-				let changeDate = arrDate[1] + '/' + arrDate[0] + '/' + arrDate[2];
+				let changeDate = arrDate[1] + '/' + arrDate[0] + '/' + self.yearNow;
+				let onlyDayMonth = arrDate[0] + '/' + arrDate[1];
 				//let orderDateTempArr = orderDateTemp.split('/');
 				//orderDateTemp = orderDateTempArr[1] + '/' + orderDateTempArr[0] + '/' + orderDateTempArr[2];
 
