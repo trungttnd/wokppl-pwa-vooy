@@ -34,7 +34,7 @@
                             </li>
                             <li>
                                 <div class="item-content">
-                                    <div class="item-media">Collection Time: <i
+                                    <div class="item-media"><a class="link dynamic-popover" href="#" style="color: black">Collection Time:</a> <i
                                             class="icon material-icons text-color-red"
                                             style="margin-left: 13px;">access_time</i>&nbsp;</div>
 
@@ -209,7 +209,7 @@
                 &nbsp;
             </div>
         </div>
-        <div class="popover popover-text">
+        <div class="gpopover" id="my-popover">
             <div class="popover-inner">
                 <div class="block">
                     <p>Choose the time you want to receive the goods.</p>
@@ -720,6 +720,30 @@
                 console.log('startDateTimeExtend', startDateTimeExtend);
                 console.log('dateTimeNowPlus', dateTimeNowPlus);
             },
+            openPopOver: function(){
+                var dynamicPopover = app.popover.create({
+                    targetEl: 'a.dynamic-popover',
+                    content: '<div class="popover">'+
+                                '<div class="popover-inner">'+
+                                    '<div class="block">'+
+                                    '<p><span style="font-size: 20px"><b>Collection time</b></span></p>'+
+                                    '<p>Choose the time you want to receive the goods!</p>'+
+                                    '<p style="text-align: center"><a href="#" class="link popover-close">Close</a></p>'+
+                                    '</div>'+
+                                '</div>'+
+                                '</div>',
+                    // Events
+                    on: {
+                        open: function (popover) {
+                            console.log('Popover mo');
+                        },
+                        opened: function (popover) {
+                            console.log('Popover da mo');
+                        },
+                    }
+                });
+                return dynamicPopover;
+            },
         },
         on: {
             pageInit: function () {
@@ -817,6 +841,13 @@
                 })
                 console.log('productList', self.productList, self.total, self.grandTotal);
                 self.showTimePicker();
+
+                $(document).ready(function(){
+                    self.openPopOver().open();
+                });
+                $('.dynamic-popover').click(function(){
+                    self.openPopOver().open();
+                });             
             }
         }
     }
