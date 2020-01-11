@@ -54,35 +54,37 @@
                 <div class="card-content card-content-padding">
                     <div class="list no-hairlines no-hairlines-between">
                         <ul>
-                            <li>
+                            <!-- <li>
                                 <div class="item-content">
                                     <div class="item-inner">
                                         <div class="item-title">Subtotal</div>
                                         <div class="item-after">${{this.total.toFixed(2)}}</div>
                                     </div>
                                 </div>
-                            </li>
-                            <li>
+                            </li> -->
+                            <!-- <li>
                                 <div class="item-content">
                                     <div class="item-inner">
                                         <div class="item-title">Discount</div>
                                         <div class="item-after">$0.00</div>
                                     </div>
                                 </div>
-                            </li>
+                            </li> -->
+                            {{#js_if "this.gst>0"}}
                             <li>
                                 <div class="item-content">
                                     <div class="item-inner">
                                         <div class="item-title">GST</div>
-                                        <div class="item-after">$0.00</div>
+                                        <div class="item-after">{{gst}}%</div>
                                     </div>
                                 </div>
                             </li>
+                            {{/js_if}}
                             <li>
                                 <div class="item-content">
                                     <div class="item-inner">
                                         <div class="item-title"><b>Grand Total</b></div>
-                                        <div class="item-after"><b>${{this.total.toFixed(2)}}</b></div>
+                                        <div class="item-after"><b>${{this.grandTotal.toFixed(2)}}</b></div>
                                     </div>
                                 </div>
                             </li>
@@ -115,6 +117,8 @@
                 detail: [],
                 orderItems: [],
                 total: 0,
+                grandTotal: 0,
+                gst: 0,
                 collectionTimeDisplay: '',
                 id: this.$route.params.id,
                 listOrders: null,
@@ -152,7 +156,8 @@
                         self.$setState({
                             detail: self.det,
                             orderItems: self.det.orderItems,
-                            total: self.det.payments[0].amount,
+                            //total: self.det.payments[0].amount,
+                            grandTotal: self.det.payments[0].amount
                         });
                     },
                     function (err) {

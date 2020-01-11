@@ -37,7 +37,9 @@
                                     <div class="item-media">Collection Time: <i
                                             class="icon material-icons text-color-red"
                                             style="margin-left: 13px;">access_time</i>&nbsp;</div>
+
                                     <div class="item-inner" style="margin-left: unset;">
+
                                         <div class="item-input">
                                             <input type="text" placeholder="Select" readonly="readonly"
                                                 id="timepicker-24" />
@@ -90,7 +92,9 @@
                                     <div class="item-title-row">
                                         <div class="item-title">{{this.name}}</div>
                                         <div class="item-title">
-                                            ${{this.price.toFixed(2)}} x {{this.orderQuantity}}</div>
+                                            ${{this.price.toFixed(2)}} x {{this.orderQuantity}}
+                                        </div>
+
                                     </div>
                                     <div class="item-text">
                                         <div class="row">
@@ -151,40 +155,42 @@
                                 <div class="item-content">
                                     <div class="item-inner">
                                         <div class="item-title">Reward points
-                                            <div class="item-text">You have $0 redeem to use</div>
+                                            <div class="item-text">You have ${{redeem.toFixed(2)}} redeem to use</div>
                                         </div>
                                         <div class="item-after">
                                             <label class="toggle toggle-init color-pink tooltip-init"
                                                 data-tooltip="Redeem">
-                                                <input type="checkbox" value="0" data-permission="redeem" />
+                                                <input type="checkbox" />
                                                 <span class="toggle-icon"></span>
                                             </label>
                                         </div>
                                     </div>
                                 </div>
                             </li>
-                            <li>
+                            <!-- <li>
                                 <div class="item-content">
                                     <div class="item-inner">
                                         <div class="item-title">Discount</div>
                                         <div class="item-after">
-                                            <input type="text" value="$0.00" readonly="readonly" id="discountValue"
-                                                style="width: 3.4rem;" />
+                                            <input type="text" value="${{discount}}" readonly="readonly"
+                                                id="discountValue" style="width: 3.4rem;" />
                                         </div>
                                     </div>
                                 </div>
-                            </li>
+                            </li> -->
+                            {{#js_if "this.gst>0"}}
                             <li>
                                 <div class="item-content">
                                     <div class="item-inner">
                                         <div class="item-title">GST</div>
                                         <div class="item-after">
-                                            <input type="text" value="$0.00" readonly="readonly" id="gstValue"
+                                            <input type="text" value="{{gst}}%" readonly="readonly" id="gstValue"
                                                 style="width: 3.4rem;" />
                                         </div>
                                     </div>
                                 </div>
                             </li>
+                            {{/js_if}}
                             <li>
                                 <div class="item-content">
                                     <div class="item-inner">
@@ -201,6 +207,13 @@
             </div>
             <div class="block">
                 &nbsp;
+            </div>
+        </div>
+        <div class="popover popover-text">
+            <div class="popover-inner">
+                <div class="block">
+                    <p>Choose the time you want to receive the goods.</p>
+                </div>
             </div>
         </div>
         {{#if disableCloseButton}}
@@ -271,9 +284,11 @@
                 listOption: [],
                 updateCartList: [],
                 discount: 0,
-                gst: 0,
+                gst: 7,
+                gstType: 'inclusive', //type: inclusive/exclusive
                 grandTotal: 0,
-                redeem: 0,
+                redeem: 2,
+                checkToggle: false,
                 newOrder: {
                     collectionTime: '',
                     type: 3,
@@ -291,6 +306,7 @@
             }
         },
         methods: {
+
             initializeTimepicker24: function () {
                 var self = this;
                 jQuery('#timepicker-24').timeDropper({
@@ -399,44 +415,11 @@
                 localStorage.setItem('isEdit', isEdit);
                 localStorage.setItem('editProduct', JSON.stringify(det));
                 localStorage.setItem('cartItems', JSON.stringify(self.updateCartList));
-                // // self.$setState({
-                // // 	detail: det,
-                // // 	tempQuantity: self.tempQuantity + 1,
-                // // })
-                // //console.log(self.detail)
-                // // self.listOrderDate = orderDate;
-                // // for (let i = 0; i < self.session.length; i++){
-                // // 	if (orderSession == self.session[i].id){
-                // // 		self.listOrderSession = self.session[i];
-                // // 	}
-                // // }
-                // // localStorage.setItem('listOrderDate', JSON.stringify(self.listOrderDate));
-                // // localStorage.setItem('listOrderSession', JSON.stringify(self.listOrderSession));
+
                 app.views.current.router.navigate('/orders-options');
             },
             closeButton: function () {
                 localStorage.removeItem('isEdit');
-            },
-            getDicount: function () {
-                var self = this;
-                let tempdiscount = $('#discountValue').val();
-                let arr = tempdiscount.split('$');
-                console.log('tempdiscount', tempdiscount)
-                tempdiscount = arr[1];
-                console.log('tempdiscount', tempdiscount)
-                self.$setState({
-                    discount: tempdiscount,
-                });
-            },
-            getGST: function () {
-                var self = this;
-                let tempGST = $('#gstValue').val();
-                let arr = tempGST.split('$');
-                tempGST = arr[1];
-                console.log('tempGST', tempGST)
-                self.$setState({
-                    gst: tempGST,
-                });
             },
             validate: function () {
                 var self = this;
@@ -444,7 +427,6 @@
                 console.log(self.$('input[id=timepicker-24]').val())
                 let arrTime = self.$('input[id=timepicker-24]').val().split(':')
                 self.checkCollectionTime(arrTime)
-                console.log(self.validateOk)
                 if (self.validateOk == true)
                     self.checkout();
             },
@@ -469,26 +451,7 @@
                 if (cartTemp != null) {
                     console.log(self.listOrderSession, self.listOrderDate)
                     console.log(cartTemp)
-                    //let today = new Date();
-                    // today.setTime(today.getTime() + (1000 * 60 * (self.listOrderSession.preparationTime + self.listOrderSession.bufferTime)))
-                    // console.log(today)
-                    // let dt = today.getDate() + '/' + (today.getMonth() + 1) + '/' + today.getFullYear();
-                    // console.log(dt)
-                    // if (dt == self.listOrderDate) {
-                    //     console.log(today.toISOString())
-                    //     self.newOrder.collectionTime = today.toISOString();
-                    //     //self.newOrder.orderDate = today.toISOString();
-                    // }
-                    // else {
-                    //     let arr = self.listOrderDate.split('/');
-                    //     let time = self.listOrderSession.startTime.split(':');
-                    //     console.log(arr)
-                    //     let dat = new Date(arr[2], arr[1] - 1, arr[0], time[0], time[1])
-                    //     dat.setTime(dat.getTime() + (1000 * 60 * (self.listOrderSession.preparationTime + self.listOrderSession.bufferTime)))
-                    //     console.log(dat)
-                    //     self.newOrder.collectionTime = dat.toISOString();
-                    //     //self.newOrder.orderDate = dat.toISOString();
-                    // }
+
                     let today = new Date();
                     var offset = -(today.getTimezoneOffset() / 60);
 
@@ -538,6 +501,8 @@
                     //create new order
                     app.request.postJSON(window.config.url + 'api/services/app/Preorder/CreateOrder',
                         {
+                            payWithPointEnabled: self.checkToggle,
+                            totalAmount: self.grandTotal,
                             collectionTime: self.newOrder.collectionTime,
                             type: self.newOrder.type,
                             orderItems: self.newOrder.orderItems,
@@ -557,7 +522,7 @@
                                 content: '<div class="block no-margin margin-top text-align-center"><i class="fa-stack fa-3x"><span class="fas fa-stack-2x fa-circle text-color-red"></span><span class="fas fa-stack-1x fa-inverse fa-times"></span></i><p>' + response.error.message + '.</p></div>',
                                 buttons: [
                                     {
-                                        text: 'Retry',
+                                        text: 'Cancel',
                                         bold: true,
                                         color: 'red',
                                         onClick: function () {
@@ -706,10 +671,10 @@
                 dateTimeNowExtend = new Date(dateTimeNowExtend);
 
                 if (startDateTimeExtend > dateTimeNowPlus) {
-                    self.messageTime = startDateTimeExtend.getHours() + ':' + (startDateTimeExtend.getMinutes() + 1 < 10 ? '0' + (startDateTimeExtend.getMinutes()+1) : startDateTimeExtend.getMinutes()+1);
+                    self.messageTime = startDateTimeExtend.getHours() + ':' + (startDateTimeExtend.getMinutes() + 1 < 10 ? '0' + (startDateTimeExtend.getMinutes() + 1) : startDateTimeExtend.getMinutes() + 1);
                 }
                 else {
-                    self.messageTime = dateTimeNowPlus.getHours() + ':' + (dateTimeNowPlus.getMinutes()+1 < 10 ? '0' + (dateTimeNowPlus.getMinutes()+1) : dateTimeNowPlus.getMinutes()+1);
+                    self.messageTime = dateTimeNowPlus.getHours() + ':' + (dateTimeNowPlus.getMinutes() + 1 < 10 ? '0' + (dateTimeNowPlus.getMinutes() + 1) : dateTimeNowPlus.getMinutes() + 1);
                 }
 
                 let message = "Collection time is invalid. Collection time shoud be range from " + self.messageTime + " to " + endDateTime.getHours() + ':' + (endDateTime.getMinutes() < 10 ? '0' + endDateTime.getMinutes() : endDateTime.getMinutes()) + "!";
@@ -780,20 +745,24 @@
                         cartTemp.items[i].editornew = false;
                         cartTemp.items[i].indexProduct = i + '-' + cartTemp.items[i].id;
                     }
-                self.getDicount();
-                self.getGST();
+
                 self.$('input[type=checkbox]').change(function () {
-                    let tempRedeem = $(this).val();
                     if ($(this).is(":checked")) {
                         self.$setState({
-                            grandTotal: cartTemp.total - Number(tempRedeem) - Number(self.discount) + Number(self.gst),
+                            checkToggle: true,
+                            //discount: self.discount - self.redeem,
+                            grandTotal: self.gstType == 'inclusive' ? cartTemp.total - self.redeem : cartTemp.total * (1 + Number(self.gst) / 100) - self.redeem,
                         })
+
                     }
                     else {
                         self.$setState({
-                            grandTotal: cartTemp.total - 0 - Number(self.discount) + Number(self.gst),
+                            checkToggle: false,
+                            //discount: self.discount + self.redeem,
+                            grandTotal: self.gstType == 'inclusive' ? cartTemp.total : cartTemp.total * (1 + Number(self.gst) / 100)
                         })
                     }
+                    console.log(self.checkToggle)
                 })
                 self.$('input[type=radio]').change(function () {
                     console.log($(this).val())
@@ -811,57 +780,42 @@
                         disableCloseButton: false,
                     })
                 });
-                // self.$('input[id=timepicker-24]').change(function (){
-                //     // Ngay hien tai
-                //     let nowDateTime = new Date();
-                //     var nowHours = nowDateTime.getHours();
-                //     var nowMinutes = nowDateTime.getMinutes(); 
-                //     // Ngay lay tu session
-                //     let arrDate = orderDateTemp.split('/');
-                //     let sessionDate = arrDate[1] + '/' + arrDate[0] + '/' + arrDate[2];
-                //     // Gan ngay lay tu session voi startime
-                //     let startDateTime = sessionDate + ' ' + sessionTemp.startTime;
-                //     startDateTime = new Date(startDateTime);
-                //     // Gan ngay lay tu session voi endtime
-                //     let endDateTime = sessionDate + ' ' + sessionTemp.endTime;
-                //     endDateTime = new Date(endDateTime);
-                //     // Gan ngay lay tu session voi timepicker
-                //     let pickerDateTime = sessionDate + ' ' + self.$('input[id=timepicker-24]').val();
-                //     pickerDateTime = new Date(pickerDateTime);
-                //     if (pickerDateTime < nowDateTime){
-                //         self.$('input[id=timepicker-24]').val(nowHours + ':' + nowMinutes);
-                //     }
 
-                //     // sessionDateTime.setTime(pickerDateTime.getTime() + (sessionTemp.preparationTime * 60 * 1000) + (sessionTemp.bufferTime * 60 * 1000));
-                //     // console.log('sessionDateTime', sessionDateTime);
-                //     // let sessionDateTimeExpand = new Date(sessionDateTime);
-                //     // console.log('newDate',sessionDateTime);
-                //     // console.log('Time picker',self.$('input[id=timepicker-24]').val());
-                //     // console.log('sessionDateTime',sessionDateTime);
-                //     // console.log('nowDT',nowDT);
-                //     let selectTime = self.$('input[id=timepicker-24]').val() 
-                // });
                 let arrStarTime = sessionTemp.startTime.split(':');
                 let arrEndTime = sessionTemp.endTime.split(':')
+
                 if (cartTemp != null) {
                     self.$setState({
                         updateCartList: cartTemp,
-                        productList: cartTemp.items,
+
                         quantity: cartTemp.quantity,
-                        total: cartTemp.total,
+                        total: self.gstType == 'inclusive' ? cartTemp.total * (1 - self.gst / 100) : cartTemp.total,
                         listOrderDate: cartTemp.listOrderDate,
                         listOrderSession: cartTemp.listOrderSession,
                         orderSessionName: cartTemp.listOrderSession.name,
                         orderSessionTime: cartTemp.listOrderSession.startTime + " - " + cartTemp.listOrderSession.endTime,
-                        grandTotal: cartTemp.total - Number(self.discount) + Number(self.gst),
+                        grandTotal: self.gstType == 'inclusive' ? cartTemp.total : cartTemp.total * (1 + Number(self.gst) / 100),
                         hourStart: arrStarTime[0],
                         hourEnd: arrEndTime[0],
                         minuteStart: arrStarTime[1],
                         minuteEnd: arrEndTime[1]
                     })
                 }
-                console.log('productList', self.productList);
+                console.log(cartTemp.items)
 
+                if (self.gstType == 'inclusive') {
+                    let temp = cartTemp.items;
+                    temp.forEach(function (el) {
+                        el.price = el.price * (1 - self.gst / 100);
+                    })
+                    self.$setState({
+                        productList: temp
+                    })
+                }
+                else self.$setState({
+                    productList: cartTemp.items
+                })
+                console.log('productList', self.productList, self.total, self.grandTotal);
                 self.showTimePicker();
             }
         }
