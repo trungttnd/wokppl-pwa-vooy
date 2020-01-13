@@ -64,11 +64,17 @@ self.addEventListener('push', function (event) {
 
 self.addEventListener('notificationclick', function (event) {
   console.log('[Service Worker] Notification click Received.');
+  console.log(event)
+  let message = event.notification.body;
+  let arr = message.split(' ');
+  console.log(arr)
+  let orderNumber = arr.find(function (el) {
+    return el.substr(0, 1) == "#"
+  }).substr(1)
+  event.notification.close();
 
-    event.notification.close();
-
-    event.waitUntil(
-      // clients.openWindow('https://preorder-pwa.netlify.com/')
-      clients.openWindow('http://localhost:81/cusPWA/wokppl-pwa-vooy/')
-    );
+  event.waitUntil(
+    // clients.openWindow('https://preorder-pwa.netlify.com/')
+    clients.openWindow('http://localhost:81/cusPWA/wokppl-pwa-vooy/#!/transactions-detail/' + orderNumber)
+  );
 });
