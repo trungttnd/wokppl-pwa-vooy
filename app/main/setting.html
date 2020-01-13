@@ -17,82 +17,7 @@
             <div class="block-title">Permission</div>
             <div class="list inset">
                 <ul>
-                    <!-- <li class="permission-camera">
-                        <div class="item-content">
-                            <div class="item-media">
-                                <i class="fa-stack">
-                                    <span class="fas fa-circle fa-stack-2x text-color-blue"></span>
-                                    <span class="fas fa-camera fa-stack-1x fa-inverse"></span>
-                                </i>
-                            </div>
-                            <div class="item-inner">
-                                <div class="item-title">Camera</div>
-                                <div class="item-after">
-                                    <label class="toggle toggle-init color-blue tooltip-init" data-tooltip="Request">
-                                        <input type="checkbox" data-permission="camera" />
-                                        <span class="toggle-icon"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="permission-geolocation">
-                        <div class="item-content">
-                            <div class="item-media">
-                                <i class="fa-stack">
-                                    <span class="fas fa-circle fa-stack-2x text-color-green"></span>
-                                    <span class="fas fa-map-marker-alt fa-stack-1x fa-inverse"></span>
-                                </i>
-                            </div>
-                            <div class="item-inner">
-                                <div class="item-title">Geolocation</div>
-                                <div class="item-after">
-                                    <label class="toggle toggle-init color-green tooltip-init" data-tooltip="Request">
-                                        <input type="checkbox" data-permission="geolocation" />
-                                        <span class="toggle-icon"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="permission-microphone">
-                        <div class="item-content">
-                            <div class="item-media">
-                                <i class="fa-stack">
-                                    <span class="fas fa-circle fa-stack-2x text-color-red"></span>
-                                    <span class="fas fa-microphone fa-stack-1x fa-inverse"></span>
-                                </i>
-                            </div>
-                            <div class="item-inner">
-                                <div class="item-title">Microphone</div>
-                                <div class="item-after">
-                                    <label class="toggle toggle-init color-red tooltip-init" data-tooltip="Request">
-                                        <input type="checkbox" data-permission="microphone" />
-                                        <span class="toggle-icon"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="permission-midi">
-                        <div class="item-content">
-                            <div class="item-media">
-                                <i class="fa-stack">
-                                    <span class="fas fa-circle fa-stack-2x text-color-pink"></span>
-                                    <span class="fas fa-music fa-stack-1x fa-inverse"></span>
-                                </i>
-                            </div>
-                            <div class="item-inner">
-                                <div class="item-title">MIDI</div>
-                                <div class="item-after">
-                                    <label class="toggle toggle-init color-pink tooltip-init" data-tooltip="Request">
-                                        <input type="checkbox" data-permission="midi" />
-                                        <span class="toggle-icon"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </li> -->
+                    
                     <li class="permission-notifications">
                         <div class="item-content">
                             <div class="item-media">
@@ -327,10 +252,6 @@
         on: {
             pageInit: function () {
                 var self = this;
-                // self.checkPermissionStatus('camera');
-                // self.checkPermissionStatus('geolocation');
-                // self.checkPermissionStatus('microphone');
-                // self.checkPermissionStatus('midi', { sysex: true });
                 self.checkPermissionStatus('notifications');
 
                 self.$('[data-permission]').on('change', function () {
@@ -342,11 +263,9 @@
                     })
                         .then(function (subscription) {
                             //console.log('User is subscribed');
-
                             self.updateSubscriptionOnServer(subscription);
                         })
                 });
-
             }
         }
     }

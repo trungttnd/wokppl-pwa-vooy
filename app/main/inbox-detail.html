@@ -157,14 +157,13 @@
                             detail: self.det,
                             orderItems: self.det.orderItems,
                             // total: self.det.payments[0].amount,
-                            grandTotal: self.det.payments[0].amount,
+                            grandTotal: self.det.payments[0]?self.det.payments[0].amount:tempTotal,
                         });
                     },
                     function (err) {
                         console.log(err)
                     })
-            },
-            
+            },            
         },
         on: {
             pageInit: function () {
