@@ -74,7 +74,7 @@ self.addEventListener('notificationclick', function (event) {
   event.notification.close();
 
   event.waitUntil(
-    // clients.openWindow('https://preorder-pwa.netlify.com/')
+    // clients.openWindow('https://preorder-pwa.netlify.com/#!/transactions-detail/' + orderNumber)
     clients.openWindow('http://localhost:81/cusPWA/wokppl-pwa-vooy/#!/transactions-detail/' + orderNumber)
   );
 });

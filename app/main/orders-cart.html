@@ -38,16 +38,16 @@
                                             class="icon material-icons text-color-red"
                                             style="margin-left: 13px;">access_time</i>&nbsp;</div>
 
-                                    <div class="item-inner" style="margin-left: 0px; width: 100px;">
-                                        <div class="item-input">                                            
+                                    <div class="item-inner" style="margin-left: 0px; width: 120px; padding: unset;">
+                                        <div class="item-input">
                                             <input type="text" placeholder="Select" readonly="readonly"
                                                 id="timepicker-24" />
-                                        </div>                                        
+                                        </div>
                                     </div>
                                     <div style="width: -webkit-fill-available; margin-top: -30px;margin-left: -30px;">
                                         <a class="link dynamic-popover" href="#" style="color: black"></a>
                                     </div>
-                                    
+
                             </li>
                             <li>
                                 <div class="item-content">
@@ -424,6 +424,13 @@
             closeButton: function () {
                 localStorage.removeItem('isEdit');
             },
+            compareDate: function (date1, date2) {
+                var self = this;
+                let a = date1.toISOString().substr(0, 16);
+                let b = date2.toISOString().substr(0, 16);
+                if (a > b) return true
+                else return false
+            },
             validate: function () {
                 var self = this;
                 self.validateOk = true;
@@ -673,20 +680,25 @@
                 dateTimeNowExtend.setTime(tempDateTimeNow.getTime());
                 dateTimeNowExtend = new Date(dateTimeNowExtend);
 
-                if (startDateTimeExtend > dateTimeNowPlus) {
-                    self.messageTime = startDateTimeExtend.getHours() + ':' + (startDateTimeExtend.getMinutes() + 1 < 10 ? '0' + (startDateTimeExtend.getMinutes() + 1) : startDateTimeExtend.getMinutes() + 1);
+                console.log(startDateTimeExtend, dateTimeNowPlus, self.compareDate(startDateTimeExtend, dateTimeNowPlus))
+                // if (startDateTimeExtend > dateTimeNowPlus) 
+                if (self.compareDate(startDateTimeExtend, dateTimeNowPlus)) {
+                    self.messageTime = startDateTimeExtend.getHours() + ':' + (startDateTimeExtend.getMinutes() < 10 ? '0' + startDateTimeExtend.getMinutes() : startDateTimeExtend.getMinutes());
                 }
                 else {
-                    self.messageTime = dateTimeNowPlus.getHours() + ':' + (dateTimeNowPlus.getMinutes() + 1 < 10 ? '0' + (dateTimeNowPlus.getMinutes() + 1) : dateTimeNowPlus.getMinutes() + 1);
+                    self.messageTime = dateTimeNowPlus.getHours() + ':' + (dateTimeNowPlus.getMinutes() < 10 ? '0' + dateTimeNowPlus.getMinutes() : dateTimeNowPlus.getMinutes());
                 }
 
                 let message = "Collection time is invalid. Collection time shoud be range from " + self.messageTime + " to " + endDateTime.getHours() + ':' + (endDateTime.getMinutes() < 10 ? '0' + endDateTime.getMinutes() : endDateTime.getMinutes()) + "!";
 
-                if (pickerDateTime < startDateTimeExtend || pickerDateTime < dateTimeNowPlus) {
+                // if (pickerDateTime < startDateTimeExtend || pickerDateTime < dateTimeNowPlus) 
+                if (!self.compareDate(pickerDateTime, startDateTimeExtend) || !self.compareDate(pickerDateTime, dateTimeNowPlus)) {
                     //let message = "Collection time is not smaller " + self.messageTime + "!";
                     self.openDialog(message).open();
                     self.validateOk = false;
-                } else if (pickerDateTime > dateTimeNow && pickerDateTime < endDateTime && dateTimeNowPlus > endDateTime) {
+                }
+                // else if (pickerDateTime > dateTimeNow && pickerDateTime < endDateTime && dateTimeNowPlus > endDateTime)
+                else if (self.compareDate(pickerDateTime, dateTimeNow) && !self.compareDate(pickerDateTime, endDateTime) && self.compareDate(dateTimeNowPlus, endDateTime)) {
                     message = "There is no longer enough time to order this session. Please try again with a later session!"
                     self.openDialog(message).open();
                     self.validateOk = false;
@@ -694,16 +706,14 @@
                 else {
                     acceptPicker = acceptPicker + 1;
                 }
-                if (pickerDateTime > endDateTime) {
-
+                // if (pickerDateTime > endDateTime) 
+                if (self.compareDate(pickerDateTime, endDateTime)) {
+                    if (pickerDateTime > dateTimeNowPlus) message = "There is no longer enough time to order this session. Please try again with a later session!"
                     self.openDialog(message).open();
                     self.validateOk = false;
                 }
                 else {
                     acceptPicker = acceptPicker + 1;
-                }
-                if ((endDateTime == dateTimeNow)) {
-
                 }
                 // if (pickerDateTime < dateTimeNow){
                 //     let message = "Collection time is not smaller time now!";
@@ -723,18 +733,18 @@
                 console.log('startDateTimeExtend', startDateTimeExtend);
                 console.log('dateTimeNowPlus', dateTimeNowPlus);
             },
-            openPopOver: function(){
+            openPopOver: function () {
                 var dynamicPopover = app.popover.create({
                     targetEl: 'a.dynamic-popover',
-                    content: '<div class="popover">'+
-                                '<div class="popover-inner">'+
-                                    '<div class="block">'+
-                                    '<p><span style="font-size: 20px"><b>Collection time</b></span></p>'+
-                                    '<p>Choose the time you want to receive the goods!</p>'+
-                                    '<p style="text-align: center"><a href="#" class="link popover-close">Close</a></p>'+
-                                    '</div>'+
-                                '</div>'+
-                                '</div>',
+                    content: '<div class="popover">' +
+                        '<div class="popover-inner">' +
+                        '<div class="block">' +
+                        '<p><span style="font-size: 20px"><b>Collection time</b></span></p>' +
+                        '<p>Choose the time you want to receive the goods!</p>' +
+                        '<p style="text-align: center"><a href="#" class="link popover-close">Close</a></p>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>',
                     // Events
                     on: {
                         open: function (popover) {
@@ -845,12 +855,12 @@
                 console.log('productList', self.productList, self.total, self.grandTotal);
                 self.showTimePicker();
 
-                $(document).ready(function(){
+                $(document).ready(function () {
                     self.openPopOver().open();
                 });
-                $('.dynamic-popover').click(function(){
+                $('.dynamic-popover').click(function () {
                     self.openPopOver().open();
-                });             
+                });
             }
         }
     }

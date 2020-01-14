@@ -11,13 +11,13 @@
             </div>
         </div>
         <div class="page-content">
-            <div class="block text-align-center">
+            <div class="block text-align-center" style="margin-top: 50px; margin-bottom: 10px;">
                 <i class="fa-stack fa-2x tooltip-init" data-tooltip="Loyalty">
                     <span class="fas fa-circle fa-stack-2x brand-color-strava"></span>
                     <span class="fas fa-gem fa-stack-1x fa-inverse"></span>
                 </i>
             </div>
-            <div class="block">
+            <div class="block" style="margin-top: 10px;">
                 <p style="text-align: center;"> $1 to earn {{ratePoint.earnPointRate}} points<br>
                 Redeem $1 of your next order with {{ratePoint.redeemPointRate}} points</p>
                 <p>Loyalty points: {{loyalty.points}}</p>
@@ -26,8 +26,8 @@
             </div>
             <div class="content-block text-align-center">
                 <span class="history-points">History points</span>
-            </div>           
-            <div id="loyaltyPoint" class="toolbar tabbar tabbar-sticky">
+            </div>
+            <div id="loyaltyPoint" class="toolbar tabbar tabbar-sticky" style="margin-top: 10px;">
 				<div class="toolbar-inner categoriesFont">
 					<a href="#" id="earn-points" class="tab-link tab-link-active" style="padding-left: 10px; padding-right: 10px" @click="selectHistoryPoint('earn-points')">Earn Points</a>
 					<a href="#" id="use-points" class="tab-link" style="padding-left: 10px; padding-right: 10px;" @click="selectHistoryPoint('use-points')">Use Points</a>
@@ -69,13 +69,18 @@
             </div>
             {{/js_if}}
         </div>
+        <!-- <div class="fab fab-right-top color-orange" style="padding-top: 20px;">
+            <a href="#" class="link back">
+                <i class="icon material-icons">close</i>
+            </a>
+        </div> -->
     </div>
 </template>
 <style>
     .history-points {
         padding-top: 20px;
         padding-bottom: 10px;
-        font-size: 30px;
+        font-size: 26px;
     }
     li {
 		border-bottom-color: #c9c6c6;

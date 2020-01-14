@@ -5,6 +5,7 @@
 | Framework7 Plugins
 |------------------------------------------------------------------------------
 */
+var isSubscribed = false;
 var swRegistration = null;
 var inboxNumber = 0;
 Framework7.use(Framework7Keypad);
