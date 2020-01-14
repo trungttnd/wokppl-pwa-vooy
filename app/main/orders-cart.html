@@ -39,15 +39,15 @@
                                             style="margin-left: 13px;">access_time</i>&nbsp;</div>
 
                                     <div class="item-inner" style="margin-left: 0px; width: 100px;">
-                                        <div class="item-input">                                            
+                                        <div class="item-input">
                                             <input type="text" placeholder="Select" readonly="readonly"
                                                 id="timepicker-24" />
-                                        </div>                                        
+                                        </div>
                                     </div>
                                     <div style="width: -webkit-fill-available; margin-top: -30px;margin-left: -30px;">
                                         <a class="link dynamic-popover" href="#" style="color: black"></a>
                                     </div>
-                                    
+
                             </li>
                             <li>
                                 <div class="item-content">
@@ -695,7 +695,7 @@
                     acceptPicker = acceptPicker + 1;
                 }
                 if (pickerDateTime > endDateTime) {
-
+                    if (pickerDateTime > dateTimeNowPlus) message = "There is no longer enough time to order this session. Please try again with a later session!"
                     self.openDialog(message).open();
                     self.validateOk = false;
                 }
@@ -723,18 +723,18 @@
                 console.log('startDateTimeExtend', startDateTimeExtend);
                 console.log('dateTimeNowPlus', dateTimeNowPlus);
             },
-            openPopOver: function(){
+            openPopOver: function () {
                 var dynamicPopover = app.popover.create({
                     targetEl: 'a.dynamic-popover',
-                    content: '<div class="popover">'+
-                                '<div class="popover-inner">'+
-                                    '<div class="block">'+
-                                    '<p><span style="font-size: 20px"><b>Collection time</b></span></p>'+
-                                    '<p>Choose the time you want to receive the goods!</p>'+
-                                    '<p style="text-align: center"><a href="#" class="link popover-close">Close</a></p>'+
-                                    '</div>'+
-                                '</div>'+
-                                '</div>',
+                    content: '<div class="popover">' +
+                        '<div class="popover-inner">' +
+                        '<div class="block">' +
+                        '<p><span style="font-size: 20px"><b>Collection time</b></span></p>' +
+                        '<p>Choose the time you want to receive the goods!</p>' +
+                        '<p style="text-align: center"><a href="#" class="link popover-close">Close</a></p>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>',
                     // Events
                     on: {
                         open: function (popover) {
@@ -845,12 +845,12 @@
                 console.log('productList', self.productList, self.total, self.grandTotal);
                 self.showTimePicker();
 
-                $(document).ready(function(){
+                $(document).ready(function () {
                     self.openPopOver().open();
                 });
-                $('.dynamic-popover').click(function(){
+                $('.dynamic-popover').click(function () {
                     self.openPopOver().open();
-                });             
+                });
             }
         }
     }
