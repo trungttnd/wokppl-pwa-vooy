@@ -10,7 +10,6 @@
                 </div>
             </div>
         </div>
-
         <div class="page-content">
             <div class="block text-align-center">
                 <i class="fa-stack fa-2x tooltip-init" data-tooltip="Loyalty">
@@ -27,7 +26,7 @@
             </div>
             <div class="content-block text-align-center">
                 <span class="history-points">History points</span>
-            </div>
+            </div>           
             <div id="loyaltyPoint" class="toolbar tabbar tabbar-sticky">
 				<div class="toolbar-inner categoriesFont">
 					<a href="#" id="earn-points" class="tab-link tab-link-active" style="padding-left: 10px; padding-right: 10px" @click="selectHistoryPoint('earn-points')">Earn Points</a>
@@ -52,7 +51,7 @@
 											class="item-link">{{infor.time}}</a>
 									</div>
 									<div class="item-after" style="color: red; font-weight: bold;">
-										<span class="item-link tooltip-init" data-tooltip="Points">+{{infor.amount}} points</span>
+										<span class="item-link tooltip-init" data-tooltip="Points">{{infor.amount}} points</span>
 									</div>									
 								</div>
 							</div>
@@ -151,10 +150,13 @@
                             }
                             for (let j = 0; j < his.items.length; j++){
                                 let tempDateTime = new Date(his.items[j].infor.time);
-                                console.log('tempDateTime', tempDateTime)
                                 let tempDate = (tempDateTime.getDate() > 10 ? tempDateTime.getDate() : '0' + tempDateTime.getDate()) + '/' + ((tempDateTime.getMonth() + 1) > 10 ? (tempDateTime.getMonth() + 1) : '0' + (tempDateTime.getMonth() + 1)) + '/' + tempDateTime.getFullYear();
                                 let tempTime = (tempDateTime.getHours() > 10 ? tempDateTime.getHours() : '0' + tempDateTime.getHours()) + ':' + ((tempDateTime.getMinutes() > 10) ? tempDateTime.getMinutes() : '0' + tempDateTime.getMinutes());
                                 his.items[j].infor.time = tempTime + ' ' + tempDate;
+                                if (his.items[j].infor.type == 0){
+                                    his.items[j].infor.amount = '+' + his.items[j].infor.amount
+                                }
+                                else his.items[j].infor.amount = '-' + his.items[j].infor.amount
                             }
                             self.$setState({
                                 historyLoy: his.items,
@@ -232,7 +234,7 @@
                         displayPoint: self.loyalty - p,
                         displayRedeem: self.redeem + p/50
                     })
-                });
+                });              
             }
         }
     }
