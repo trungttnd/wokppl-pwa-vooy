@@ -6,12 +6,12 @@
                 <div class="center">
                     <img class="theme-light-only" src="{{this.logo}}" height="80px" alt="" />
                 </div>
-                <div class="right"></div>    
+                <div class="right"></div>
             </div>
-        </div>	
+        </div>
         <div class="page-content" style="padding-top: 80px;">
             <div class="content-block text-align-center">
-            <!-- <div class="block text-align-center"> -->
+                <!-- <div class="block text-align-center"> -->
                 <div class="welcome">Welcome to <b>{{this.canteenName}}</b></div>
             </div>
             <div class="content-block text-align-left">
@@ -50,7 +50,9 @@
                                 <div class="swiper-slide">
                                     <div class="slide-media">
                                         <div class="slide-img">
-                                            <img class="img-responsive imgGallery{{this.number}}" src="https://wokpplapi.konbi.cloud/uploads/{{this.imgFileName}}" alt="" />
+                                            <img class="img-responsive imgGallery{{this.number}}"
+                                                src="https://wokpplapi.konbi.cloud/uploads/{{this.imgFileName}}"
+                                                alt="" />
                                         </div>
                                         <div class="details">
                                             <h3>{{this.name}}</h3>
@@ -77,7 +79,9 @@
                                     <div class="slide-media">
                                         <div class="slide-img">
                                             <!-- <img class="img-responsive" src="https://wokpplapi.konbi.cloud/uploads/{{this.imgFileName}}" alt="" /> -->
-                                            <img class="img-responsive imgGallery{{this.number}}" src="https://wokpplapi.konbi.cloud/uploads/{{this.imgFileName}}" alt="" />
+                                            <img class="img-responsive imgGallery{{this.number}}"
+                                                src="https://wokpplapi.konbi.cloud/uploads/{{this.imgFileName}}"
+                                                alt="" />
                                         </div>
                                         <div class="details">
                                             <h3>{{this.name}}</h3>
@@ -91,7 +95,7 @@
                     </div>
                 </div>
             </div>
-            {{/if}}           
+            {{/if}}
             <div class="block text-align-center">
                 <p class="row">
                     <span></span>
@@ -116,13 +120,14 @@
         font-size: 30px;
     }
 
-    .title-box{
+    .title-box {
         padding-top: 30px;
         padding-left: 25px;
         font-size: 20px;
         font-weight: bold;
     }
-    .title-card{
+
+    .title-card {
         font-size: 20px;
         font-weight: bold;
     }
@@ -172,7 +177,7 @@
     }
 </style>
 <script>
-    return{
+    return {
         data: function () {
             return {
                 sliderHero: null,
@@ -183,7 +188,7 @@
             }
         },
         methods: {
-            
+
             loadData: function () {
                 var self = this;
                 app.request.setup({
@@ -215,7 +220,7 @@
                     'assets/custom/dataset/getcurrentlogin.json',
                     function (data) {
                         if (data) {
-                            console.log('getcurrentlogin',data);
+                            console.log('getcurrentlogin', data);
                             self.$setState({
                                 canteenName: data.result.canteen.name,
                                 logo: data.result.canteen.logoUrl
@@ -240,24 +245,24 @@
                     function (data) {
                         if (data) {
                             self.loadBannerImage(data.items);
-                           
+
                         }
                     }
                 );
             },
-            loadGalleryImage: function (data){
+            loadGalleryImage: function (data) {
                 var self = this;
-                for (let i = 0; i < data.products.length; i++){
+                for (let i = 0; i < data.products.length; i++) {
                     data.products[i].number = i;
                 }
-                self.$setState({
-                    bannerArr: data,
-                });
+                // self.$setState({
+                //     bannerArr: data,
+                // });
                 self.initializePhotos(data);
             },
-            loadBannerImage: function (imageList){
+            loadBannerImage: function (imageList) {
                 var self = this;
-                for (let i = 0; i < imageList.length; i++){
+                for (let i = 0; i < imageList.length; i++) {
                     imageList[i].number = i;
                 }
                 self.$setState({
@@ -270,13 +275,13 @@
                 var listImg = [];
                 var tempWidth = 0;
                 var tempHeight = 0;
-                for (let i = 0; i < data.products.length; i++){
-                    $('.imgGallery' + i).on('load', function(event) {
+                for (let i = 0; i < data.products.length; i++) {
+                    $('.imgGallery' + i).on('load', function (event) {
                         // Lay ti le 4:3
                         // 133.33 la ti le % cua width va height
-                        tempWidth =  $('.imgGallery' + i).prop('naturalWidth');
-                        tempHeight =  $('.imgGallery' + i).prop('naturalHeight');
-                        if (tempWidth > $(window).width() || ((tempWidth * 100 / tempHeight).toFixed(2) != 133.33)){
+                        tempWidth = $('.imgGallery' + i).prop('naturalWidth');
+                        tempHeight = $('.imgGallery' + i).prop('naturalHeight');
+                        if (tempWidth > $(window).width() || ((tempWidth * 100 / tempHeight).toFixed(2) != 133.33)) {
                             //$('.imgGallery' + i).width((($(window).width() - 10) / 3).toFixed(0));
                             $('.imgGallery' + i).height((($(window).width() / 2).toFixed(0) * 100 / 133.33).toFixed(0));
                         }
@@ -290,7 +295,7 @@
                     slidesPerView: 2,
                     spaceBetween: 5
                 });
-                for (let i = 0; i < self.business.products.length; i++){
+                for (let i = 0; i < self.business.products.length; i++) {
                     listImg.push("https://wokpplapi.konbi.cloud/uploads/" + self.business.products[i].imgFileName);
                 }
                 self.$('.photo-gallery .slide-media img').on('click', function () {
@@ -309,13 +314,13 @@
                 var self = this;
                 var tempWidth = 0;
                 var tempHeight = 0;
-                for (let i = 0; i < imageList.length; i++){
-                    $('.slider'+ i).on('load', function(event) {
+                for (let i = 0; i < imageList.length; i++) {
+                    $('.slider' + i).on('load', function (event) {
                         // Kich thuoc pop under tu IAB (720x300)
                         // 240 la ti le % cua width va height
                         tempWidth = $('.slider' + i).prop('naturalWidth');
                         tempHeight = $('.slider' + i).prop('naturalHeight');
-                        if (tempWidth > $(window).width() || ((tempWidth * 100 / tempHeight).toFixed(2) != 240)){
+                        if (tempWidth > $(window).width() || ((tempWidth * 100 / tempHeight).toFixed(2) != 240)) {
                             $('.slider' + i).width($(window).width());
                             $('.slider' + i).height(($(window).width() * 100 / 240).toFixed(0));
                         }
@@ -327,7 +332,7 @@
                         disableOnInteraction: false
                     },
                     centeredSlides: true,
-                    effect: 'coverflow',
+                    effect: 'fade',
                     coverflowEffect: {
                         rotate: 50,
                         stretch: 0,
@@ -339,6 +344,10 @@
                         el: '.swiper-container .swiper-pagination',
                         type: 'bullets',
                         clickable: true
+                    },
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
                     },
                     grabCursor: true,
                     loop: true,
@@ -385,9 +394,9 @@
             self.loadCategory();
         },
         on: {
-			pageInit: function () {
-				console.log('pageInit');
-			}
-		}
+            pageInit: function () {
+                console.log('pageInit');
+            }
+        }
     }
 </script>
