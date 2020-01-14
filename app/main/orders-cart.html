@@ -428,8 +428,8 @@
                 var self = this;
                 let a = date1.toISOString().substr(0, 16);
                 let b = date2.toISOString().substr(0, 16);
-                if (a > b) true
-                else false
+                if (a > b) return true
+                else return false
             },
             validate: function () {
                 var self = this;
@@ -680,6 +680,7 @@
                 dateTimeNowExtend.setTime(tempDateTimeNow.getTime());
                 dateTimeNowExtend = new Date(dateTimeNowExtend);
 
+                console.log(startDateTimeExtend, dateTimeNowPlus, self.compareDate(startDateTimeExtend, dateTimeNowPlus))
                 // if (startDateTimeExtend > dateTimeNowPlus) 
                 if (self.compareDate(startDateTimeExtend, dateTimeNowPlus)) {
                     self.messageTime = startDateTimeExtend.getHours() + ':' + (startDateTimeExtend.getMinutes() < 10 ? '0' + startDateTimeExtend.getMinutes() : startDateTimeExtend.getMinutes());
@@ -691,13 +692,13 @@
                 let message = "Collection time is invalid. Collection time shoud be range from " + self.messageTime + " to " + endDateTime.getHours() + ':' + (endDateTime.getMinutes() < 10 ? '0' + endDateTime.getMinutes() : endDateTime.getMinutes()) + "!";
 
                 // if (pickerDateTime < startDateTimeExtend || pickerDateTime < dateTimeNowPlus) 
-                if (self.compareDate(pickerDateTime, startDateTime) || self.compareDate(pickerDateTime, dateTimeNowPlus)) {
+                if (!self.compareDate(pickerDateTime, startDateTimeExtend) || !self.compareDate(pickerDateTime, dateTimeNowPlus)) {
                     //let message = "Collection time is not smaller " + self.messageTime + "!";
                     self.openDialog(message).open();
                     self.validateOk = false;
                 }
                 // else if (pickerDateTime > dateTimeNow && pickerDateTime < endDateTime && dateTimeNowPlus > endDateTime)
-                else if (self.compareDate(pickerDateTime, dateTimeNow) && self.compareDate(pickerDateTime, endDateTime) && self.compareDate(dateTimeNowPlus, endDateTime)) {
+                else if (self.compareDate(pickerDateTime, dateTimeNow) && !self.compareDate(pickerDateTime, endDateTime) && self.compareDate(dateTimeNowPlus, endDateTime)) {
                     message = "There is no longer enough time to order this session. Please try again with a later session!"
                     self.openDialog(message).open();
                     self.validateOk = false;
