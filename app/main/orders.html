@@ -15,14 +15,16 @@
 							<i class="fas fa-caret-left" style="margin-right: 8px"></i>
 						</a>
 
-							<div class="item-media"><i class="icon f7-icons color-red" style="font-size: 25px;">calendar</i></div>
-							<div class="item-inner" style="margin-left: unset;">
-								<div class="item-input">
-									<input type="text" value="{{today}}" readonly="readonly" id="date" style="width: 3.5rem; padding-left: 5px;" />
-								</div>
+						<div class="item-media"><i class="icon f7-icons color-red" style="font-size: 25px;">calendar</i>
+						</div>
+						<div class="item-inner" style="margin-left: unset;">
+							<div class="item-input">
+								<input type="text" value="{{today}}" readonly="readonly" id="date"
+									style="width: 3.5rem; padding-left: 5px;" />
 							</div>
-							
-						
+						</div>
+
+
 						<a href="#" @click="next" class="item-link">
 							<i class="fas fa-caret-right" style="margin-left: 8px"></i>
 						</a>
@@ -45,8 +47,8 @@
 			{{#if categories}}
 			<div id="menuCats" class="toolbar tabbar tabbar-scrollable tabbar-sticky">
 				<div class="toolbar-inner categoriesFont">
-					<a href="#" id="undefined" class="cat-link tab-link-active" style="margin-left: 10px; padding-right: 10px"
-						@click="selectCat(undefined)">ALL</a>
+					<a href="#" id="undefined" class="cat-link tab-link-active"
+						style="margin-left: 10px; padding-right: 10px" @click="selectCat(undefined)">ALL</a>
 					{{#each categories}}
 					<a href="#" id="{{this.id}}" class="cat-link" style="margin-left: 10px; padding-right: 10px;"
 						@click="selectCat('{{this.id}}')">{{this.name}}</a>
@@ -125,7 +127,7 @@
 						</div>
 						{{#if this.isAvailable}}
 						{{#js_if "this.quantity>0"}}
-						
+
 						{{else}}
 						<div class="overlay" @click="selectOption('{{this.id}}')">
 							<div class="soldout">
@@ -206,15 +208,15 @@
 			goCart: function () {
 				var self = this;
 				if (self.cartItems.quantity > 0)
-					app.views.main.router.navigate('/orders-cart', {animate: false});
-					//app.view.current.router.navigate('/orders-cart');
-					// app.view.current.router.navigate({
-					// 	url: '/orders-cart',
-					// 	option: {
-					// 		animate: false,
-					// 		reloadAll: true,
-					// 	}
-					// });
+					app.views.main.router.navigate('/orders-cart', { animate: false });
+				//app.view.current.router.navigate('/orders-cart');
+				// app.view.current.router.navigate({
+				// 	url: '/orders-cart',
+				// 	option: {
+				// 		animate: false,
+				// 		reloadAll: true,
+				// 	}
+				// });
 			},
 			formatDate: function (date, langCode) {
 				var day = date.toLocaleString(langCode, { day: '2-digit' });   // DD
@@ -549,7 +551,7 @@
 				var count = 0;
 				var newDate = '';
 				let listSession = JSON.parse(localStorage.getItem('sessions'));
-
+				console.log('listSession',listSession)
 				if (changeDate == '') {
 					newDate = dateInput;
 				}
@@ -643,18 +645,18 @@
 				localStorage.removeItem('disableCheckout');
 				localStorage.removeItem('cartItems');
 			},
-			getDayMonthOnly: function(fullDate){
+			getDayMonthOnly: function (fullDate) {
 				let arrDate = fullDate.split('/');
 				let onlyDayMonth = arrDate[0] + '/' + arrDate[1];
 				return onlyDayMonth;
 			},
-			yearNow: function(){
+			yearNow: function () {
 				var d = new Date();
 				var y = d.getFullYear();
 				return y;
 			},
 		},
-		
+
 		mounted() {
 			localStorage.removeItem('isEdit');
 			var self = this;
@@ -671,6 +673,7 @@
 				function (err) {
 					console.log(err)
 				})
+			self.loadSession();
 			let date = new Date();
 			let dateInput = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
 			let timeNow = date.getHours() + ":" + date.getMinutes();
@@ -692,8 +695,8 @@
 					self.goCartDialog().open();
 				}
 			}
-			self.loadSession();
-			self.checkListSession(dateInput, timeNow, firstLoadDay);
+
+			self.checkListSession(dateInput, timeNow, firstLoadDay),1000;
 
 			self.$setState({
 				today: self.getDayMonthOnly(self.formatDate(date, 'en')),

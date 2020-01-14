@@ -263,7 +263,23 @@
                         lastItemIndex: self.$('#list-infinite-scroll li').length
                     });
                 }, 1500);
-            }
+            },
+            loadSession: function () {
+                var self = this;
+
+                app.request.get(window.config.url + 'api/services/app/Preorder/GetSessions',
+                    function (suc) {
+                        let response = JSON.parse(suc)
+                        console.log('get session success', response)
+                        // self.$setState({
+                        // 	session: response.result.items
+                        // })
+                        localStorage.setItem('sessions', JSON.stringify(response.result.items))
+                    },
+                    function (err) {
+                        console.log('get session error', err)
+                    })
+            },
         },
         
         mounted() {
@@ -294,6 +310,7 @@
             dat.setDate(1);
             self.startDate = dat.toISOString().substr(0, 10);
             self.loadData();
+            self.loadSession();
             //lazy load
 
             self.$setState({

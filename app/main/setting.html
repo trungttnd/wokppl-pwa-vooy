@@ -14,10 +14,10 @@
 
         <div class="page-content">
             {{#if isApiSupported}}
-            <div class="block-title">Permission</div>
+            <div class="block-title" style="margin-top: 50px;">Permission</div>
             <div class="list inset">
                 <ul>
-                    
+
                     <li class="permission-notifications">
                         <div class="item-content">
                             <div class="item-media">
@@ -63,8 +63,12 @@
                 </div>
             </div>
             {{/if}}
-
         </div>
+        <!-- <div class="fab fab-right-top color-orange" style="padding-top: 20px;">
+            <a href="#" class="link back">
+                <i class="icon material-icons">close</i>
+            </a>
+        </div> -->
     </div>
 </template>
 
@@ -77,7 +81,8 @@
                 })(),
                 endpoint: '',
                 auth: '',
-                p256dh: ''
+                p256dh: '',
+                userId: localStorage.getItem('WOKPPL_userId')
             }
         },
         methods: {
@@ -238,7 +243,7 @@
                                 content: '<div class="block no-margin margin-top text-align-center"><i class="fa-stack fa-3x"><span class="fas fa-stack-2x fa-circle text-color-red"></span><span class="fas fa-stack-1x fa-inverse fa-times"></span></i><p>' + response.error.message + '.</p></div>',
                                 buttons: [
                                     {
-                                        text: 'Retry',
+                                        text: 'Cancel',
                                         bold: true,
                                         color: 'red'
                                     }
@@ -246,26 +251,137 @@
                             });
                             dialog.open();
                         });
+
                 }
+                else {
+                    app.request({
+                        url: window.config.url + 'api/services/app/Device/DeleteDevice',
+                        dataType: 'json',
+                        contentType: "application/json",
+                        method: 'DELETE',
+                        data: { userId: self.userId },
+                        statusCode: {
+                            404: function (xhr) {
+                                console.log("URL not found");
+                            },
+                            400: function (xhr) {
+                                console.log("Bad request. Some of the inputs provided to the request aren't valid.");
+                            },
+                            401: function (xhr) {
+                                console.log("Not authenticated. The user session isn't valid.");
+                            },
+                            403: function (xhr) {
+                                console.log("The user isn't authorized to perform the specified request.");
+                            },
+                            500: function (xhr) {
+                                console.log("Internal server error. Additional details will be contained on the server logs.");
+                            },
+                            201: function (xhr) {
+                                console.log("The requested resource has been created.");
+                            }
+                        },
+                        success: function (data, status, xhr) {
+                            console.log(data);
+                            if (data.success) {
+                                app.toast.show({
+                                    text: 'User unsubcription successful.',
+                                    position: 'bottom',
+                                    cssClass: 'toast-round bg-color-green'
+                                });
+                                app.popup.close('.popup-cardDetail', false);
+                            }
+                        },
+                        error: function (xhr, status) {
+                            let response = JSON.parse(xhr.response);
+                            console.log(response);
+                            var dialog = app.dialog.create({
+                                content: '<div class="block no-margin margin-top text-align-center"><i class="fa-stack fa-3x"><span class="fas fa-stack-2x fa-circle text-color-red"></span><span class="fas fa-stack-1x fa-inverse fa-times"></span></i><p>' + response.error.message + '.</p></div>',
+                                buttons: [
+                                    {
+                                        text: 'Cancel',
+                                        bold: true,
+                                        color: 'red'
+                                    }
+                                ]
+                            });
+                            dialog.open();
+                        }
+                    });
+                }
+            },
+            subscribeUser: function () {
+                var self = this;
+                const applicationServerKey = app.utils.custom.urlB64ToUint8Array(window.config.appServerPublicKey);
+                swRegistration.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: applicationServerKey
+                })
+                    .then(function (subscription) {
+                        console.log('User is subscribed');
+                        self.updateSubscriptionOnServer(subscription);
+                        isSubscribed = true;
+                    })
+            },
+            unsubscribeUser: function () {
+                var self = this;
+                swRegistration.pushManager.getSubscription()
+                    .then(function (subscription) {
+                        if (subscription) {
+                            return subscription.unsubscribe();
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log('Error unsubscribing', error);
+                    })
+                    .then(function () {
+                        self.updateSubscriptionOnServer(null);
+
+                        console.log('User is unsubscribed.');
+                        isSubscribed = false;
+                    });
             }
         },
         on: {
             pageInit: function () {
                 var self = this;
-                self.checkPermissionStatus('notifications');
+
+                //self.checkPermissionStatus('notifications');
+                // Set the initial subscription value
+                swRegistration.pushManager.getSubscription()
+                    .then(function (subscription) {
+                        console.log(subscription)
+                        isSubscribed = subscription === null ? false : true;
+                        //self.updateSubscriptionOnServer(subscription);
+                        console.log('isSubscribed', isSubscribed)
+                        if (isSubscribed) {
+                            self.$('[data-permission]').prop("checked", true);
+                        }
+                        else {
+                            self.$('[data-permission]').prop("checked", false);
+                        }
+                    });
+
 
                 self.$('[data-permission]').on('change', function () {
                     console.log(swRegistration)
-                    const applicationServerKey = app.utils.custom.urlB64ToUint8Array(window.config.appServerPublicKey);
-                    swRegistration.pushManager.subscribe({
-                        userVisibleOnly: true,
-                        applicationServerKey: applicationServerKey
-                    })
-                        .then(function (subscription) {
-                            //console.log('User is subscribed');
-                            self.updateSubscriptionOnServer(subscription);
-                        })
+                    // const applicationServerKey = app.utils.custom.urlB64ToUint8Array(window.config.appServerPublicKey);
+
+                    // swRegistration.pushManager.subscribe({
+                    //     userVisibleOnly: true,
+                    //     applicationServerKey: applicationServerKey
+                    // }).then(function (subscription) {
+                    //     //console.log('User is subscribed');
+                    //     self.updateSubscriptionOnServer(subscription);
+                    // })
+
+                    if (isSubscribed) {
+                        self.unsubscribeUser();
+                    } else {
+                        self.subscribeUser();
+                    }
                 });
+
+
             }
         }
     }
