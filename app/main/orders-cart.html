@@ -154,6 +154,7 @@
                                     </div>
                                 </div>
                             </li>
+                            {{#if isEnabledPoint}}
                             <li>
                                 <div class="item-content">
                                     <div class="item-inner">
@@ -170,6 +171,7 @@
                                     </div>
                                 </div>
                             </li>
+                            {{/if}}
                             <!-- <li>
                                 <div class="item-content">
                                     <div class="item-inner">
@@ -305,11 +307,26 @@
                 hourStart: 0,
                 hourEnd: 23,
                 minuteStart: 0,
-                minuteEnd: 59
+                minuteEnd: 59,
+                isEnabledPoint: true,
             }
         },
         methods: {
-
+            getStatusRewardOint: function(){
+                var self = this;
+                //get status Reward Point: IsEnabled (true/false)
+                app.request.getJSON(window.config.url+'api/services/app/Customer/GetPointRateInfo',
+                function (suc){
+                    console.log(suc)
+                    let response = JSON.parse(suc)
+                    self.$setState({
+                        isEnabledPoint: suc.result.isEnabled
+                    })
+                },
+                function (err){
+                    console.log(err)
+                });
+            },
             initializeTimepicker24: function () {
                 var self = this;
                 jQuery('#timepicker-24').timeDropper({
@@ -761,6 +778,9 @@
         on: {
             pageInit: function () {
                 var self = this;
+                //khi nao co API GetPointRateInfo thi bo comment dòng bên dưới
+                //self.getStatusRewardOint();
+                
                 //self.initializeTimepicker24()
                 let cartTemp = JSON.parse(localStorage.getItem('cartItems'));
                 let disableCheckout = JSON.parse(localStorage.getItem('disableCheckout'));
