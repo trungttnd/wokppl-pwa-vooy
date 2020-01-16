@@ -551,7 +551,7 @@
 				var count = 0;
 				var newDate = '';
 				let listSession = JSON.parse(localStorage.getItem('sessions'));
-				console.log('listSession',listSession)
+				console.log('listSession', listSession)
 				if (changeDate == '') {
 					newDate = dateInput;
 				}
@@ -682,22 +682,6 @@
 			let sessionTemp = JSON.parse(localStorage.getItem('listOrderSession'));
 			let orderDateTemp = JSON.parse(localStorage.getItem('listOrderDate'));
 			let firstLoad = '';
-			if (orderDateTemp == null) {
-				firstLoadDay = '';
-			}
-			else {
-				let arrFirstDay = orderDateTemp.split('/');
-				firstLoadDay = arrFirstDay[1] + '/' + arrFirstDay[0] + '/' + arrFirstDay[2];
-				console.log('Ngay session', firstLoadDay + ' ' + sessionTemp.endTime);
-				console.log('Ngay hien tai', dateInput + ' ' + timeNow);
-				if (Date.parse(firstLoadDay + ' ' + sessionTemp.endTime) < Date.parse(dateInput + ' ' + timeNow)) {
-					localStorage.setItem('disableCheckout', JSON.stringify('true'))
-					self.goCartDialog().open();
-				}
-			}
-
-			self.checkListSession(dateInput, timeNow, firstLoadDay),1000;
-
 			self.$setState({
 				today: self.getDayMonthOnly(self.formatDate(date, 'en')),
 				yearNow: self.yearNow(),
@@ -706,6 +690,24 @@
 				//session: listSession,
 				categories: JSON.parse(localStorage.getItem('categories'))
 			});
+
+			if (orderDateTemp == null) {
+				firstLoadDay = '';
+			}
+			else {
+				let arrFirstDay = orderDateTemp.split('/');
+				firstLoadDay = arrFirstDay[1] + '/' + arrFirstDay[0] + '/' + arrFirstDay[2];
+				console.log('Ngay session', firstLoadDay + ' ' + sessionTemp.endTime);
+				console.log('Ngay hien tai', dateInput + ' ' + timeNow);
+				if (self.cartItems.quantity > 0 && Date.parse(firstLoadDay + ' ' + sessionTemp.endTime) < Date.parse(dateInput + ' ' + timeNow)) {
+					localStorage.setItem('disableCheckout', JSON.stringify('true'))
+					self.goCartDialog().open();
+				}
+			}
+
+			self.checkListSession(dateInput, timeNow, firstLoadDay), 1000;
+
+
 			// setTimeout(function () {
 			// 	console.log('setTimeout')
 			// 	self.$setState({
