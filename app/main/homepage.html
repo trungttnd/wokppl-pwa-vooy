@@ -385,13 +385,82 @@
                         console.log('get category error', err)
                     })
             },
-
+            subscribeUser: function () {
+                var self = this;
+                const applicationServerKey = app.utils.custom.urlB64ToUint8Array(window.config.appServerPublicKey);
+                swRegistration.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: applicationServerKey
+                })
+                    .then(function (subscription) {
+                        console.log('User is subscribed');
+                        self.updateSubscriptionOnServer(subscription);
+                        isSubscribed = true;
+                    })
+            },
+            updateSubscriptionOnServer: function (subscription) {
+                var self = this;
+                if (subscription) {
+                    let sss = JSON.stringify(subscription);
+                    let output = JSON.parse(sss)
+                    // self.$setState({
+                    //     endpoint: output.endpoint,
+                    //     p256dh: output.keys.p256dh,
+                    //     auth: output.keys.auth
+                    // })
+                    // //console.log('subscription',subscription)
+                    // console.log('sss',output)
+                    console.log('endpoint', output.endpoint);
+                    console.log('p256dh', output.keys.p256dh)
+                    console.log('auth', output.keys.auth)
+                    app.request.postJSON(window.config.url + 'api/services/app/Device/Create', {
+                        name: 'Name',
+                        pushEndPoint: output.endpoint,
+                        pushP256DH: output.keys.p256dh,
+                        pushAuth: output.keys.auth
+                    },
+                        function (suc) {
+                            console.log(suc);
+                            app.toast.show({
+                                text: 'User subcription successful.',
+                                position: 'bottom',
+                                cssClass: 'toast-round bg-color-green'
+                            });
+                        },
+                        function (err) {
+                            // let response = JSON.parse(err.response);
+                            // console.log(response);
+                            var dialog = app.dialog.create({
+                                content: '<div class="block no-margin margin-top text-align-center"><i class="fa-stack fa-3x"><span class="fas fa-stack-2x fa-circle text-color-red"></span><span class="fas fa-stack-1x fa-inverse fa-times"></span></i><p>Error cannot subscribe device. Please go to More / Setting to reset.</p></div>',
+                                buttons: [
+                                    {
+                                        text: 'Cancel',
+                                        bold: true,
+                                        color: 'red'
+                                    }
+                                ]
+                            });
+                            dialog.open();
+                        });
+                }
+            }
         },
         mounted() {
             var self = this;
             self.loadData();
             self.loadSession();
             self.loadCategory();
+            //subscription user
+            swRegistration.pushManager.getSubscription()
+                    .then(function (subscription) {
+                        console.log(subscription)
+                        isSubscribed = subscription === null ? false : true;
+                        //self.updateSubscriptionOnServer(subscription);
+                        console.log('isSubscribed', isSubscribed)
+                        if (!isSubscribed) {
+                            self.subscribeUser();
+                        }
+                    });
         },
         on: {
             pageInit: function () {

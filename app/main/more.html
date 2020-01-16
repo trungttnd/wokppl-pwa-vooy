@@ -5,8 +5,8 @@
 			<div class="navbar-inner">
 				<img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="60px" alt="" />
 				<div class="right">
-                    
-                </div>
+
+				</div>
 			</div>
 		</div>
 
@@ -28,7 +28,7 @@
 							</div>
 						</a>
 					</li>
-					
+
 					<li>
 						<a href="/more/account" class="item-link">
 							<div class="item-content">
@@ -45,20 +45,20 @@
 						</a>
 					</li>
 					<li>
-							<a href="/more/setting" class="item-link">
-								<div class="item-content">
-									<div class="item-media">
-										<i class="fa-stack">
-											<span class="fas fa-circle fa-stack-2x color-orange-5"></span>
-											<span class="fas fa-cog fa-stack-1x fa-inverse"></span>
-										</i>
-									</div>
-									<div class="item-inner">
-										<div class="item-title">Setting</div>
-									</div>
+						<a href="/more/setting" class="item-link">
+							<div class="item-content">
+								<div class="item-media">
+									<i class="fa-stack">
+										<span class="fas fa-circle fa-stack-2x color-orange-5"></span>
+										<span class="fas fa-cog fa-stack-1x fa-inverse"></span>
+									</i>
 								</div>
-							</a>
-						</li>
+								<div class="item-inner">
+									<div class="item-title">Setting</div>
+								</div>
+							</div>
+						</a>
+					</li>
 					<li>
 						<a @click="logout" class="item-link">
 							<div class="item-content">
@@ -83,53 +83,139 @@
 <script>
 	return {
 		data: function () {
-						return {
-							formValidator: null,
-							_username: '',
-							_name: '',
-							_email: ''
+			return {
+				formValidator: null,
+				_username: '',
+				_name: '',
+				_email: '',
+				userId: localStorage.getItem('WOKPPL_userId')
+			}
+		},
+		methods: {
+			loadData: function () {
+				var self = this;
+
+				self.$setState({
+					_username: localStorage.getItem('WOKPPL_username'),
+					_name: localStorage.getItem('WOKPPL_name'),
+					_email: localStorage.getItem('WOKPPL_email')
+				});
+
+			},
+
+			refreshSearchbar: function () {
+				var self = this;
+				app.searchbar.clear('.searchbar');
+			},
+			unsubscribeUser: function () {
+                var self = this;
+                swRegistration.pushManager.getSubscription()
+                    .then(function (subscription) {
+                        if (subscription) {
+                            return subscription.unsubscribe();
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log('Error unsubscribing', error);
+                    })
+                    .then(function () {
+                        self.updateSubscriptionOnServer();
+
+                        console.log('User is unsubscribed.');
+                        isSubscribed = false;
+                    });
+            },
+			updateSubscriptionOnServer: function () {
+				var self = this;
+				app.request({
+					url: window.config.url + 'api/services/app/Device/DeleteDevice',
+					dataType: 'json',
+					contentType: "application/json",
+					method: 'DELETE',
+					data: { userId: self.userId },
+					statusCode: {
+						404: function (xhr) {
+							console.log("URL not found");
+						},
+						400: function (xhr) {
+							console.log("Bad request. Some of the inputs provided to the request aren't valid.");
+						},
+						401: function (xhr) {
+							console.log("Not authenticated. The user session isn't valid.");
+						},
+						403: function (xhr) {
+							console.log("The user isn't authorized to perform the specified request.");
+						},
+						500: function (xhr) {
+							console.log("Internal server error. Additional details will be contained on the server logs.");
+						},
+						201: function (xhr) {
+							console.log("The requested resource has been created.");
 						}
 					},
-					methods: {
-						loadData: function () {
-							var self = this;
-
-							self.$setState({
-								_username: localStorage.getItem('WOKPPL_username'),
-								_name: localStorage.getItem('WOKPPL_name'),
-								_email: localStorage.getItem('WOKPPL_email')
-							});
-
-						},
-
-						refreshSearchbar: function () {
-							var self = this;
-							app.searchbar.clear('.searchbar');
-						},
-						
-						logout: function () {
-							var self = this;
-
-							app.request.get(window.config.url + 'api/TokenAuth/LogOut',
-								function (suc) {
-									console.log('Logout success')
-									console.log(suc);
-								},
-								function (err) {
-									console.log('Logout error')
-									console.log(err);
-								});
-								app.utils.custom.removeCookie()
-							app.views.current.router.navigate('/signin');
-						},
-						exitApp: function () {
-							navigator.app.exitApp();
-						},
-
+					success: function (data, status, xhr) {
+						console.log(data);
+						if (data.success) {
+							// app.toast.show({
+							// 	text: 'User unsubcription successful.',
+							// 	position: 'bottom',
+							// 	cssClass: 'toast-round bg-color-green'
+							// });
+						}
 					},
-					mounted() {
-						var self = this;
-						self.loadData();
+					error: function (xhr, status) {
+						let response = JSON.parse(xhr.response);
+						console.log(response);
+						// var dialog = app.dialog.create({
+						// 	content: '<div class="block no-margin margin-top text-align-center"><i class="fa-stack fa-3x"><span class="fas fa-stack-2x fa-circle text-color-red"></span><span class="fas fa-stack-1x fa-inverse fa-times"></span></i><p>' + response.error.message + '.</p></div>',
+						// 	buttons: [
+						// 		{
+						// 			text: 'Cancel',
+						// 			bold: true,
+						// 			color: 'red'
+						// 		}
+						// 	]
+						// });
+						// dialog.open();
 					}
+				});
+			},
+			logout: function () {
+				var self = this;
+				//unsubscription unser
+				swRegistration.pushManager.getSubscription()
+                    .then(function (subscription) {
+                        console.log(subscription)
+                        isSubscribed = subscription === null ? false : true;
+                        //self.updateSubscriptionOnServer(subscription);
+                        console.log('isSubscribed', isSubscribed)
+                        if (isSubscribed) {
+							self.unsubscribeUser();
+                        }
+                    });
+
+				//logout
+				app.request.get(window.config.url + 'api/TokenAuth/LogOut',
+					function (suc) {
+						console.log('Logout success')
+						console.log(suc);
+					},
+					function (err) {
+						console.log('Logout error')
+						console.log(err);
+					});
+				//remove cookie
+				app.utils.custom.removeCookie()
+				app.views.current.router.navigate('/signin');
+			},
+			exitApp: function () {
+				navigator.app.exitApp();
+			},
+
+		},
+		mounted() {
+			var self = this;
+			self.loadData();
+		}
 	}
 </script>
