@@ -4,7 +4,9 @@
             <div class="navbar-inner">
                 <img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="60px" alt="" />
                 <div class="right">
-
+                    <!-- <a href="#" class="link back">
+                        <span>Back</span>
+                    </a> -->
                 </div>
             </div>
         </div>
@@ -64,12 +66,17 @@
         methods: {
             closeApp: function () {
                 var self = this;
+                var currentRoute = app.views.current.router.currentRoute.url;
+                console.log(currentRoute)
+                app.views.main.router.history = ['/'];
+                app.views.main.router.clearPreviousHistory();
+                // app.view.main.history.pop();
                 // $('.page-previous, .navbar-previous').remove();
                 // app.view.main.history = ['/']; // url of the home pagec
-                // app.view.main.router.history = ['/'];
-                app.views.current.router.clearPreviousHistory();
+                
+                //app.views.current.router.clearPreviousHistory();
+                console.log(app.views.main.router.history);
                 console.log('close App1')
-
                 app.views.current.router.back();
             },
             getUrlVars: function () {
