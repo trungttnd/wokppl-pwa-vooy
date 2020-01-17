@@ -4,7 +4,9 @@
             <div class="navbar-inner">
                 <img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="60px" alt="" />
                 <div class="right">
-
+                    <!-- <a href="#" class="link back">
+                        <span>Back</span>
+                    </a> -->
                 </div>
             </div>
         </div>
@@ -24,21 +26,25 @@
                 <span style="font-size: 24px">Payment Success</span>
             </div>
             <div class="block text-align-center">
-                <span>Your order <span style="color: red;"><a href="/transactions-detail/{{orderId}}">#{{orderId}}</a></span> has been placed. A notification will be sent to you when it's ready to collect!</span>
+                <span>Your order <span style="color: red;"><a
+                            href="/transactions-detail/{{orderId}}">#{{orderId}}</a></span> has been placed. A
+                    notification will be sent to you when it's ready to collect!</span>
             </div>
             <div class="block text-align-center">
                 <p class="row">
                     <span></span>
-                    <a class="col button button-big button-fill color-red" style="width: 200px;" href="/tab-order/">Create a new order</a>
+                    <a class="col button button-big button-fill color-red" style="width: 200px;"
+                        href="/tab-order/">Create a new order</a>
                     <span></span>
                 </p>
                 <p class="row">
                     <span></span>
-                    <a class="col button button-big button-fill color-red" style="width: 200px;" href="#" @click="closeApp">Finish</a>
+                    <a class="col button button-big button-fill color-red" style="width: 200px;" href="#"
+                        @click="closeApp">Finish</a>
                     <span></span>
                 </p>
             </div>
-        </div>    
+        </div>
         <!-- <div class="fab fab-right-top color-orange">
             <a href="#" class="link back">
                 <i class="icon material-icons">close</i>
@@ -65,16 +71,25 @@
             }
         },
         methods: {
-            closeApp: function(){
+            closeApp: function () {
                 var self = this;
-                navigator.app.exitApp();
+                var currentRoute = app.views.current.router.currentRoute.url;
+                console.log(currentRoute)
+                app.views.main.router.history = ['/'];
+                app.views.main.router.clearPreviousHistory();
+                // app.view.main.history.pop();
+                // $('.page-previous, .navbar-previous').remove();
+                // app.view.main.history = ['/']; // url of the home pagec
+                
+                //app.views.current.router.clearPreviousHistory();
+                console.log(app.views.main.router.history);
+                console.log('close App1')
+                app.views.current.router.back();
             },
-            getUrlVars: function()
-            {
+            getUrlVars: function () {
                 var vars = [], hash;
                 var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-                for(var i = 0; i < hashes.length; i++)
-                {
+                for (var i = 0; i < hashes.length; i++) {
                     hash = hashes[i].split('=');
                     vars.push(hash[0]);
                     vars[hash[0]] = hash[1];
