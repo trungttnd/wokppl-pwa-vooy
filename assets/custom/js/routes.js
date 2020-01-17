@@ -104,6 +104,10 @@ window.routes = [
 		componentUrl: './app/main/survey.html',
 	},
 	{
+		path: '/blank',
+		componentUrl: './app/main/blank-page.html',
+	},
+	{
 		path: '/more',
 		componentUrl: './app/main/tab-more.html',
 		routes: [

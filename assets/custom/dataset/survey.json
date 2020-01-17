@@ -1,0 +1,90 @@
+{
+	"result": {
+		"id": 1,
+		"title": "Aenean luctus at orci eu tempus!",
+		"description": "Aliquam fringilla faucibus convallis. Sed quis ultrices sapien. In diam urna, sollicitudin sed lobortis vel, feugiat lobortis neque. In ut nisl quam. Praesent ac cursus urna.",
+		"isActive": true,
+		"questions": [
+			{
+				"id": 0,
+				"question": "Etiam vestibulum consectetur felis?",
+				"isMandatory": false,
+				"answerLength": 100,
+				"questionType": 0,
+				"answerOptions": []
+			},
+			{
+				"id": 1,
+				"question": "Sed nec metus ut felis fringilla commodo?",
+				"isMandatory": false,
+				"answerLength": 0,
+				"questionType": 1,
+				"answerOptions": [
+					{
+						"id": 1,
+						"content": "Nullam volutpat"
+					},
+					{
+						"id": 2,
+						"content": "Cras vitae"
+					},
+					{
+						"id": 3,
+						"content": "Nunc scelerisque"
+					},
+					{
+						"id": 4,
+						"content": "Curabitur vel"
+					}
+				]
+			},
+			{
+				"id": 2,
+				"question": "Cras vitae laoreet mauris?",
+				"isMandatory": true,
+				"answerLength": 0,
+				"questionType": 2,
+				"answerOptions": [
+					{
+						"id": 5,
+						"content": "In nisi augue"	
+					},
+					{
+						"id": 6,
+						"content": "Praesent a ma"
+					}
+				]
+			},
+			{
+				"id": 3,
+				"question": "Curabitur ut lacus ut dui faucibus sagittis!",
+				"isMandatory": false,
+				"answerLength": 200,
+				"questionType": 0,
+				"answerOptions": []
+			},
+			{
+				"id": 4,
+				"question": "Maecenas consectetur, lectus sed dapibus!",
+				"isMandatory": false,
+				"answerLength": 0,
+				"questionType": 3,
+				"answerOptions": [
+					{
+						"id": 7,
+						"content": "In nisi augue"	
+					},
+					{
+						"id": 8,
+						"content": "Praesent a ma"
+					}
+				]
+			}
+		]
+	},
+	"targetUrl": null,
+	"success": true,
+	"error": null,
+	"unAuthorizedRequest": false,
+	"__abp": true
+}

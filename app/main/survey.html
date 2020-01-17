@@ -1,80 +1,237 @@
 <template>
     <div class="page">
-
-        <div class="navbar" style="height: 72px;">
+        <div class="navbar" style="height: 80px;">
             <div class="navbar-inner">
-                    <img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="60px" alt="" />
+                <div class="left">
+                    <a href="/">
+                        <i class="icon material-icons">home</i>
+                    </a>
+                </div>
+                <div class="center">
+                    <img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="80px" alt="" />
+                </div>
+                <div class="right"></div>
             </div>
         </div>
-
-        <div class="page-content">
-            <div class="block text-align-center">
-                <p>Thank you for completing this survey. We value your opinion and will take on board any suggestions you make that are cost effective and comply with our healthy eating policy.</p>
-            </div>
-            <form name="survey" action="#" method="POST" enctype="multipart/form-data">
-                <div class="list no-hairlines no-hairlines-between">
-                    <ul>
-                        <li>
-                            <div class="item-content item-input item-input-with-info">
-                                <div class="item-inner">
-                                    <div class="item-title item-label" style="font-size: 16px; height: 30px;">1. Food Quality?</div>
-                                    <div>
-                                        <input type="hidden" name="rating" required />
-                                        <div class="rating-full-star"></div>
-                                    </div>
-                                    <div class="block">
-                                        <span></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="item-content item-input item-input-with-info">
-                                <div class="item-inner">
-                                    <div class="item-title item-label" style="font-size: 16px; height: 30px;">2. Value?</div>
-                                    <div>
-                                        <input type="hidden" name="rating" required />
-                                        <div class="rating-full-star"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
+        <div class="page-content" style="padding-top: 60px;">
+            <form id="survey" name="survey" action="#" method="POST" enctype="multipart/form-data">
+                <div class="block text-align-center">
+                    <div class="survey-title block-title text-color-black">{{surveyContent.title}}</div>
+                    <div class="survey-desc">{{surveyContent.description}}</div>
                 </div>
-                <div class="block">
-                    <button type="submit" class="button button-big button-fill" data-i18n="survey">Submit</button>
+                <div class="item-content">
+                    <div class="list no-hairlines no-hairlines-between">
+                        <ul class="survey-content">
+                            {{#each surveyContent.questions}}
+                            {{#js_if "this.questionType == 0"}}
+                            <li>
+                                <div class="item-content item-input item-input-with-info">
+                                    <div class="item-inner survey-area">
+                                        <div class="item-title item-floating-label"><p>{{this.index}}. {{this.question}}</p></div>
+                                        <div class="item-input-wrap">
+                                        <textarea name="shorttext_{{this.index}}" placeholder="Your answer"></textarea>
+                                        <span class="input-clear-button"></span>
+                                        </div>
+                                    </div>  
+                                </div>
+                            </li>
+                            {{else}}
+                            {{#js_if "this.questionType == 1"}}
+                            <li>
+                                <div class="item-content item-input item-input-with-info">
+                                    <div class="item-inner survey-area">
+                                        <div class="item-title item-floating-label"><p>{{this.index}}. {{this.question}}</p></div>
+                                        <div class="item-input-wrap">
+                                        <textarea name="longtext_{{this.index}}" placeholder="Your answer"></textarea>
+                                        <span class="input-clear-button"></span>
+                                        </div>
+                                    </div>  
+                                </div>
+                            </li>
+                            {{else}}
+                            {{#js_if "this.questionType == 3"}}
+                            <li>
+                                <div class="item-content item-input item-input-with-info">
+                                    <div class="item-inner survey-radio">
+                                        <div class="item-title item-floating-label"><p>{{this.index}}. {{this.question}}</p></div>
+                                        {{#if this.answerOptions}}
+                                        {{#each this.answerOptions}}
+                                        <div>
+                                            <label class="item-checkbox item-content">
+                                                <input type="checkbox" name="checkbox_{{this.index}}" value="{{this.id}}" />
+                                                <i class="icon-checkbox"></i>
+                                                <div class="item-inner">
+                                                    <div class="item-title" style="padding-top: 5px;">{{this.content}}</div>
+                                                </div>
+                                            </label>
+                                        </div>
+                                        {{/each}}
+                                        {{/if}}
+                                        
+                                    </div>  
+                                </div>
+                            </li>
+                            {{else}}
+                            {{#js_if "this.questionType == 2"}}
+                            <li>
+                                <div class="item-content item-input item-input-with-info">
+                                    <div class="item-inner survey-multi">
+                                        <div class="item-title item-floating-label"><p>{{this.index}}. {{this.question}}</p></div>
+                                        {{#if this.answerOptions}}
+                                        {{#each this.answerOptions}}
+                                        <div>
+                                            <label class="radio item-content">
+                                                <input type="radio" name="radio_{{this.index}}" value="{{this.id}}" />
+                                                <i class="icon-radio"></i>
+                                                <div class="item-inner">
+                                                    <div class="item-title" style="padding-top: 5px; padding-left: 15px;">{{this.content}}</div>
+                                                </div>
+                                            </label>
+                                        </div>
+                                        {{/each}}
+                                        {{/if}}
+                                    </div>  
+                                </div>
+                            </li>
+                            {{/js_if}}
+                            <!-- {{else}}
+                            {{#js_if "this.questionType == 3"}}
+                            <li>
+                                <div class="item-content item-input item-input-with-info">
+                                    <div class="item-inner survey-rate">
+                                        <div class="item-title item-floating-label"><p>{{this.index}}. {{this.question}}</p></div>
+                                        {{#if this.answerOptions}}
+                                        {{#each this.answerOptions}}
+                                        <div class="item-title" style="height: 30px;">{{this.content}}</div>
+                                        <div>
+                                            <input type="hidden" name="rating" required />
+                                            <div class="rating-full-star"></div>
+                                        </div>
+                                        <div style="padding-top: 15px;">
+                                            <span></span>
+                                        </div>
+                                        {{/each}}
+                                        {{/if}}
+                                    </div>
+                                </div>
+                            </li>
+                            {{/js_if}} -->
+                            {{/js_if}}
+                            {{/js_if}}
+                            {{/js_if}}
+                            {{/each}}
+                        </ul>  
+                    </div>                           
+                    <div class="block">
+                        <button type="submit" class="button button-big button-fill" data-i18n="survey">Submit</button>
+                    </div>
                 </div>
             </form>
         </div>
     </div>
 </template>
-
+<style>
+    .survey-title{
+        font-size: 24px;
+    }
+    .survey-area{
+        width: 100%;
+        height: auto;
+    }
+    .survey-area p{
+        font-size: 18px;
+    }
+    .survey-multi p{
+        font-size: 18px;
+    }
+    .survey-radio p{
+        font-size: 18px;
+    }
+    .survey-rate p{
+        font-size: 18px;
+    }
+</style>
 <script>
     return {
         data: function () {
             return {
                 formValidator: null,
+                surveyContent: [],
+                isActive: false,
             }
         },
         methods: {
-            initializeRatingFullStar: function () {
+            loadData: function(){
                 var self = this;
-                jQuery('.rating-full-star').rateYo({
-                    fullStar: true,
-                    normalFill: '#FFF9DB',
-                    ratedFill: '#FCC419',
-                    rating: 3,
-                    spacing: '10px',
-                    starWidth: '32px'
-                });
+                app.request.get(window.config.url + '/api/services/app/Survey/GetSurvey',
+                {id: 8},
+                function (suc) {
+                    let response = JSON.parse(suc);
+                    response.result.isActive = true;
+                    if (response) {
+                        for (let i = 0; i < response.result.questions.length; i++){
+                            response.result.questions[i].index = i + 1;
+                            if (response.result.questions[i].answerOptions != ''){
+                                for (let j = 0; j < response.result.questions[i].answerOptions.length; j++){
+                                    response.result.questions[i].answerOptions[j].index = i + 1;
+                                    response.result.questions[i].answerOptions[j].questionsId = response.result.questions[i].id;
+                                }
+                            }
+                        }
+                        self.$setState({
+                            surveyContent: response.result,
+                            isActive: response.result.isActive,
+                        });
+                        console.log('surveyContent', self.surveyContent);
+                        //self.pushSurveyContent();
+                    }
+                },
+                function (err) {
+                    console.log('get session error', err)
+                })
             },
+            submitSurvey: function(){
+                var self = this;
+                var text = $('#survey').find('input[name="FirstName"]').val();
+            },
+            // initializeRatingFullStar: function () {
+            //     var self = this;
+            //     $(document).ready(function() {
+            //         console.log('abc');
+            //         $('.rating-full-star').rateYo({
+            //         fullStar: true,
+            //         normalFill: '#FFF9DB',
+            //         ratedFill: '#FCC419',
+            //         rating: 3,
+            //         spacing: '10px',
+            //         starWidth: '32px'
+            //         });
+            //     });
+                
+            // },
             initializeFormValidator: function () {
-				var self = this;
+                var self = this;
+                var dataForSubmit = {surveyId: null, answer: []};
+                var answerQuestion = {questionId: null, answerString: null, answerByOptionId: []}
 				self.formValidator = jQuery('form[name=survey]').validate({
 					submitHandler: function (form) {
-                        self.submitForm(form);
+                        var formData = app.form.convertToData('#survey');
+                        console.log('formData',formData);
+                        dataForSubmit = {surveyId: self.surveyContent.id, answer: answerQuestion}
+                        console.log('dataForSubmit',dataForSubmit);
+                        for (let i = 0; i < self.surveyContent.questions.length; i++){
+                            if (self.surveyContent.questions[i].questionType == 0){
+                                let shorttext = "shorttext_" + (i + 1);
+                                console.log('formData.shorttext',formData.shorttext);
+                                var shorttextValue = formData.shorttext + '_' + (i + 1);
+                                var obj = {questionId: self.surveyContent.questions[i].id, answerString: shorttextValue, answerByOptionId: []}
+                                console.log('obj', obj);
+                                // answerQuestion.push(obj);
+                            }
+                        }
+                        console.log('answerQuestion',answerQuestion);
+                        //self.submitForm(form);
 					}
-
 				});
 			},
             submitForm: function (form) {
@@ -94,9 +251,11 @@
         },
         on: {
             pageInit: function () {
-                var self = this;
-                self.initializeRatingFullStar();
+                var self = this;              
+                self.loadData();
+                // self.initializeRatingFullStar();
                 self.initializeFormValidator();
+                
             }
         }
     }

@@ -10,6 +10,13 @@
         </div>
 
         <div class="page-content">
+            <!-- <div class="content-block text-align-center">
+                <p class="row">
+                    <span></span>
+                    <a class="col button button-big button-fill color-red" style="width: 200px;" href="/survey" id = "close">Survey</a>
+                    <span></span>
+                </p>
+            </div> -->
             <div class="block text-align-center">
                 <i class="icon material-icons color-green" style="font-size: 150px;">check_circle_outline</i>
             </div>
@@ -74,6 +81,51 @@
                 }
                 return vars;
             },
+//             logout: function () {
+//                 var self = this;
+
+//                 // app.request.get(window.config.url + 'api/TokenAuth/LogOut',
+//                 //     function (suc) {
+//                 //         console.log('Logout success')
+//                 //         console.log(suc);
+//                 //     },
+//                 //     function (err) {
+//                 //         console.log('Logout error')
+//                 //         console.log(err);
+//                 //     });
+//                 //     app.utils.custom.removeCookie()
+//                 //app.views.current.router.navigate('/signin');
+// //                 window.onhashchange = function() {
+// //     if (window.innerDocClick) {
+// //         window.innerDocClick = false;
+// //     } else {
+// //         if (window.location.hash != '#undefined') {
+// //             goBack();
+// //         } else {
+// //             history.pushState("", document.title, window.location.pathname);
+// //             location.reload();
+// //         }
+// //     }
+// // }            
+// // document.location.replace("/Exercises#nocache")
+// // window.history.forward(-1)
+// // window.close();
+// var len=window.history.length; 
+// //alert(len);
+// window.history.state.view_main.url = '/'
+// console.log(window.history);
+// // for (let i = 0; i < window.history.length; i++){
+// // alert(window.history[i].url())
+// // window.history[i].replaceState(null)
+// // alert(window.history[i])
+// // }
+// // alert(window.history)
+// //app.views.current.router.navigate(window.history.state.view_main.url);
+// window.history.state.view_main.url = null
+// //window.open(window.history.state.view_main.url, '_self')
+// document.referrer;
+// document.referrer;
+//             },
         },
         on: {
             pageInit: function () {
@@ -82,6 +134,21 @@
                 self.$setState({
                     orderId: self.getUrlVars().order,
                 })
+//                 $(document).ready(function() {
+//                     $("#close").click(function() {
+//                         self.logout();
+//                         //window.close();
+//                     });
+//                 });
+//                 window.onhashchange = function() {
+//  alert('abc')
+//  window.history.forward()
+// }
+// $(document).ready(function() {
+//          function disablePrev() { window.history.forward() }
+//          window.onload = disablePrev();
+//          window.onpageshow = function(evt) { if (evt.persisted) disableBack() }
+//       });
             }
         }
     }
