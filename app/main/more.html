@@ -104,7 +104,8 @@
 				_username: '',
 				_name: '',
 				_email: '',
-				userId: localStorage.getItem('WOKPPL_userId')
+				userId: localStorage.getItem('WOKPPL_userId'),
+				endpoint: ''
 			}
 		},
 		methods: {
@@ -203,6 +204,15 @@
                     .then(function (subscription) {
                         console.log(subscription)
                         isSubscribed = subscription === null ? false : true;
+						if (subscription) {
+                            let sss = JSON.stringify(subscription);
+                            let output = JSON.parse(sss)
+                            self.$setState({
+                                endpoint: output.endpoint,
+                                // p256dh: output.keys.p256dh,
+                                // auth: output.keys.auth
+                            })
+                        }
                         //self.updateSubscriptionOnServer(subscription);
                         console.log('isSubscribed', isSubscribed)
                         if (isSubscribed) {
