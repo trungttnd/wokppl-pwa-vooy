@@ -699,13 +699,17 @@
 				firstLoadDay = arrFirstDay[1] + '/' + arrFirstDay[0] + '/' + arrFirstDay[2];
 				console.log('Ngay session', firstLoadDay + ' ' + sessionTemp.endTime);
 				console.log('Ngay hien tai', dateInput + ' ' + timeNow);
-				if (self.cartItems.quantity > 0 && Date.parse(firstLoadDay + ' ' + sessionTemp.endTime) < Date.parse(dateInput + ' ' + timeNow)) {
+				if (Date.parse(firstLoadDay + ' ' + sessionTemp.endTime) < Date.parse(dateInput + ' ' + timeNow)) {
 					localStorage.setItem('disableCheckout', JSON.stringify('true'))
-					self.goCartDialog().open();
+					if (self.cartItems.quantity > 0) self.goCartDialog().open();
+					else {
+						self.clearCartWhenSessionExpired();
+						app.views.current.router.refreshPage()
+					}
 				}
 			}
 
-			self.checkListSession(dateInput, timeNow, firstLoadDay), 1000;
+			self.checkListSession(dateInput, timeNow, firstLoadDay);
 
 
 			// setTimeout(function () {

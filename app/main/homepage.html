@@ -37,7 +37,7 @@
                     <div class="swiper-pagination"></div>
                 </div>
             </div>
-            {{#if business}}
+            {{#if bestSellers}}
             <div class="card">
                 <div class="card-header justify-content-space-between">
                     <span class="title-card">Best Sellers</span>
@@ -46,7 +46,7 @@
                     <div class="photo-gallery">
                         <div class="swiper-container">
                             <div class="swiper-wrapper">
-                                {{#each business.products}}
+                                {{#each bestSellers}}
                                 <div class="swiper-slide">
                                     <div class="slide-media">
                                         <div class="slide-img">
@@ -66,6 +66,8 @@
                     </div>
                 </div>
             </div>
+            {{/if}}
+            {{#if newProducts}}
             <div class="card">
                 <div class="card-header justify-content-space-between">
                     <span class="title-card">New Products</span>
@@ -74,7 +76,7 @@
                     <div class="photo-gallery">
                         <div class="swiper-container">
                             <div class="swiper-wrapper">
-                                {{#each business.products}}
+                                {{#each newProducts}}
                                 <div class="swiper-slide">
                                     <div class="slide-media">
                                         <div class="slide-img">
@@ -181,8 +183,9 @@
         data: function () {
             return {
                 sliderHero: null,
-                business: null,
                 bannerArr: null,
+                bestSellers: null,
+                newProducts: null,
                 canteenName: 'Default',
                 logo: '',
             }
@@ -210,31 +213,49 @@
                             localStorage.setItem('WOKPPL_mobile', response.result.user.userName);
                             localStorage.setItem('WOKPPL_name', response.result.user.name);
                             localStorage.setItem('WOKPPL_email', response.result.user.emailAddress);
+                            if (response.result.canteen != null && response.result.canteen != 'null') {
+                                self.$setState({
+                                    canteenName: response.result.canteen.name,
+                                    logo: response.result.canteen.logoUrl
+                                })
+                            }
+                            else {
+                                app.request.json(
+                                    'assets/custom/dataset/getcurrentlogin.json',
+                                    function (data) {
+                                        if (data) {
+                                            console.log('getcurrentlogin', data);
+                                            self.$setState({
+                                                canteenName: data.result.canteen.name,
+                                                logo: data.result.canteen.logoUrl
+                                            });
+                                        }
+                                    }
+                                );
+                            }
                         }
                     },
                     function (err) {
                         console.log(err)
                     })
+                //get featured products
+                // app.request.get(window.config.url + 'api/services/app/product/GetFeatureProducts',
+                //     { featuredType: 0 },
+                //     function (suc) {
+                //         console.log('get feature product', suc);
+                //     },
+                //     function (err) {
+                //         console.log(err)
 
-                app.request.json(
-                    'assets/custom/dataset/getcurrentlogin.json',
-                    function (data) {
-                        if (data) {
-                            console.log('getcurrentlogin', data);
-                            self.$setState({
-                                canteenName: data.result.canteen.name,
-                                logo: data.result.canteen.logoUrl
-                            });
-                        }
-                    }
-                );
+                //     })
 
                 app.request.json(
                     'assets/custom/dataset/business.json',
                     function (data) {
                         if (data) {
                             self.$setState({
-                                business: data
+                                newProducts: data.products,
+                                bestSellers: data.products
                             });
                             self.loadGalleryImage(data);
                         }
@@ -295,8 +316,8 @@
                     slidesPerView: 2,
                     spaceBetween: 5
                 });
-                for (let i = 0; i < self.business.products.length; i++) {
-                    listImg.push("https://wokpplapi.konbi.cloud/uploads/" + self.business.products[i].imgFileName);
+                for (let i = 0; i < data.products.length; i++) {
+                    listImg.push("https://wokpplapi.konbi.cloud/uploads/" + data.products[i].imgFileName);
                 }
                 self.$('.photo-gallery .slide-media img').on('click', function () {
                     var currentSlide = self.$('.photo-gallery .slide-media img').parent().parent().parent('.swiper-slide-active').data('swiper-slide-index');
@@ -452,15 +473,15 @@
             self.loadCategory();
             //subscription user
             swRegistration.pushManager.getSubscription()
-                    .then(function (subscription) {
-                        console.log(subscription)
-                        isSubscribed = subscription === null ? false : true;
-                        //self.updateSubscriptionOnServer(subscription);
-                        console.log('isSubscribed', isSubscribed)
-                        if (!isSubscribed) {
-                            self.subscribeUser();
-                        }
-                    });
+                .then(function (subscription) {
+                    console.log(subscription)
+                    isSubscribed = subscription === null ? false : true;
+                    //self.updateSubscriptionOnServer(subscription);
+                    console.log('isSubscribed', isSubscribed)
+                    if (!isSubscribed) {
+                        self.subscribeUser();
+                    }
+                });
         },
         on: {
             pageInit: function () {
