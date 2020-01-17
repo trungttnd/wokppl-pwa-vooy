@@ -711,9 +711,10 @@
 
                 let message = "Collection time is invalid. Collection time shoud be range from " + self.messageTime + " to " + endDateTime.getHours() + ':' + (endDateTime.getMinutes() < 10 ? '0' + endDateTime.getMinutes() : endDateTime.getMinutes()) + "!";
                 if (self.compareDate(pickerDateTime, endDateTime)) {
+
                     // if (pickerDateTime > dateTimeNowPlus)
                     // if (self.compareDate(dateTimeNowPlus, pickerDateTime))
-                    //     message = "There is no longer enough time to order this session. Please try again with a later session!"
+                    message = "The time it takes for us to prepare your order at this session is not enough. Please select another session."
                     self.openDialog(message).open();
                     self.validateOk = false;
                 }
@@ -728,7 +729,7 @@
                 }
                 // else if (pickerDateTime > dateTimeNow && pickerDateTime < endDateTime && dateTimeNowPlus > endDateTime)
                 else if (self.compareDate(pickerDateTime, dateTimeNow) && self.compareDate(endDateTime, pickerDateTime) && self.compareDate(dateTimeNowPlus, endDateTime)) {
-                    message = "There is no longer enough time to order this session. Please try again with a later session!"
+                    message = "The time it takes for us to prepare your order at this session is not enough. Please select another session."
                     self.openDialog(message).open();
                     self.validateOk = false;
                 }
