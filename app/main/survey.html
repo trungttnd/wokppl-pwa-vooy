@@ -2,13 +2,9 @@
     <div class="page">
         <div class="navbar" style="height: 80px;">
             <div class="navbar-inner">
-                <div class="left">
-                    <!-- <a href="/">
-                        <i class="icon material-icons">home</i>
-                    </a> -->
-                </div>
+                <div class="left"></div>
                 <div class="center">
-                    <img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="80px" alt="" />
+                    <a href="/"><img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="80px" alt="" /></a>
                 </div>
                 <div class="right"></div>
             </div>
@@ -53,7 +49,8 @@
                             <li>
                                 <div class="item-content item-input item-input-with-info">
                                     <div class="item-inner survey-radio">
-                                        <div class="item-title item-floating-label"><p>{{this.index}}. {{this.question}}</p></div>
+                                        <div class="item-title item-floating-label"><p>{{this.index}}. {{this.question}}<span style="color: red;"> *</span></p></div>
+                                        <div id="checkbox_{{this.index}}" style="display:none; font-size: 14px; color: red;">Please select your answer!</div>
                                         {{#if this.answerOptions}}
                                         {{#each this.answerOptions}}
                                         <div>
@@ -76,7 +73,8 @@
                             <li>
                                 <div class="item-content item-input item-input-with-info">
                                     <div class="item-inner survey-multi">
-                                        <div class="item-title item-floating-label"><p>{{this.index}}. {{this.question}}</p></div>
+                                        <div class="item-title item-floating-label"><p>{{this.index}}. {{this.question}}<span style="color: red;"> *</span></p></div>
+                                        <div id="radio_{{this.index}}" style="display:none; font-size: 14px; color: red;">Please select your answer!</div>
                                         {{#if this.answerOptions}}
                                         {{#each this.answerOptions}}
                                         <div>
@@ -195,10 +193,6 @@
                     console.log('get session error', err)
                 })
             },
-            submitSurvey: function(){
-                var self = this;
-                var text = $('#survey').find('input[name="FirstName"]').val();
-            },
             // initializeRatingFullStar: function () {
             //     var self = this;
             //     $(document).ready(function() {
@@ -217,109 +211,138 @@
             initializeFormValidator: function () {
                 var self = this;
                 var dataForSubmit = {surveyId: null, answer: []};
-                var answerQuestion = []
+                var answerQuestion = [];
+                var radioString = 'radio';
+                var checkboxString = 'checkbox';
 				self.formValidator = jQuery('form[name=survey]').validate({
 					submitHandler: function (form) {
                         var formData = app.form.convertToData('#survey');
-                        for (let i = 0; i < self.surveyContent.questions.length; i++){
-                            if (self.surveyContent.questions[i].questionType == 0){
-                                let shorttext = "shorttext_" + (i + 1);
-                                var shorttextValue = "";
-                                $.each(formData, function(key, value) {
-                                    if (key == shorttext){
-                                        shorttextValue = value
-                                    }
-                                });
-                                var obj = {questionId: self.surveyContent.questions[i].id, answerString: shorttextValue, answerByOptionId: []}
-                                answerQuestion.push(obj);
+                        var flag = true;
+                        $(':radio').each(function () {
+                            name = $(this).attr('name');
+                            if (!$(':radio[name="' + name + '"]:checked').length) {
+                                $('div[id="' + name + '"]').show();
+                                flag = false;
                             }
-                            else if (self.surveyContent.questions[i].questionType == 1){
-                                let longtext = "longtext_" + (i + 1);
-                                var longtextValue = "";
-                                $.each(formData, function(key, value) {
-                                    if (key == longtext){
-                                        longtextValue = value
-                                    }
-                                });
-                                var obj = {questionId: self.surveyContent.questions[i].id, answerString: longtextValue, answerByOptionId: []}
-                                answerQuestion.push(obj);
+                            else{
+                                $('div[id="' + name + '"]').hide();
                             }
-                            else if (self.surveyContent.questions[i].questionType == 2){
-                                let radioName = "radio_" + (i + 1);
-                                var radioValue = "";
-                                var arrTemp = [];
-                                $.each(formData, function(key, value) {
-                                    if (key == radioName){
-                                        radioValue = value
-                                    }
-                                });
-                                arrTemp.push(radioValue);
-                                var obj = {questionId: self.surveyContent.questions[i].id, answerString: "", answerByOptionId: arrTemp}
-                                answerQuestion.push(obj);
+                        });
+                        $(':checkbox').each(function () {
+                            name = $(this).attr('name');
+                            if (!$(':checkbox[name="' + name + '"]:checked').length) {
+                                $('div[id="' + name + '"]').show();
+                                flag = false;
                             }
-                            else if (self.surveyContent.questions[i].questionType == 3){
-                                let checkboxName = "checkbox_" + (i + 1);
-                                var checkboxValue = "";
-                                var arrTemp = [];
-                                $.each(formData, function(key, value) {
-                                    if (key == checkboxName){
-                                        for (let x = 0; x < value.length; x++){
-                                            arrTemp.push(value[x]);
+                            else{
+                                $('div[id="' + name + '"]').hide();
+                            }
+                        });
+                        if (flag){
+                            for (let i = 0; i < self.surveyContent.questions.length; i++){
+                                if (self.surveyContent.questions[i].questionType == 0){
+                                    let shorttext = "shorttext_" + (i + 1);
+                                    var shorttextValue = "";
+                                    $.each(formData, function(key, value) {
+                                        if (key == shorttext){
+                                            shorttextValue = value
                                         }
-                                    }
-                                });
-                                var obj = {questionId: self.surveyContent.questions[i].id, answerString: "", answerByOptionId: arrTemp}
-                                answerQuestion.push(obj);
+                                    });
+                                    var obj = {questionId: self.surveyContent.questions[i].id, answerString: shorttextValue, answerByOptionId: []}
+                                    answerQuestion.push(obj);
+                                }
+                                else if (self.surveyContent.questions[i].questionType == 1){
+                                    let longtext = "longtext_" + (i + 1);
+                                    var longtextValue = "";
+                                    $.each(formData, function(key, value) {
+                                        if (key == longtext){
+                                            longtextValue = value
+                                        }
+                                    });
+                                    var obj = {questionId: self.surveyContent.questions[i].id, answerString: longtextValue, answerByOptionId: []}
+                                    answerQuestion.push(obj);
+                                }
+                                else if (self.surveyContent.questions[i].questionType == 2){
+                                    let radioName = "radio_" + (i + 1);
+                                    var radioValue = "";
+                                    var arrTemp = [];
+                                    $.each(formData, function(key, value) {
+                                        if (key == radioName){
+                                            radioValue = value
+                                        }
+                                    });
+                                    arrTemp.push(radioValue);
+                                    var obj = {questionId: self.surveyContent.questions[i].id, answerString: "", answerByOptionId: arrTemp}
+                                    answerQuestion.push(obj);
+                                }
+                                else if (self.surveyContent.questions[i].questionType == 3){
+                                    let checkboxName = "checkbox_" + (i + 1);
+                                    var checkboxValue = "";
+                                    var arrTemp = [];
+                                    $.each(formData, function(key, value) {
+                                        if (key == checkboxName){
+                                            for (let x = 0; x < value.length; x++){
+                                                arrTemp.push(value[x]);
+                                            }
+                                        }
+                                    });
+                                    var obj = {questionId: self.surveyContent.questions[i].id, answerString: "", answerByOptionId: arrTemp}
+                                    answerQuestion.push(obj);
+                                }
                             }
-                        }
 
-                        app.request.postJSON(window.config.url + '/api/services/app/Survey/SubmitSurvey',
-                        {
-                            surveyId: self.surveyContent.id,
-                            answer: answerQuestion
-                        },
-                        function (suc) {
-                            console.log('suc', suc)
-                            app.toast.show({
-								text: 'Thank you for your reply survey!',
-								position: 'bottom',
-								cssClass: 'toast-round bg-color-green'
-							});
-                            app.views.current.router.navigate('/');
-                        },
-                        function (err) {
-                            console.log('err', err)
-                            let response = JSON.parse(err.response)
-                            self.disableCloseButton = false;
-                            var dialog = app.dialog.create({
-                                content: '<div class="block no-margin margin-top text-align-center"><i class="fa-stack fa-3x"><span class="fas fa-stack-2x fa-circle text-color-red"></span><span class="fas fa-stack-1x fa-inverse fa-times"></span></i><p>' + response.error.message + '.</p></div>',
-                                buttons: [
-                                    {
-                                        text: 'Cancel',
-                                        bold: true,
-                                        color: 'red',
-                                        onClick: function () {
-                                            self.$setState({
-                                                disableCloseButton: false,
-                                            })
+                            app.request.postJSON(window.config.url + '/api/services/app/Survey/SubmitSurvey',
+                            {
+                                surveyId: self.surveyContent.id,
+                                answer: answerQuestion
+                            },
+                            function (suc) {
+                                console.log('suc', suc)
+                                // app.toast.show({
+                                //     text: 'Thank you for your reply survey!',
+                                //     position: 'bottom',
+                                //     cssClass: 'toast-round bg-color-green'
+                                // });
+                                self.submitForm();
+                            },
+                            function (err) {
+                                console.log('err', err)
+                                let response = JSON.parse(err.response)
+                                self.disableCloseButton = false;
+                                var dialog = app.dialog.create({
+                                    content: '<div class="block no-margin margin-top text-align-center"><i class="fa-stack fa-3x"><span class="fas fa-stack-2x fa-circle text-color-red"></span><span class="fas fa-stack-1x fa-inverse fa-times"></span></i><p>' + response.error.message + '.</p></div>',
+                                    buttons: [
+                                        {
+                                            text: 'Cancel',
+                                            bold: true,
+                                            color: 'red',
+                                            onClick: function () {
+                                                self.$setState({
+                                                    disableCloseButton: false,
+                                                })
+                                            }
                                         }
-                                    }
-                                ]
-                            });
-                            dialog.open();
-                        })
+                                    ]
+                                });
+                                dialog.open();
+                            })
+                        }
+                        else return flag;
 					}
 				});
 			},
-            submitForm: function (form) {
+            submitForm: function () {
 				var self = this;
                 var dialog = app.dialog.create({
-                    content: '<div class="block no-margin margin-top text-align-center"><i class="fa-stack fa-3x"><span class="fas fa-stack-2x fa-circle text-color-orange"></span><span class="fas fa-stack-1x fa-inverse fa-exclamation"></span></i><p>Thanks for your rating.<br /> Transaction ID: 12345678</p></div>',
+                    content: '<div class="block no-margin margin-top text-align-center"><i class="fa-stack fa-3x"><span class="fas fa-stack-2x fa-circle text-color-orange"></span><span class="fas fa-stack-1x fa-inverse fa-exclamation"></span></i><p>Thank you for your reply survey!</p></div>',
                     buttons: [
                         {
                             text: 'OK',
                             bold: true,
-                            color: 'orange'
+                            color: 'green',
+                            onClick: function () {
+								app.views.current.router.navigate('/');
+							}
                         }
                     ]
                 });
