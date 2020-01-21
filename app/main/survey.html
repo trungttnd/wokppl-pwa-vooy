@@ -1,5 +1,5 @@
 <template>
-    <div class="page" data-page="survey">
+    <div class="page">
         <div class="navbar" style="height: 80px;">
             <div class="navbar-inner">
                 <div class="left"></div>
@@ -161,13 +161,14 @@
                 formValidator: null,
                 surveyContent: [],
                 isActive: false,
+                surveyId: '',
             }
         },
         methods: {
             loadData: function(){
                 var self = this;
                 app.request.get(window.config.url + '/api/services/app/Survey/GetSurvey',
-                {id: 8},
+                {id: self.getUrlVars().surveyId},
                 function (suc) {
                     let response = JSON.parse(suc);
                     response.result.isActive = true;
@@ -347,7 +348,18 @@
                     ]
                 });
                 dialog.open();
-			},
+            },
+            getUrlVars: function () {
+                var vars = [], hash;
+                var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+                for (var i = 0; i < hashes.length; i++) {
+                    hash = hashes[i].split('=');
+                    vars.push(hash[0]);
+                    vars[hash[0]] = hash[1];
+                }
+                console.log('vars', vars)
+                return vars;
+            },
         },
         on: {
             pageInit: function () {
@@ -355,7 +367,6 @@
                 self.loadData();
                 // self.initializeRatingFullStar();
                 self.initializeFormValidator();
-                
             }
         }
     }
