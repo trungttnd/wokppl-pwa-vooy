@@ -54,6 +54,10 @@
         methods: {
             
         },
+        mounted: function(){
+            var self=this;
+            console.log('mounted')
+        },
         on: {
             pageInit: function () {
                 var self = this;
@@ -115,6 +119,7 @@
             },
             pageAfterIn() {
                 var self = this;
+                console.log('pageAfterIn')
                 app.views.main.router.clearPreviousHistory();
             },
         }

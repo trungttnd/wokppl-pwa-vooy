@@ -232,7 +232,7 @@
 				let changePrevDate = '';
 				let tempDate = new Date();
 				let prevDateInput = (tempDate.getMonth() + 1) + '/' + tempDate.getDate() + '/' + tempDate.getFullYear();
-				let prevtimeNow = tempDate.getHours() + ":" + tempDate.getMinutes();
+				let prevtimeNow = (tempDate.getHours() < 10 ? '0' + tempDate.getHours() : tempDate.getHours()) + ":" + (tempDate.getMinutes() < 10 ? '0' + tempDate.getMinutes() : tempDate.getMinutes());
 				console.log('now', now.toLocaleDateString())
 				console.log('dt', dt)
 				if (dt + "/" + self.yearNow != self.formatDate(now, 'en')) {
@@ -249,20 +249,7 @@
 				console.log('today', self.today);
 				console.log('yearNow', self.yearNow);
 				let orderDateTemp = JSON.parse(localStorage.getItem('listOrderDate'));
-				//if (self.cartItems.quantity > 0){
-				// if (self.today != orderDateTemp){
-				// 	self.$('#date').val(orderDateTemp)
-				// 	self.openDialog().open();
-				// }
-				// else{
-				// 	self.checkListSession(prevDateInput, prevtimeNow, changePrevDate);
-				// 	self.updateProducts();
-				// }
-				//}	
-				//else{
-				// self.checkListSession(prevDateInput, prevtimeNow, changePrevDate);
-				// self.updateProducts();
-				//}
+
 				console.log('changePrevDate', changePrevDate);
 				self.checkListSession(prevDateInput, prevtimeNow, changePrevDate);
 				console.log('prev', self.today, orderDateTemp)
@@ -279,7 +266,7 @@
 				let arr = dt.split('/');
 				let tempDate = new Date();
 				let nextDateInput = (tempDate.getMonth() + 1) + '/' + tempDate.getDate() + '/' + tempDate.getFullYear();
-				let nexttimeNow = tempDate.getHours() + ":" + tempDate.getMinutes();
+				let nexttimeNow = (tempDate.getHours() < 10 ? '0' + tempDate.getHours() : tempDate.getHours()) + ":" + (tempDate.getMinutes() < 10 ? '0' + tempDate.getMinutes() : tempDate.getMinutes());
 				console.log('dt1', dt)
 				dt = self.yearNow + '/' + arr[1] + '/' + arr[0]
 				console.log('dt2', dt)
@@ -562,6 +549,8 @@
 				self.session = [];
 				let arr = [];
 				for (let i = 0; i < listSession.length; i++) {
+					listSession[i].startTime = self.convertIsoDateToHourMin(listSession[i].startTimeDisplay);
+					listSession[i].endTime = self.convertIsoDateToHourMin(listSession[i].endTimeDisplay);
 					if (Date.parse(newDate + ' ' + listSession[i].startTime) < Date.parse(dateInput + ' ' + timeNow) && Date.parse(dateInput + ' ' + timeNow) > Date.parse(newDate + ' ' + listSession[i].endTime)) {
 						count++;
 					}
@@ -654,6 +643,11 @@
 				var d = new Date();
 				var y = d.getFullYear();
 				return y;
+			},
+			convertIsoDateToHourMin: function (date) {
+				var self = this;
+				let dateTime = new Date(date);
+				return (dateTime.getHours() < 10 ? '0' + dateTime.getHours() : dateTime.getHours()) + ':' + (dateTime.getMinutes() < 10 ? '0' + dateTime.getMinutes() : dateTime.getMinutes())
 			},
 		},
 
@@ -806,6 +800,7 @@
 			// $('#tab-order').on('tab:show', function () {
 			// 	app.views.current.router.refreshPage();
 			// });
+			console.log('convert', self.convertIsoDateToHourMin('2020-01-20T02:01:00Z'));
 		},
 		on: {
 			pageInit: function () {

@@ -129,7 +129,24 @@
         methods: {
             loadData: function () {
                 var self = this;
-
+                //console.log('4-getcurrent-history')
+                app.request.get(window.config.url + 'api/services/app/Session/GetCurrentLoginInformations',
+                    function (suc) {
+                        let response = JSON.parse(suc)
+                        console.log(response.result.user)
+                        if (response.result.user == null || response.result.user == 'null') {
+                            app.utils.custom.removeCookie();
+                            app.views.current.router.navigate('/signin');
+                        }
+                        else {
+                            localStorage.setItem('WOKPPL_mobile', response.result.user.userName);
+                            localStorage.setItem('WOKPPL_name', response.result.user.name);
+                            localStorage.setItem('WOKPPL_email', response.result.user.emailAddress);
+                        }
+                    },
+                    function (err) {
+                        console.log(err)
+                    })
                 //list orders
                 app.request.getJSON(window.config.url + 'api/services/app/Preorder/GetTransactions',
                     { MaxResultCount: 1000 },
@@ -157,21 +174,21 @@
                             detail: self.det,
                             orderItems: self.det.orderItems,
                             // total: self.det.payments[0].amount,
-                            grandTotal: self.det.payments[0]?self.det.payments[0].amount:tempTotal,
+                            grandTotal: self.det.payments[0] ? self.det.payments[0].amount : tempTotal,
                         });
                     },
                     function (err) {
                         console.log(err)
                     })
-            },   
-                   
+            },
+
         },
         on: {
             pageInit: function () {
                 var self = this;
                 console.log(self.id)
                 self.loadData();
-                
+
             }
         }
     }

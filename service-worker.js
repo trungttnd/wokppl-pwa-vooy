@@ -52,12 +52,19 @@ self.addEventListener('push', function (event) {
   //console.log('[Service Worker] Push Received.');
   //console.log(`[Service Worker] Push had this data: "${event.data.text()}"`);
   let dataContent = JSON.parse(event.data.text());
+
   const title = dataContent.title;
   const options = {
     body: dataContent.message,
     icon: 'assets/custom/favicon/android-chrome-icon-96x96.png',
-    badge: 'assets/custom/favicon/android-chrome-icon-96x96.png'
+    badge: 'assets/custom/favicon/android-chrome-icon-16x16.png'
   };
+  console.log('title', title)
+  if (title != "Order info")
+    options.actions = [
+      { "action": "yes", "title": "Yes", "icon": "images/yes.png" },
+      { "action": "no", "title": "No", "icon": "images/no.png" }
+    ]
 
   event.waitUntil(self.registration.showNotification(title, options));
 });
@@ -71,11 +78,22 @@ self.addEventListener('notificationclick', function (event) {
   let orderNumber = arr.find(function (el) {
     return el.substr(0, 1) == "#"
   }).substr(1)
+
   event.notification.close();
 
-  event.waitUntil(
-    // clients.openWindow('https://preorder-pwa.netlify.com/#!/transactions-detail/' + orderNumber)
-    clients.openWindow('http://localhost:81/cusPWA/wokppl-pwa-vooy/#!/inbox-detail/' + orderNumber)
-    
-  );
+  if (!event.action) {
+    event.waitUntil(
+      // clients.openWindow('https://preorder-pwa.netlify.com/#!/transactions-detail/' + orderNumber)
+      clients.openWindow('http://localhost:81/cusPWA/wokppl-pwa-vooy/#!/inbox-detail/' + orderNumber, '_system')
+    );
+  }
+  switch (event.action) {
+    case 'yes':
+      event.waitUntil(
+        clients.openWindow('http://localhost:81/cusPWA/wokppl-pwa-vooy/#!/survey', '_system')
+      );
+      break;
+    default:
+      break
+  }
 });
