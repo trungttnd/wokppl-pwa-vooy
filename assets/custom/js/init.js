@@ -104,7 +104,9 @@ var app = new Framework7({
 		pushStateRoot: (function() {
 			return location.pathname;
 		})(),
-		pushStateSeparator: '',
+		pushStateSeparator: '#!',
+		loadInitialPage: true,
+		reloadDetail: true
 	}
 });
 
