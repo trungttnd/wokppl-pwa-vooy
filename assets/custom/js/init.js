@@ -98,13 +98,14 @@ var app = new Framework7({
 				return !Framework7.device.cordova;
 			}
 			else {
-				return false;
+				return true;
 			}
 		})(),
 		pushStateRoot: (function() {
 			return location.pathname;
 		})(),
-		pushStateSeparator: '#!'
+		pushStateSeparator: '#!',
+		pushStateOnLoad: true
 	}
 });
 
