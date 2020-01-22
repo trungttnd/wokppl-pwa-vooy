@@ -23,7 +23,7 @@
                     <li class="swipeout">
                         {{/if}}
                         {{#js_if "this.notification.notificationName == 'OrderStatusChanged'"}}
-                        <a href="/inbox-detail/{{this.notification.data.properties.orderNumber}}"
+                        <a href="/inbox-detail?orderNumber={{this.notification.data.properties.orderNumber}}"
                             @click="markAsRead('{{this.id}}'))" class="item-link item-content swipeout-content"
                             style="padding-left: unset;">
                             <div class="item-content" style="padding-left: unset; width: 100%;">
@@ -213,7 +213,7 @@
                         dialog.open();
                     }
                 });
-            }
+            },
         },
         mounted() {
             var self = this;

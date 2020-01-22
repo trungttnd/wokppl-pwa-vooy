@@ -92,7 +92,7 @@ window.routes = [
 		componentUrl: './app/main/details-only.html'
 	},
 	{
-		path: '/inbox-detail/:id',
+		path: '/inbox-detail',
 		componentUrl: './app/main/inbox-detail.html',
 	},
 	{
