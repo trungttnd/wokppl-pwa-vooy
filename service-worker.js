@@ -57,14 +57,22 @@ self.addEventListener('push', function (event) {
   const options = {
     body: dataContent.message,
     icon: 'assets/custom/favicon/android-chrome-icon-96x96.png',
-    badge: 'assets/custom/favicon/android-chrome-icon-16x16.png'
+    badge: 'assets/custom/favicon/android-chrome-icon-32x32.png'
   };
   console.log('title', title)
-  if (title != "Order info")
+  if (title != "Order info") {
+    let message = dataContent.message;
+    let arr = message.split(' ');
+    options.body = arr.slice(1, arr.length).join(' ')
+    options.data = {
+      id: arr[0].substr(1)
+    }
     options.actions = [
       { "action": "yes", "title": "Yes", "icon": "images/yes.png" },
       { "action": "no", "title": "No", "icon": "images/no.png" }
     ]
+  }
+
 
   event.waitUntil(self.registration.showNotification(title, options));
 });
@@ -72,28 +80,31 @@ self.addEventListener('push', function (event) {
 self.addEventListener('notificationclick', function (event) {
   console.log('[Service Worker] Notification click Received.');
   console.log(event)
-  let message = event.notification.body;
-  let arr = message.split(' ');
-  console.log(arr)
-  let orderNumber = arr.find(function (el) {
-    return el.substr(0, 1) == "#"
-  }).substr(1)
-
+  let message = event.notification.body;  
+  let data = event.notification.data
   event.notification.close();
 
   if (!event.action) {
+    let arr = message.split(' ');
+    console.log(arr)
+    let id = arr.find(function (el) {
+      return el.substr(0, 1) == "#"
+    }).substr(1)
     event.waitUntil(
-      // clients.openWindow('https://preorder-pwa.netlify.com/#!/transactions-detail/' + orderNumber)
-      clients.openWindow('http://localhost:81/cusPWA/wokppl-pwa-vooy/#!/inbox-detail/' + orderNumber, '_system')
+      clients.openWindow('https://preorder-pwa.netlify.com/#!inbox-detail?orderNumber=' + id)
     );
   }
-  switch (event.action) {
-    case 'yes':
-      event.waitUntil(
-        clients.openWindow('http://localhost:81/cusPWA/wokppl-pwa-vooy/#!/survey', '_system')
-      );
-      break;
-    default:
-      break
+  else {
+
+    switch (event.action) {
+      case 'yes':
+        event.waitUntil(
+          clients.openWindow('https://preorder-pwa.netlify.com/#!survey?surveyId=' + data.id)
+        );
+        break;
+      default:
+        break
+    }
   }
+
 });

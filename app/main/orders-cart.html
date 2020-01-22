@@ -309,26 +309,45 @@
                 minuteStart: 0,
                 minuteEnd: 59,
                 isEnabledPoint: true,
+                loyalty: {},
+                ratePoint: {
+                    earnPointRate: 0.0,
+                    redeemPointRate: 0.0
+                },
             }
         },
         methods: {
             getStatusRewardOint: function () {
                 var self = this;
                 //get status Reward Point: IsEnabled (true/false)
+                //API GetLoyaltyPointRateInfo
                 app.request.get(window.config.url + 'api/services/app/Preorder/GetLoyaltyPointRateInfo',
                     function (suc) {
-                        
                         let response = JSON.parse(suc)
-                        console.log(response)
+                        console.log(response.result)
                         self.$setState({
-                            //isEnabledPoint: response.result.isEnabled
-                            //earnPointRate, redeemPointRate: chưa hiểu cách tính 2 giá trị được get về này như thế nào
-                            redeem: 0
-                        })
+                            ratePoint: response.result
+                        });
                     },
                     function (err) {
                         console.log(err)
                     });
+               
+                //API GetCurrentLoyaltyPointInfo
+                setTimeout(function (){
+                    app.request.get(window.config.url + 'api/services/app/Preorder/GetCurrentLoyaltyPointInfo',
+                    function (suc) {
+                        let response = JSON.parse(suc)
+                        console.log(response.result)
+                        self.$setState({
+                            loyalty: response.result,
+                            redeem: response.result.point * self.ratePoint.redeemPointRate
+                        })
+                    },
+                    function (err) {
+                        console.log(err)
+                    }, 500);
+                })
             },
             initializeTimepicker24: function () {
                 var self = this;
