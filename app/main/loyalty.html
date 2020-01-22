@@ -2,7 +2,7 @@
     <div class="page">
         <div class="navbar" style="height: 72px;">
             <div class="navbar-inner">
-                    <img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="60px" alt="" />
+                <img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="60px" alt="" />
                 <div class="right">
                     <a href="#" class="link back">
                         <span>Back</span>
@@ -18,47 +18,53 @@
                 </i>
             </div>
             <div class="block" style="margin-top: 10px;">
-                <p style="text-align: center;"> $1 to earn {{ratePoint.earnPointRate}} points<br>
-                Redeem $1 of your next order with {{ratePoint.redeemPointRate}} points</p>
-                <p>Loyalty points: {{loyalty.points}}</p>
+                <p style="text-align: center;"> $1 to earn {{earnPointRateDisplay.toFixed(2)}} points<br>
+                    Redeem $1 of your next order with {{redeemPointRateDisplay.toFixed(2)}} points</p>
+                
+                <p>Loyalty points: {{loyalty.point}}</p>
                 <p>Corresponding: ${{displayRedeem.toFixed(2)}}</p>
-                <p> {{expirePoint.exPoints}} points will expire on {{expirePoint.expiryDate}}</p>
+                {{#if loyalty.expiringPoints}}
+                <p> {{loyalty.expiringPoints.points}} points will expire on {{loyalty.expiringPoints.expiryDate}}</p>
+                {{/if}}
             </div>
             <div class="content-block text-align-center">
                 <span class="history-points">History points</span>
             </div>
             <div id="loyaltyPoint" class="toolbar tabbar tabbar-sticky" style="margin-top: 10px;">
-				<div class="toolbar-inner categoriesFont">
-					<a href="#" id="earn-points" class="tab-link tab-link-active" style="padding-left: 10px; padding-right: 10px" @click="selectHistoryPoint('earn-points')">Earn Points</a>
-					<a href="#" id="use-points" class="tab-link" style="padding-left: 10px; padding-right: 10px;" @click="selectHistoryPoint('use-points')">Use Points</a>
-				</div>
+                <div class="toolbar-inner categoriesFont">
+                    <a href="#" id="earn-points" class="tab-link tab-link-active"
+                        style="padding-left: 10px; padding-right: 10px" @click="selectHistoryPoint('earn-points')">Earn
+                        Points</a>
+                    <a href="#" id="use-points" class="tab-link" style="padding-left: 10px; padding-right: 10px;"
+                        @click="selectHistoryPoint('use-points')">Use Points</a>
+                </div>
             </div>
             {{#js_if "this.historyLoyList != ''"}}
             <div class="list media-list no-hairlines no-hairlines-between margin-vertical descriptionFont"
-				style="margin-top: 0px !important;">
-				<ul>
+                style="margin-top: 0px !important;">
+                <ul>
                     {{#each historyLoyList}}
-					<li>
-						<div class="item-content">
-							<div class="item-inner">
-								<div class="row">
-									<div class="item-title">
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="row">
+                                    <div class="item-title">
                                         <a href="#" class="item-link">{{order}}</a>
                                     </div>
-								</div>
-								<div class="item-row">
-									<div class="item-text"><a href="#"
-											class="item-link">{{infor.time}}</a>
-									</div>
-									<div class="item-after" style="color: red; font-weight: bold;">
-										<span class="item-link tooltip-init" data-tooltip="Points">{{infor.amount}} points</span>
-									</div>									
-								</div>
-							</div>
-						</div>
+                                </div>
+                                <div class="item-row">
+                                    <div class="item-text"><a href="#" class="item-link">{{infor.time}}</a>
+                                    </div>
+                                    <div class="item-after" style="color: red; font-weight: bold;">
+                                        <span class="item-link tooltip-init" data-tooltip="Points">{{infor.amount}}
+                                            points</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </li>
                     {{/each}}
-				</ul>
+                </ul>
             </div>
             {{else}}
             <div class="item-content text-align-center">
@@ -82,24 +88,29 @@
         padding-bottom: 10px;
         font-size: 26px;
     }
+
     li {
-		border-bottom-color: #c9c6c6;
-		border-bottom-width: thin;
-		border-bottom-style: solid;
-	}
+        border-bottom-color: #c9c6c6;
+        border-bottom-width: thin;
+        border-bottom-style: solid;
+    }
 </style>
 <script>
     return {
         data: function () {
             return {
                 ratePoint: {
-                    earnPointRate: 10,
-                    redeemPointRate: 10
+                    earnPointRate: 0.0,
+                    redeemPointRate: 0.0
                 },
-                loyalty: {},
+                earnPointRateDisplay: 0.0,
+                redeemPointRateDisplay: 0.0,
+                loyalty: {
+
+                },
                 expirePoint: {},
                 historyLoy: {},
-                displayPoint: 1000,
+                displayPoint: 0,
                 redeem: 0.00,
                 displayRedeem: 0.00,
                 historyLoyList: [],
@@ -110,40 +121,70 @@
             loadData: function () {
                 var self = this;
                 var tempList = [];
-                app.request.json(
-                    'assets/custom/dataset/ratepoint.json',
-                    function (rate) {
-                        if (rate && rate.isEnabled) {
-                            self.$setState({
-                                ratePoint: rate,
-                            });
-                            console.log('rate', self.ratePoint);
-                        }
-                    }
-                );
-                app.request.json(
-                    'assets/custom/dataset/loyalty.json',
-                    function (loy) {
-                        if (loy) {
-                            let tempTime = new Date(loy.expiringPoints.expiryDate);
-                            tempTime = self.formatDate(tempTime, 'en');
-                            loy.expiringPoints.expiryDate = tempTime;
-                            self.$setState({
-                                loyalty: loy,
-                                displayRedeem: loy.points / self.ratePoint.redeemPointRate,
-                                expirePoint: loy.expiringPoints,
-                            });
-                            console.log('loyalty', self.loyalty);
-                        }
-                    }
-                ); 
+                //API GetLoyaltyPointRateInfo
+                app.request.get(window.config.url + 'api/services/app/Preorder/GetLoyaltyPointRateInfo',
+                    function (suc) {
+                        let response = JSON.parse(suc)
+                        console.log(response.result)
+                        self.$setState({
+                            ratePoint: response.result,
+                            earnPointRateDisplay: 1 * response.result.earnPointRate,
+                            redeemPointRateDisplay: response.result.redeemPointRate > 0 ? (1 / response.result.redeemPointRate) : 0
+                        });
+                    },
+                    function (err) {
+                        console.log(err)
+                    });
+                // app.request.json(
+                //     'assets/custom/dataset/ratepoint.json',
+                //     function (rate) {
+                //         if (rate && rate.isEnabled) {
+                //             self.$setState({
+                //                 ratePoint: rate,
+                //             });
+                //             console.log('rate', self.ratePoint);
+                //         }
+                //     }
+                // );
+                //API GetCurrentLoyaltyPointInfo
+                setTimeout(function (){
+                    app.request.get(window.config.url + 'api/services/app/Preorder/GetCurrentLoyaltyPointInfo',
+                    function (suc) {
+                        let response = JSON.parse(suc)
+                        console.log(response.result)
+                        self.$setState({
+                            loyalty: response.result,
+                            displayRedeem: response.result.point * self.ratePoint.redeemPointRate
+                        })
+                    },
+                    function (err) {
+                        console.log(err)
+                    }, 500);
+                })
+                
+                // app.request.json(
+                //     'assets/custom/dataset/loyalty.json',
+                //     function (loy) {
+                //         if (loy) {
+                //             let tempTime = new Date(loy.expiringPoints.expiryDate);
+                //             tempTime = self.formatDate(tempTime, 'en');
+                //             loy.expiringPoints.expiryDate = tempTime;
+                //             self.$setState({
+                //                 loyalty: loy,
+                //                 displayRedeem: loy.points / self.ratePoint.redeemPointRate,
+                //                 expirePoint: loy.expiringPoints,
+                //             });
+                //             console.log('loyalty', self.loyalty);
+                //         }
+                //     }
+                // ); 
                 app.request.json(
                     'assets/custom/dataset/historyloy.json',
                     function (his) {
                         if (his) {
-                            if (self.defaultList == ''){
-                                for (let i = 0; i < his.items.length; i++){
-                                    if (his.items[i].infor.type == 0){
+                            if (self.defaultList == '') {
+                                for (let i = 0; i < his.items.length; i++) {
+                                    if (his.items[i].infor.type == 0) {
                                         tempList.push(his.items[i]);
                                     }
                                 }
@@ -153,12 +194,12 @@
                                 console.log('vao rong');
                                 console.log('new historyLoyList', self.historyLoyList);
                             }
-                            for (let j = 0; j < his.items.length; j++){
+                            for (let j = 0; j < his.items.length; j++) {
                                 let tempDateTime = new Date(his.items[j].infor.time);
                                 let tempDate = (tempDateTime.getDate() > 10 ? tempDateTime.getDate() : '0' + tempDateTime.getDate()) + '/' + ((tempDateTime.getMonth() + 1) > 10 ? (tempDateTime.getMonth() + 1) : '0' + (tempDateTime.getMonth() + 1)) + '/' + tempDateTime.getFullYear();
                                 let tempTime = (tempDateTime.getHours() > 10 ? tempDateTime.getHours() : '0' + tempDateTime.getHours()) + ':' + ((tempDateTime.getMinutes() > 10) ? tempDateTime.getMinutes() : '0' + tempDateTime.getMinutes());
                                 his.items[j].infor.time = tempTime + ' ' + tempDate;
-                                if (his.items[j].infor.type == 0){
+                                if (his.items[j].infor.type == 0) {
                                     his.items[j].infor.amount = '+' + his.items[j].infor.amount
                                 }
                                 else his.items[j].infor.amount = '-' + his.items[j].infor.amount
@@ -169,7 +210,7 @@
                             console.log('historyLoy', self.historyLoy);
                             //self.loadGalleryImage(data);
                         }
-                        else{
+                        else {
                             console.log('Khong load history');
                         }
                     }
@@ -187,7 +228,7 @@
                             defaultList: id,
                         })
                     }
-                    else{
+                    else {
                         self.$setState({
                             defaultList: id,
                         })
@@ -195,8 +236,8 @@
                     }
                 });
 
-                for (let i = 0; i < self.historyLoy.length; i++){
-                    if (self.historyLoy[i].infor.type == 0){
+                for (let i = 0; i < self.historyLoy.length; i++) {
+                    if (self.historyLoy[i].infor.type == 0) {
                         earnArr.push(self.historyLoy[i]);
                     }
                     else {
@@ -204,13 +245,13 @@
                     }
                 }
                 console.log(self.historyLoy);
-                if (selected == 'earn-points'){
+                if (selected == 'earn-points') {
                     console.log('if', earnArr);
                     self.$setState({
                         historyLoyList: earnArr,
                     })
                 }
-                else{
+                else {
                     console.log('else', useArr);
                     self.$setState({
                         historyLoyList: useArr,
@@ -219,12 +260,12 @@
                 console.log('historyLoyList', self.historyLoyList);
             },
             formatDate: function (date, langCode) {
-				var day = date.toLocaleString(langCode, { day: '2-digit' });   // DD
-				var month = date.toLocaleString(langCode, { month: '2-digit' }); // MM
-				var year = date.toLocaleString(langCode, { year: 'numeric' }); // YYYY
-				console.log('year', year)
-				return `${day}/${month}/${year}`;
-			},
+                var day = date.toLocaleString(langCode, { day: '2-digit' });   // DD
+                var month = date.toLocaleString(langCode, { month: '2-digit' }); // MM
+                var year = date.toLocaleString(langCode, { year: 'numeric' }); // YYYY
+                console.log('year', year)
+                return `${day}/${month}/${year}`;
+            },
         },
         on: {
             pageInit: function () {
@@ -235,11 +276,11 @@
                     // console.log($(this).val())
                     let p = 0;
                     p = $(this).val()
-                    self.$setState({                        
+                    self.$setState({
                         displayPoint: self.loyalty - p,
-                        displayRedeem: self.redeem + p/50
+                        displayRedeem: self.redeem + p / 50
                     })
-                });              
+                });
             }
         }
     }
