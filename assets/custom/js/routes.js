@@ -92,15 +92,16 @@ window.routes = [
 		componentUrl: './app/main/details-only.html'
 	},
 	{
-		path: '/inbox-detail/:id',
+		path: '/inbox-detail',
 		componentUrl: './app/main/inbox-detail.html',
+		alias: '/inbox-detail/:id'
 	},
 	{
 		path: '/transactions-detail/:id',
 		componentUrl: './app/main/transactions-detail.html',
 	},
 	{
-		path: '/survey/:id',
+		path: '/survey',
 		componentUrl: './app/main/survey.html',
 	},
 	{

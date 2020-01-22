@@ -161,14 +161,14 @@
                 formValidator: null,
                 surveyContent: [],
                 isActive: false,
-                surveyId: this.$route.params.id,
+                surveyId: '',
             }
         },
         methods: {
             loadData: function(){
                 var self = this;
                 app.request.get(window.config.url + '/api/services/app/Survey/GetSurvey',
-                {id: self.surveyId},
+                {id: self.getUrlVars().surveyId},
                 function (suc) {
                     let response = JSON.parse(suc);
                     response.result.isActive = true;
