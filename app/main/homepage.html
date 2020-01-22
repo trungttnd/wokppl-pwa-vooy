@@ -479,6 +479,9 @@
         },
         mounted() {
             var self = this;
+            if (self.getUrlVars().surveyId){
+                app.views.current.router.navigate('/survey?surveyId='+self.getUrlVars().surveyId);
+            }
             self.loadData();
             self.loadSession();
             self.loadCategory();
@@ -493,10 +496,6 @@
                         self.subscribeUser();
                     }
                 });
-            if (self.getUrlVars().surveyId){
-                alert(self.getUrlVars().surveyId);
-                app.views.current.router.navigate('/survey?surveyId='+self.getUrlVars().surveyId);
-            }
         },
         on: {
             pageInit: function () {
