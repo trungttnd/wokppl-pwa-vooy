@@ -494,7 +494,10 @@
                     }
                 });
             if (self.getUrlVars().surveyId){
-                app.views.current.router.navigate('/survey?surveyId='+self.getUrlVars().surveyId);
+                app.views.current.router.navigate('/survey/'+self.getUrlVars().surveyId);
+            }
+            if (self.getUrlVars().orderNumber){
+                app.views.current.router.navigate('/inbox-detail/'+self.getUrlVars().orderNumber);
             }
         },
         on: {

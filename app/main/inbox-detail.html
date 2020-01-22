@@ -156,7 +156,7 @@
                         self.$setState({
                             listOrders: suc.result.items,
                             det: suc.result.items.find(function (el) {
-                                return el.orderNumber == self.getUrlVars().orderNumber;
+                                return el.orderNumber == self.id;
                             })
                         });
                         // console.log('listorders', self.listOrders);
@@ -181,24 +181,14 @@
                         console.log(err)
                     })
             },
-            getUrlVars: function () {
-                var vars = [], hash;
-                var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-                for (var i = 0; i < hashes.length; i++) {
-                    hash = hashes[i].split('=');
-                    vars.push(hash[0]);
-                    vars[hash[0]] = hash[1];
-                }
-                console.log('vars', vars)
-                return vars;
-            },
+
         },
         on: {
             pageInit: function () {
                 var self = this;
                 console.log(self.id)
                 self.loadData();
-                self.getUrlVars().orderNumber;
+
             }
         }
     }
