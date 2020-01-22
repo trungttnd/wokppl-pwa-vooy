@@ -120,7 +120,7 @@
                 gst: 0,
                 grandTotal: 0,
                 collectionTimeDisplay: '',
-                id: this.$route.params.id,
+                id: '',
                 listOrders: null,
                 det: null,
                 statusName: ''
@@ -129,6 +129,16 @@
         methods: {
             loadData: function () {
                 var self = this;
+                if (self.getUrlVars().orderNumber){
+                    self.$setState({
+                        id: self.getUrlVars().orderNumber,
+                    });
+                }
+                else {
+                    self.$setState({
+                        id: this.$route.params.id,
+                    });
+                }
                 //console.log('4-getcurrent-history')
                 app.request.get(window.config.url + 'api/services/app/Session/GetCurrentLoginInformations',
                     function (suc) {
@@ -156,7 +166,7 @@
                         self.$setState({
                             listOrders: suc.result.items,
                             det: suc.result.items.find(function (el) {
-                                return el.orderNumber == self.getUrlVars().orderNumber;
+                                return el.orderNumber == self.id;
                             })
                         });
                         // console.log('listorders', self.listOrders);
@@ -198,7 +208,6 @@
                 var self = this;
                 console.log(self.id)
                 self.loadData();
-                self.getUrlVars().orderNumber;
             }
         }
     }

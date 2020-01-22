@@ -94,6 +94,7 @@ window.routes = [
 	{
 		path: '/inbox-detail',
 		componentUrl: './app/main/inbox-detail.html',
+		alias: '/inbox-detail/:id'
 	},
 	{
 		path: '/transactions-detail/:id',
