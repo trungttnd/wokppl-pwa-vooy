@@ -259,7 +259,7 @@
                         dataType: 'json',
                         contentType: "application/json",
                         method: 'DELETE',
-                        data: { userId: self.userId },
+                        data: { endPoint: self.endPoint },
                         statusCode: {
                             404: function (xhr) {
                                 console.log("URL not found");
