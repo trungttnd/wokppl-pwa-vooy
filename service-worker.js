@@ -91,7 +91,7 @@ self.addEventListener('notificationclick', function (event) {
       return el.substr(0, 1) == "#"
     }).substr(1)
     event.waitUntil(
-      clients.openWindow('https://preorder-pwa.netlify.com/#!inbox-detail?orderNumber=' + id)
+      clients.openWindow('https://wokppl-pwa-vooy.netlify.com/#!inbox-detail?orderNumber=' + id)
     );
   }
   else {
@@ -99,7 +99,7 @@ self.addEventListener('notificationclick', function (event) {
     switch (event.action) {
       case 'yes':
         event.waitUntil(
-          clients.openWindow('https://preorder-pwa.netlify.com/#!survey?surveyId=' + data.id)
+          clients.openWindow('https://wokppl-pwa-vooy.netlify.com/#!survey?surveyId=' + data.id)
         );
         break;
       default:
