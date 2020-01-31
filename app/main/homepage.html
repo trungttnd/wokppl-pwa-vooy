@@ -43,15 +43,15 @@
                     <span class="title-card">Best Sellers</span>
                 </div>
                 <div class="card-content card-content-padding">
-                    <div class="photo-gallery">
+                    <div class="bestSellers-gallery">
                         <div class="swiper-container">
                             <div class="swiper-wrapper">
                                 {{#each bestSellers}}
                                 <div class="swiper-slide">
                                     <div class="slide-media">
                                         <div class="slide-img">
-                                            <img class="img-responsive imgGallery{{this.number}}"
-                                                src="https://wokpplapi.konbi.cloud/uploads/{{this.imgFileName}}"
+                                            <img class="img-responsive bestSellersGallery{{this.number}}"
+                                                src="https://wokpplapi.konbi.cloud/uploads/{{this.imageFileName}}"
                                                 alt="" />
                                         </div>
                                         <div class="details">
@@ -73,7 +73,7 @@
                     <span class="title-card">New Products</span>
                 </div>
                 <div class="card-content card-content-padding">
-                    <div class="photo-gallery">
+                    <div class="newProducts-gallery">
                         <div class="swiper-container">
                             <div class="swiper-wrapper">
                                 {{#each newProducts}}
@@ -81,8 +81,8 @@
                                     <div class="slide-media">
                                         <div class="slide-img">
                                             <!-- <img class="img-responsive" src="https://wokpplapi.konbi.cloud/uploads/{{this.imgFileName}}" alt="" /> -->
-                                            <img class="img-responsive imgGallery{{this.number}}"
-                                                src="https://wokpplapi.konbi.cloud/uploads/{{this.imgFileName}}"
+                                            <img class="img-responsive newProductsGallery{{this.number}}"
+                                                src="https://wokpplapi.konbi.cloud/uploads/{{this.imageFileName}}"
                                                 alt="" />
                                         </div>
                                         <div class="details">
@@ -238,29 +238,83 @@
                     function (err) {
                         console.log(err)
                     })
-                //get featured products
-                // app.request.get(window.config.url + 'api/services/app/product/GetFeatureProducts',
-                //     { featuredType: 0 },
-                //     function (suc) {
-                //         console.log('get feature product', suc);
-                //     },
-                //     function (err) {
-                //         console.log(err)
-
-                //     })
-
-                app.request.json(
-                    'assets/custom/dataset/business.json',
-                    function (data) {
-                        if (data) {
+                //get new products
+                app.request.get(window.config.url + 'api/services/app/Product/GetNewProducts',
+                    { MaxResultCount: 5 },
+                    function (suc) {
+                        let response = JSON.parse(suc);
+                        if (response.result.items != ''){
                             self.$setState({
-                                newProducts: data.products,
-                                bestSellers: data.products
+                                newProducts: response.result.items,
                             });
-                            self.loadGalleryImage(data);
+                            self.loadNewProductsGalleryImage(response.result);
+                            console.log('List items', response.result.items);
+                            console.log('get feature product', response);
                         }
-                    }
-                );
+                        else{
+                            app.request.json(
+                                'assets/custom/dataset/business.json',
+                                function (data) {
+                                    if (data) {
+                                        console.log('data', data);
+                                        self.$setState({
+                                            newProducts: data.result.items,
+                                        });
+                                        self.loadNewProductsGalleryImage(data.result);
+                                    }
+                                }
+                            );
+                        }
+                    },
+                    function (err) {
+                        console.log(err)
+                    })
+                //get popular products
+                app.request.get(window.config.url + 'api/services/app/Product/GetPopularProducts',
+                    { MaxResultCount: 5 },
+                    function (suc) {
+                        let response = JSON.parse(suc);
+                        if (response.result.items != ''){
+                            self.$setState({
+                                bestSellers: response.result.items,
+                            });
+                            self.loadBestSellersGalleryImage(response.result);
+                            console.log('List items', response.result.items);
+                            console.log('get popular product', response);
+                        }
+                        else{
+                            app.request.json(
+                                'assets/custom/dataset/business.json',
+                                function (data) {
+                                    if (data) {
+                                        console.log('data', data);
+                                        self.$setState({
+                                            bestSellers: data.result.items,
+                                            //newProducts: data.result.items
+                                        });
+                                        self.loadBestSellersGalleryImage(data.result);
+                                    }
+                                }
+                            );
+                        }
+                    },
+                    function (err) {
+                        console.log(err)
+                    })
+
+                // app.request.json(
+                //     'assets/custom/dataset/business.json',
+                //     function (data) {
+                //         if (data) {
+                //             console.log('data', data);
+                //             self.$setState({
+                //                 newProducts: data.result.items,
+                //                 bestSellers: data.result.items
+                //             });
+                //             self.loadGalleryImage(data.result);
+                //         }
+                //     }
+                // );
                 app.request.json(
                     'assets/custom/dataset/banner.json',
                     function (data) {
@@ -271,15 +325,27 @@
                     }
                 );
             },
-            loadGalleryImage: function (data) {
+            loadBestSellersGalleryImage: function (data) {
+                console.log('data.items', data)
                 var self = this;
-                for (let i = 0; i < data.products.length; i++) {
-                    data.products[i].number = i;
+                for (let i = 0; i < data.items.length; i++) {
+                    data.items[i].number = i;
                 }
                 // self.$setState({
                 //     bannerArr: data,
                 // });
-                self.initializePhotos(data);
+                self.initializeBestSellersPhotos(data);
+            },
+            loadNewProductsGalleryImage: function (data) {
+                console.log('data.items', data)
+                var self = this;
+                for (let i = 0; i < data.items.length; i++) {
+                    data.items[i].number = i;
+                }
+                // self.$setState({
+                //     bannerArr: data,
+                // });
+                self.initializeNewProductsPhotos(data);
             },
             loadBannerImage: function (imageList) {
                 var self = this;
@@ -291,24 +357,24 @@
                 });
                 self.initializeSliderHero(imageList);
             },
-            initializePhotos: function (data) {
+            initializeBestSellersPhotos: function (data) {
                 var self = this;
                 var listImg = [];
                 var tempWidth = 0;
                 var tempHeight = 0;
-                for (let i = 0; i < data.products.length; i++) {
-                    $('.imgGallery' + i).on('load', function (event) {
+                for (let i = 0; i < data.items.length; i++) {
+                    $('.bestSellersGallery' + i).on('load', function (event) {
                         // Lay ti le 4:3
                         // 133.33 la ti le % cua width va height
-                        tempWidth = $('.imgGallery' + i).prop('naturalWidth');
-                        tempHeight = $('.imgGallery' + i).prop('naturalHeight');
+                        tempWidth = $('.bestSellersGallery' + i).prop('naturalWidth');
+                        tempHeight = $('.bestSellersGallery' + i).prop('naturalHeight');
                         if (tempWidth > $(window).width() || ((tempWidth * 100 / tempHeight).toFixed(2) != 133.33)) {
-                            //$('.imgGallery' + i).width((($(window).width() - 10) / 3).toFixed(0));
-                            $('.imgGallery' + i).height((($(window).width() / 2).toFixed(0) * 100 / 133.33).toFixed(0));
+                            //$('.bestSellersGallery' + i).width((($(window).width() - 10) / 3).toFixed(0));
+                            $('.bestSellersGallery' + i).height((($(window).width() / 2).toFixed(0) * 100 / 133.33).toFixed(0));
                         }
                     });
                 }
-                app.swiper.create('.photo-gallery .swiper-container', {
+                app.swiper.create('.bestSellers-gallery .swiper-container', {
                     centeredSlides: true,
                     grabCursor: true,
                     initialSlide: 3,
@@ -316,11 +382,53 @@
                     slidesPerView: 2,
                     spaceBetween: 5
                 });
-                for (let i = 0; i < data.products.length; i++) {
-                    listImg.push("https://wokpplapi.konbi.cloud/uploads/" + data.products[i].imgFileName);
+                for (let i = 0; i < data.items.length; i++) {
+                    listImg.push("https://wokpplapi.konbi.cloud/uploads/" + data.items[i].imageFileName);
                 }
-                self.$('.photo-gallery .slide-media img').on('click', function () {
-                    var currentSlide = self.$('.photo-gallery .slide-media img').parent().parent().parent('.swiper-slide-active').data('swiper-slide-index');
+                console.log('listImg', listImg);
+                self.$('.bestSellers-gallery .slide-media img').on('click', function () {
+                    var currentSlide = self.$('.bestSellers-gallery .slide-media img').parent().parent().parent('.swiper-slide-active').data('swiper-slide-index');
+                    var photoBrowser = app.photoBrowser.create({
+                        photos: listImg,
+                        swiper: {
+                            initialSlide: currentSlide
+                        },
+                        theme: app.utils.theme.getLayout()
+                    });
+                    photoBrowser.open();
+                });
+            },
+            initializeNewProductsPhotos: function (data) {
+                var self = this;
+                var listImg = [];
+                var tempWidth = 0;
+                var tempHeight = 0;
+                for (let i = 0; i < data.items.length; i++) {
+                    $('.newProductsGallery' + i).on('load', function (event) {
+                        // Lay ti le 4:3
+                        // 133.33 la ti le % cua width va height
+                        tempWidth = $('.newProductsGallery' + i).prop('naturalWidth');
+                        tempHeight = $('.newProductsGallery' + i).prop('naturalHeight');
+                        if (tempWidth > $(window).width() || ((tempWidth * 100 / tempHeight).toFixed(2) != 133.33)) {
+                            //$('.newProductsGallery' + i).width((($(window).width() - 10) / 3).toFixed(0));
+                            $('.newProductsGallery' + i).height((($(window).width() / 2).toFixed(0) * 100 / 133.33).toFixed(0));
+                        }
+                    });
+                }
+                app.swiper.create('.newProducts-gallery .swiper-container', {
+                    centeredSlides: true,
+                    grabCursor: true,
+                    initialSlide: 3,
+                    loop: true,
+                    slidesPerView: 2,
+                    spaceBetween: 5
+                });
+                for (let i = 0; i < data.items.length; i++) {
+                    listImg.push("https://wokpplapi.konbi.cloud/uploads/" + data.items[i].imageFileName);
+                }
+                console.log('listImg', listImg);
+                self.$('.newProducts-gallery .slide-media img').on('click', function () {
+                    var currentSlide = self.$('.newProducts-gallery .slide-media img').parent().parent().parent('.swiper-slide-active').data('swiper-slide-index');
                     var photoBrowser = app.photoBrowser.create({
                         photos: listImg,
                         swiper: {
@@ -471,6 +579,7 @@
             self.loadData();
             self.loadSession();
             self.loadCategory();
+            app.utils.custom.initializeA2HS();
             //subscription user
             swRegistration.pushManager.getSubscription()
                 .then(function (subscription) {
