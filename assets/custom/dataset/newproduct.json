@@ -1,0 +1,137 @@
+{
+	"result": {
+		"totalCount": 5,
+		"items": [
+			{
+			  "name": "CHEESE TOBIKKO",
+			  "sku": "string",
+			  "price": 4.5,
+			  "quantity": 0,
+			  "shortDesc1": "string",
+			  "shortDesc2": "string",
+			  "shortDesc3": "string",
+			  "description": "string",
+			  "imageFileName": "fd7b9a8f-b54c-42bd-8cca-153d8e08267d.png",
+			  "sortIndex": 0,
+			  "dineIn": true,
+			  "delivery": true,
+			  "takeAway": true,
+			  "allDineIn": true,
+			  "allTakeAway": true,
+			  "allDelivery": true,
+			  "session": {
+					"id": "string",
+					"name": "string",
+					"startTime": "string",
+					"endTime": "string"
+			  },
+			  "id": "08d78563-4631-659a-2d61-b9aaf6949f6d"
+			},
+			{
+			  "name": "SHRIMP FRITTER HANDROLL",
+			  "sku": "string",
+			  "price": 2,
+			  "quantity": 0,
+			  "shortDesc1": "string",
+			  "shortDesc2": "string",
+			  "shortDesc3": "string",
+			  "description": "string",
+			  "imageFileName": "7361afe9-9261-44a8-b079-388eae0e5a2b.png",
+			  "sortIndex": 0,
+			  "dineIn": true,
+			  "delivery": true,
+			  "takeAway": true,
+			  "allDineIn": true,
+			  "allTakeAway": true,
+			  "allDelivery": true,
+			  "session": {
+					"id": "string",
+					"name": "string",
+					"startTime": "string",
+					"endTime": "string"
+			  },
+			  "id": "08d78566-fa1c-41d7-3b0b-98fdd7eee81a"
+			},
+			{
+			  "name": "FRIED CHICKEN",
+			  "sku": "string",
+			  "price": 6,
+			  "quantity": 0,
+			  "shortDesc1": "string",
+			  "shortDesc2": "string",
+			  "shortDesc3": "string",
+			  "description": "string",
+			  "imageFileName": "4ddc41ab-feaf-47b5-bfd6-d7a3ca4992da.png",
+			  "sortIndex": 0,
+			  "dineIn": true,
+			  "delivery": true,
+			  "takeAway": true,
+			  "allDineIn": true,
+			  "allTakeAway": true,
+			  "allDelivery": true,
+			  "session": {
+					"id": "string",
+					"name": "string",
+					"startTime": "string",
+					"endTime": "string"
+			  },
+			  "id": "08d78567-0e82-340d-31b9-aaf89f0631c9"
+			},
+			{
+			  "name": "SPICY SALMON HANDROLL",
+			  "sku": "string",
+			  "price": 2.3,
+			  "quantity": 0,
+			  "shortDesc1": "string",
+			  "shortDesc2": "string",
+			  "shortDesc3": "string",
+			  "description": "string",
+			  "imageFileName": "79bce811-dc42-4102-b501-d8586dc88641.png",
+			  "sortIndex": 0,
+			  "dineIn": true,
+			  "delivery": true,
+			  "takeAway": true,
+			  "allDineIn": true,
+			  "allTakeAway": true,
+			  "allDelivery": true,
+			  "session": {
+					"id": "string",
+					"name": "string",
+					"startTime": "string",
+					"endTime": "string"
+			  },
+			  "id": "08d78563-99d2-38c8-5948-344a0eebb19a"
+			},
+			{
+			  "name": "SCALLOP WASABI",
+			  "sku": "string",
+			  "price": 4.6,
+			  "quantity": 0,
+			  "shortDesc1": "string",
+			  "shortDesc2": "string",
+			  "shortDesc3": "string",
+			  "description": "string",
+			  "imageFileName": "ceb8ea10-a50e-4d34-b389-ee8265a697b2.png",
+			  "sortIndex": 0,
+			  "dineIn": true,
+			  "delivery": true,
+			  "takeAway": true,
+			  "allDineIn": true,
+			  "allTakeAway": true,
+			  "allDelivery": true,
+			  "session": {
+					"id": "string",
+					"name": "string",
+					"startTime": "string",
+					"endTime": "string"
+			  },
+			  "id": "08d78563-b72a-b1f2-2382-33ea1a5a4ca0"
+			}
+		]
+	},
+	"targetUrl": null,
+	"success": true,
+	"error": null,
+	"unAuthorizedRequest": false,
+	"__abp": true
+}
