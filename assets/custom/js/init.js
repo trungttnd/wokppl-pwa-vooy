@@ -265,52 +265,59 @@ function localizeApp() {
 */
 
 function initializeA2HS() {
-	window.addEventListener('beforeinstallprompt', function(event) {
-		event.preventDefault();
-		app.a2hs = event;
-		var dialog = app.dialog.create({
-			title: '',
-			content: '<div class="block no-margin no-padding text-align-center" style="font-size: 14px;"><img src="'+ window.config.app.logo +'" width="84" alt="" /><p><b>Add Konbi to your Home Screen?</b></p><p>Install Konbi on your home screen for quick and easy access when you\'re on the go.</p></div>',
-			verticalButtons: true,
-			buttons: [
-				{
-					text: 'Add to Home Screen',
-					bold: true,
-					color: 'green',
-					onClick: function() {
-						app.a2hs.prompt();
-						app.a2hs.userChoice
-							.then(function(choice) {
-							if (choice.outcome == 'accepted') {
-								app.toast.show({
-									text: 'Yaay! Added to Home Screen',
-									position:'bottom',
-									cssClass: 'toast-round bg-color-green'
-								});
-							}
-							else {
-								app.toast.show({
-									text: 'Oops! Could not add to Home Screen',
-									position:'bottom',
-									cssClass: 'toast-round bg-color-red'
-								});
-							}
-							app.a2hs = null;
-						});
-						app.dialog.close();
-					}
-				},
-				{
-					text: 'No, Thanks',
-					color: 'gray'
-				}
-			]
-		});
-		setTimeout(function() {
-			dialog.open();
-		}, 60000);
-	});
-}
+    window.addEventListener('beforeinstallprompt', function(event) {
+    	event.preventDefault();
+    	app.a2hs = event;
+    });
+  }
+
+// function initializeA2HS() {
+// 	window.addEventListener('beforeinstallprompt', function(event) {
+// 		event.preventDefault();
+// 		app.a2hs = event;
+// 		var dialog = app.dialog.create({
+// 			title: '',
+// 			content: '<div class="block no-margin no-padding text-align-center" style="font-size: 14px;"><img src="'+ window.config.app.logo +'" width="84" alt="" /><p><b>Add Konbi to your Home Screen?</b></p><p>Install Konbi on your home screen for quick and easy access when you\'re on the go.</p></div>',
+// 			verticalButtons: true,
+// 			buttons: [
+// 				{
+// 					text: 'Add to Home Screen',
+// 					bold: true,
+// 					color: 'green',
+// 					onClick: function() {
+// 						app.a2hs.prompt();
+// 						app.a2hs.userChoice
+// 							.then(function(choice) {
+// 							if (choice.outcome == 'accepted') {
+// 								app.toast.show({
+// 									text: 'Yaay! Added to Home Screen',
+// 									position:'bottom',
+// 									cssClass: 'toast-round bg-color-green'
+// 								});
+// 							}
+// 							else {
+// 								app.toast.show({
+// 									text: 'Oops! Could not add to Home Screen',
+// 									position:'bottom',
+// 									cssClass: 'toast-round bg-color-red'
+// 								});
+// 							}
+// 							app.a2hs = null;
+// 						});
+// 						app.dialog.close();
+// 					}
+// 				},
+// 				{
+// 					text: 'No, Thanks',
+// 					color: 'gray'
+// 				}
+// 			]
+// 		});
+// 		setTimeout(function() {
+// 			dialog.open();
+// 		}, 60000);
+// 	});
+// }
 
 /*
 |------------------------------------------------------------------------------
