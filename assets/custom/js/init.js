@@ -121,25 +121,11 @@ app.on('init', function() {
 	initializeI18n();
 	initializeA2HS();
 	initializeBackButton();
-	//document.addEventListener("backbutton", onBackKeyDown, false);
-
 	getInternetConnectionStatus();
 	setAJAXDefaults();
 	setFormValidatorDefaults();
 	// initializeFacebookJsSdk();
 });
-// function onBackKeyDown() {
-// 	// Handle the back button
-// 	// if(app.views.main.history.length == 1){
-// 	// 	exitApp();
-// 	// 	e.preventDefault();
-// 	// } else {
-// 	// 	app.dialog.close();
-// 	// 	app.views.main.router.back();
-// 	// 	return false;
-// 	// }
-// 	alert("Hello! I am an alert box!!");
-// }
 
 app.on('pageInit', function() {
 	localizeApp();
@@ -308,7 +294,7 @@ function initializeA2HS() {
 		});
 		setTimeout(function() {
 			dialog.open();
-		}, 60000);
+		}, 3000);
 	});
 }
 
