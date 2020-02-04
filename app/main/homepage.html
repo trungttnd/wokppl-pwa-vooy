@@ -239,37 +239,35 @@
                         console.log(err)
                     })
                 //get new products
-                app.request.get(window.config.url + 'api/services/app/Product/GetNewProducts',
-                    { MaxResultCount: 5 },
-                    function (suc) {
-                        let response = JSON.parse(suc);
-                        if (response.result.items != ''){
-                            self.$setState({
-                                newProducts: response.result.items,
-                            });
-                            self.loadNewProductsGalleryImage(response.result);
-                            console.log('List items', response.result.items);
-                            console.log('get feature product', response);
-                        }
-                        else{
-                            app.request.json(
-                                'assets/custom/dataset/newproduct.json',
-                                function (data) {
-                                    if (data) {
-                                        console.log('data', data);
-                                        self.$setState({
-                                            newProducts: data.result.items,
-                                        });
-                                        self.loadNewProductsGalleryImage(data.result);
-                                    }
-                                }
-                            );
-                        }
-                    },
-                    function (err) {
-                        console.log(err)
-                    })
+                
                 //get popular products
+                
+
+                // app.request.json(
+                //     'assets/custom/dataset/business.json',
+                //     function (data) {
+                //         if (data) {
+                //             console.log('data', data);
+                //             self.$setState({
+                //                 newProducts: data.result.items,
+                //                 bestSellers: data.result.items
+                //             });
+                //             self.loadGalleryImage(data.result);
+                //         }
+                //     }
+                // );
+                app.request.json(
+                    'assets/custom/dataset/banner.json',
+                    function (data) {
+                        if (data) {
+                            self.loadBannerImage(data.items);
+
+                        }
+                    }
+                );
+            },
+            loadDataBestSellers: function(){
+                var self = this;
                 app.request.get(window.config.url + 'api/services/app/Product/GetPopularProducts',
                     { MaxResultCount: 5 },
                     function (suc) {
@@ -301,29 +299,39 @@
                     function (err) {
                         console.log(err)
                     })
-
-                // app.request.json(
-                //     'assets/custom/dataset/business.json',
-                //     function (data) {
-                //         if (data) {
-                //             console.log('data', data);
-                //             self.$setState({
-                //                 newProducts: data.result.items,
-                //                 bestSellers: data.result.items
-                //             });
-                //             self.loadGalleryImage(data.result);
-                //         }
-                //     }
-                // );
-                app.request.json(
-                    'assets/custom/dataset/banner.json',
-                    function (data) {
-                        if (data) {
-                            self.loadBannerImage(data.items);
-
+            },
+            loadDataNewProducts: function(){
+                var self = this;
+                app.request.get(window.config.url + 'api/services/app/Product/GetNewProducts',
+                    { MaxResultCount: 5 },
+                    function (suc) {
+                        let response = JSON.parse(suc);
+                        if (response.result.items != ''){
+                            self.$setState({
+                                newProducts: response.result.items,
+                            });
+                            self.loadNewProductsGalleryImage(response.result);
+                            console.log('List items', response.result.items);
+                            console.log('get feature product', response);
                         }
-                    }
-                );
+                        else{
+                            app.request.json(
+                                'assets/custom/dataset/newproduct.json',
+                                function (data) {
+                                    if (data) {
+                                        console.log('data', data);
+                                        self.$setState({
+                                            newProducts: data.result.items,
+                                        });
+                                        self.loadNewProductsGalleryImage(data.result);
+                                    }
+                                }
+                            );
+                        }
+                    },
+                    function (err) {
+                        console.log(err)
+                    })
             },
             loadBestSellersGalleryImage: function (data) {
                 console.log('data.items', data)
@@ -577,9 +585,10 @@
         mounted() {
             var self = this;
             self.loadData();
+            self.loadDataBestSellers();
+            self.loadDataNewProducts();
             self.loadSession();
             self.loadCategory();
-            //app.utils.custom.initializeA2HS();
             //subscription user
             swRegistration.pushManager.getSubscription()
                 .then(function (subscription) {

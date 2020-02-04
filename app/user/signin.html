@@ -158,7 +158,52 @@
                         localStorage.setItem('WOKPPL_refreshToken', suc.result.refreshToken);
                         localStorage.setItem('WOKPPL_userId', suc.result.userId);
                         console.log('1-login')
-                        app.views.current.router.navigate('/');
+                        var dialog = app.dialog.create({
+                            title: '',
+                            content: '<div class="block no-margin no-padding text-align-center" style="font-size: 14px;"><img src="'+ window.config.app.logo +'" width="84" alt="" /><p><b>Add Konbi to your Home Screen?</b></p><p>Install Konbi on your home screen for quick and easy access when you\'re on the go.</p></div>',
+                            verticalButtons: true,
+                            buttons: [
+                            {
+                                text: 'Add to Home Screen',
+                                bold: true,
+                                color: 'green',
+                                onClick: function() {
+                                    // Ham initializeA2HS duoc goi trong file init.js co su kien beforeinstallprompt
+                                    // nen chi viec dung khong can phai goi lai
+                                    app.a2hs.prompt();
+                                    app.a2hs.userChoice
+                                    .then(function(choice) {
+                                    if (choice.outcome == 'accepted') {
+                                    app.toast.show({
+                                        text: 'Yaay! Added to Home Screen',
+                                        position:'bottom',
+                                        cssClass: 'toast-round bg-color-green'
+                                    });
+                                    }
+                                    else {
+                                    app.toast.show({
+                                        text: 'Oops! Could not add to Home Screen',
+                                        position:'bottom',
+                                        cssClass: 'toast-round bg-color-red'
+                                    });
+                                    }
+                                    app.a2hs = null;
+                                });
+                                app.dialog.close();
+                                }
+                            },
+                            {
+                                text: 'No, Thanks',
+                                color: 'gray'
+                            }
+                            ]
+                        });
+                        // Kiem tra app.a2hs duoc khai bao tu ham initializeA2HS goi trong file init.js, neu khac rong thi mo dialog
+                        // neu rong thi tuc la da install shorcut, khong can phai mo dialog len nua
+                        // Neu mo dialog tu day thi redirect den trang home cung van hien dialog.
+                        // Dap ung duoc yeu cau cua khach hang
+                        if (app.a2hs) dialog.open();
+                        app.views.current.router.navigate('/', {reloadCurrent: true, ignoreCache: true});
                     },
                     function (err) {
                         console.log("login error")
