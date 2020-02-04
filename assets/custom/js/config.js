@@ -274,9 +274,9 @@ window.config.theme = {
 	layout: 'light',
   navigation: 'hamburger'
 };
-
+//api url
 window.config.url = 'https://wokpplapi.konbi.cloud/';
-
+//image path
 window.config.upload = 'https://wokpplapi.konbi.cloud/uploads/'
-
+//firebase config 
 window.config.appServerPublicKey = 'BB9U4DQ5jqQQQoCqRvLcoyajrFrha1qY75UaNykTLW52mbgMz3T_cIjB-Tf9tXBMQTwY6Inzchc_X30HfhrMqOQ'
