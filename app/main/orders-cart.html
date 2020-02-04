@@ -560,7 +560,9 @@
                         },
                         function (suc) {
                             console.log('suc', suc)
-                            localStorage.removeItem('cartItems')
+                            localStorage.removeItem('cartItems');
+                            localStorage.removeItem('listOrderSession');
+                            localStorage.removeItem('listOrderDate');
                             app.views.current.router.navigate('/orders-finish?order=' + suc.result.orderNumber);
                         },
                         function (err) {
