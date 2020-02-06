@@ -36,6 +36,9 @@
 									{{this.endTime.substr(0,5)}}
 								</option>
 								{{/each}}
+								{{#js_if "this.session.length =='0'"}}
+								<option value="undefined">No session</option>
+								{{/js_if}}
 								{{/if}}
 							</select>
 						</div>
@@ -257,7 +260,11 @@
 					self.$('select[name=session]').val(self.cartItems.listOrderSession.id);
 					console.log('session', self.cartItems.listOrderSession)
 				}
-				else self.$('select[name=session]').val(self.session[0].id);
+				else {
+					if (self.session.length > 0)
+						self.$('select[name=session]').val(self.session[0].id);
+					else self.$('select[name=session]').val(undefined)
+				}
 				self.updateProducts();
 			},
 			next: function () {
@@ -300,7 +307,9 @@
 					self.$('select[name=session]').val(self.cartItems.listOrderSession.id);
 					console.log('session', self.cartItems.listOrderSession)
 				}
-				else self.$('select[name=session]').val(self.session[0].id);
+				else if (self.session.length > 0)
+					self.$('select[name=session]').val(self.session[0].id);
+				else self.$('select[name=session]').val(undefined);
 				self.updateProducts();
 			},
 			selectOption: function (id) {
@@ -436,7 +445,8 @@
 			},
 			loadProduct(date, sessionId, categoryId) {
 				var self = this;
-				console.log(categoryId)
+				console.log('query', date, sessionId, categoryId)
+				if (sessionId == "undefined") sessionId = undefined;
 				app.request.get(window.config.url + 'api/services/app/Preorder/GetProductMenuBrowsingList',
 					{
 						Date: date, SessionId: sessionId, CategoryId: categoryId, MaxResultCount: 5000
@@ -743,7 +753,11 @@
 				self.$('select[name=session]').val(sessionTemp.id);
 			}
 			else {
-				self.$('select[name=session]').val(self.session[0].id);
+				if (self.session.length > 0)
+					self.$('select[name=session]').val(self.session[0].id);
+				else {
+					self.$('select[name=session]').val(undefined);
+				}
 			}
 			if (orderDateTemp != null) {
 				self.$setState({
@@ -751,11 +765,13 @@
 				});
 			}
 			// else self.$('select[name=session]').val(self.session[0].id);
+			let sessionInput = self.session.length > 0 ? self.$('select[name=session]').val() : undefined;
+
 			if (orderDateTemp != null) {
-				self.loadProduct(firstLoadDay, self.$('select[name=session]').val(), '')
+				self.loadProduct(firstLoadDay, sessionInput, '')
 			}
 			else {
-				self.loadProduct(dateInput, self.$('select[name=session]').val(), '')
+				self.loadProduct(dateInput, sessionInput, '')
 			}
 
 			self.$("#menuCats").css("margin-top", "44px")
