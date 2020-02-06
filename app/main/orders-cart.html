@@ -737,8 +737,11 @@
                 // Gan ngay lay tu session voi startime
                 let startDateTime = sessionDate + ' ' + sessionTemp.startTime;
                 startDateTime = new Date(startDateTime);
+                console.log('Chan lai startDateTime', startDateTime, startDateTime.getHours());
+                console.log('sessionTemp', sessionTemp);
                 startDateTimeExtend.setTime(startDateTime.getTime() + (sessionTemp.preparationTime * 60 * 1000) + (sessionTemp.bufferTime * 60 * 1000));
                 startDateTimeExtend = new Date(startDateTimeExtend);
+                console.log('Chan lai startDateTimeExtend', startDateTimeExtend);
                 // Gan ngay lay tu session voi endtime
                 let endDateTime = sessionDate + ' ' + sessionTemp.endTime;
                 endDateTime = new Date(endDateTime);

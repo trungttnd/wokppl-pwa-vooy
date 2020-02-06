@@ -89,7 +89,7 @@
         </div>
         {{else}}
         <div class="fab fab-right-top color-orange" style="padding-top: 20px;">
-            <a href="#" class="link back" @click="closeButton()">
+            <a href="/tab-order/" class="link item" @click="closeButton()">
                 <i class="icon material-icons">close</i>
             </a>
         </div>
@@ -172,9 +172,12 @@
                 })
             },
             closeButton: function () {
-                localStorage.removeItem('isEdit');
-                localStorage.removeItem('listOrderDate');
-                localStorage.removeItem('listOrderSession');
+                let checkCarts = JSON.parse(localStorage.getItem('cartItems'))
+                if (checkCarts == [] || checkCarts == null){
+                    localStorage.removeItem('isEdit');
+                    localStorage.removeItem('listOrderDate');
+                    localStorage.removeItem('listOrderSession');
+                }
             },
             updateCart: function () {
                 var self = this;
