@@ -275,7 +275,7 @@ window.config.theme = {
   navigation: 'hamburger'
 };
 //api url
-window.config.url = 'https://wokpplapi.konbi.cloud/';
+window.config.url = 'http://localhost:22742/';
 //image path
 window.config.upload = 'https://wokpplapi.konbi.cloud/uploads/'
 //firebase config 

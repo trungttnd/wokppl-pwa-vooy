@@ -151,7 +151,7 @@
                         }
                         let colTime = new Date(self.det.collectionTimeDisplay);
                         //self.collectionTimeDisplay = colTime.toLocaleTimeString().substring(0,5) + ', ' + colTime.toLocaleDateString();
-                        self.collectionTimeDisplay = colTime.getHours() + ':' + colTime.getMinutes() + ', ' + colTime.getDate() + '/' + (colTime.getMonth() + 1) + '/' + colTime.getFullYear()
+                        self.collectionTimeDisplay = colTime.getHours() + ':' + (colTime.getMinutes() < 10 ? '0' + colTime.getMinutes() : colTime.getMinutes()) + ', ' + colTime.getDate() + '/' + (colTime.getMonth() + 1) + '/' + colTime.getFullYear()
                         self.statusName = self.det.statusName;
                         self.$setState({
                             detail: self.det,
