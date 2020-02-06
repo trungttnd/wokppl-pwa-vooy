@@ -514,8 +514,8 @@
                     // var hours = dat.getHours();
                     // hours += offset;
                     // dat.setHours(hours);
-                    let startTime = new Date(arr[2], arr[1] - 1, arr[0], sessionTemp.startTime.split(':')[0],sessionTemp.startTime.split(':')[0])
-                    let endTime = new Date(arr[2], arr[1] - 1, arr[0], sessionTemp.endTime.split(':')[0],sessionTemp.endTime.split(':')[0])
+                    let startTime = new Date(arr[2], arr[1] - 1, arr[0], sessionTemp.startTime.split(':')[0],sessionTemp.startTime.split(':')[1])
+                    let endTime = new Date(arr[2], arr[1] - 1, arr[0], sessionTemp.endTime.split(':')[0],sessionTemp.endTime.split(':')[1])
                     self.newOrder.collectionTime = dat.toISOString();
                     //self.newOrder.type = 
                     self.newOrder.sessionId = self.listOrderSession.id;
