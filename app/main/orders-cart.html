@@ -316,6 +316,7 @@
                 },
                 defaultPickerDate: new Date(),
                 isFutureOrder: false,
+
             }
         },
         methods: {
@@ -484,6 +485,7 @@
             checkout: function () {
                 var self = this;
                 let cartTemp = JSON.parse(localStorage.getItem('cartItems'));
+                let sessionTemp = JSON.parse(localStorage.getItem('listOrderSession'));
                 // de tam day sua sau
                 // let orderDateTemp = JSON.parse(localStorage.getItem('listOrderDate'));
                 // let arrDate = orderDateTemp.split('/');
@@ -512,7 +514,8 @@
                     // var hours = dat.getHours();
                     // hours += offset;
                     // dat.setHours(hours);
-
+                    let startTime = new Date(arr[2], arr[1] - 1, arr[0], sessionTemp.startTime.split(':')[0],sessionTemp.startTime.split(':')[0])
+                    let endTime = new Date(arr[2], arr[1] - 1, arr[0], sessionTemp.endTime.split(':')[0],sessionTemp.endTime.split(':')[0])
                     self.newOrder.collectionTime = dat.toISOString();
                     //self.newOrder.type = 
                     self.newOrder.sessionId = self.listOrderSession.id;
@@ -558,7 +561,9 @@
                             type: self.newOrder.type,
                             orderItems: self.newOrder.orderItems,
                             //payments: self.newOrder.payments,
-                            sessionId: self.newOrder.sessionId
+                            sessionId: self.newOrder.sessionId,
+                            startTime: startTime.toISOString(),
+                            endTime: endTime.toISOString()
                         },
                         function (suc) {
                             console.log('suc', suc)
