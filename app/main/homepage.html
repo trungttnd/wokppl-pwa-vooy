@@ -37,21 +37,21 @@
                     <div class="swiper-pagination"></div>
                 </div>
             </div>
-            {{#if bestSellers}}
-            <div class="card">
+            <div class="card" id="bestSellers-card">
                 <div class="card-header justify-content-space-between">
                     <span class="title-card">Best Sellers</span>
                 </div>
                 <div class="card-content card-content-padding">
-                    <div class="bestSellers-gallery">
+                    <div class="slide-gallery">
                         <div class="swiper-container">
                             <div class="swiper-wrapper">
+                                {{#if bestSellers}}
                                 {{#each bestSellers}}
                                 <div class="swiper-slide">
                                     <div class="slide-media">
                                         <div class="slide-img">
                                             <img class="img-responsive bestSellersGallery{{this.number}}"
-                                                src="https://wokpplapi.konbi.cloud/uploads/{{this.imageFileName}}"
+                                                src="https://wokppl-api-staging.konbi.cloud/uploads/{{this.imageFileName}}"
                                                 alt="" />
                                         </div>
                                         <div class="details">
@@ -61,28 +61,28 @@
                                     </div>
                                 </div>
                                 {{/each}}
+                                {{/if}}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            {{/if}}
-            {{#if newProducts}}
-            <div class="card">
+            <div class="card" id="newProducts-card">
                 <div class="card-header justify-content-space-between">
                     <span class="title-card">New Products</span>
                 </div>
                 <div class="card-content card-content-padding">
-                    <div class="newProducts-gallery">
+                    <div class="slide-gallery">
                         <div class="swiper-container">
                             <div class="swiper-wrapper">
+                                {{#if newProducts}}
                                 {{#each newProducts}}
                                 <div class="swiper-slide">
                                     <div class="slide-media">
                                         <div class="slide-img">
-                                            <!-- <img class="img-responsive" src="https://wokpplapi.konbi.cloud/uploads/{{this.imgFileName}}" alt="" /> -->
+                                            <!-- <img class="img-responsive" src="https://wokppl-api-staging.konbi.cloud/uploads/{{this.imgFileName}}" alt="" /> -->
                                             <img class="img-responsive newProductsGallery{{this.number}}"
-                                                src="https://wokpplapi.konbi.cloud/uploads/{{this.imageFileName}}"
+                                                src="https://wokppl-api-staging.konbi.cloud/uploads/{{this.imageFileName}}"
                                                 alt="" />
                                         </div>
                                         <div class="details">
@@ -92,12 +92,13 @@
                                     </div>
                                 </div>
                                 {{/each}}
+                                {{/if}}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            {{/if}}
+           
             <div class="block text-align-center">
                 <p class="row">
                     <span></span>
@@ -188,10 +189,10 @@
                 newProducts: null,
                 canteenName: 'Default',
                 logo: '',
+                totalSwiperInstances: {}
             }
         },
         methods: {
-
             loadData: function () {
                 var self = this;
                 app.request.setup({
@@ -238,59 +239,59 @@
                     function (err) {
                         console.log(err)
                     })
-                //get new products
-                
-                //get popular products
-                
 
-                // app.request.json(
-                //     'assets/custom/dataset/business.json',
-                //     function (data) {
-                //         if (data) {
-                //             console.log('data', data);
-                //             self.$setState({
-                //                 newProducts: data.result.items,
-                //                 bestSellers: data.result.items
-                //             });
-                //             self.loadGalleryImage(data.result);
-                //         }
-                //     }
-                // );
                 app.request.json(
                     'assets/custom/dataset/banner.json',
                     function (data) {
                         if (data) {
                             self.loadBannerImage(data.items);
-
                         }
                     }
                 );
             },
+            createInstantSwiper: function(position){
+                var swiperInstances = {};
+                var self = this;
+                $(".slide-gallery .swiper-container").each(function(index, element){
+                    var $this = $(this);
+                    if (position == index){
+                    $this.addClass("instance-" + index);
+                    swiperInstances[index] = new Swiper(".instance-" + index, {
+                        centeredSlides: true,
+                        grabCursor: true,
+                        initialSlide: 3,
+                        loop: true,
+                        slidesPerView: 2,
+                        spaceBetween: 5
+                    });
+                    }
+                });
+                self.$setState({
+                    totalSwiperInstances: swiperInstances,
+                });
+            },
             loadDataBestSellers: function(){
                 var self = this;
+                $("#bestSellers-card").hide();
                 app.request.get(window.config.url + 'api/services/app/Product/GetPopularProducts',
                     { MaxResultCount: 5 },
-                    function (suc) {
+                    function (suc) {                      
                         let response = JSON.parse(suc);
                         if (response.result.items != ''){
                             self.$setState({
                                 bestSellers: response.result.items,
                             });
                             self.loadBestSellersGalleryImage(response.result);
-                            console.log('List items', response.result.items);
-                            console.log('get popular product', response);
                         }
                         else{
                             app.request.json(
                                 'assets/custom/dataset/popular.json',
                                 function (data) {
                                     if (data) {
-                                        console.log('data', data);
                                         self.$setState({
                                             bestSellers: data.result.items,
-                                            //newProducts: data.result.items
                                         });
-                                        self.loadBestSellersGalleryImage(data.result);
+                                        self.loadBestSellersGalleryImage(data.result);                                       
                                     }
                                 }
                             );
@@ -302,6 +303,7 @@
             },
             loadDataNewProducts: function(){
                 var self = this;
+                $("#newProducts-card").hide();
                 app.request.get(window.config.url + 'api/services/app/Product/GetNewProducts',
                     { MaxResultCount: 5 },
                     function (suc) {
@@ -311,19 +313,16 @@
                                 newProducts: response.result.items,
                             });
                             self.loadNewProductsGalleryImage(response.result);
-                            console.log('List items', response.result.items);
-                            console.log('get feature product', response);
                         }
                         else{
                             app.request.json(
                                 'assets/custom/dataset/newproduct.json',
                                 function (data) {
                                     if (data) {
-                                        console.log('data', data);
                                         self.$setState({
                                             newProducts: data.result.items,
                                         });
-                                        self.loadNewProductsGalleryImage(data.result);
+                                        self.loadNewProductsGalleryImage(data.result); 
                                     }
                                 }
                             );
@@ -334,25 +333,17 @@
                     })
             },
             loadBestSellersGalleryImage: function (data) {
-                console.log('data.items', data)
                 var self = this;
                 for (let i = 0; i < data.items.length; i++) {
                     data.items[i].number = i;
                 }
-                // self.$setState({
-                //     bannerArr: data,
-                // });
                 self.initializeBestSellersPhotos(data);
             },
             loadNewProductsGalleryImage: function (data) {
-                console.log('data.items', data)
                 var self = this;
                 for (let i = 0; i < data.items.length; i++) {
                     data.items[i].number = i;
                 }
-                // self.$setState({
-                //     bannerArr: data,
-                // });
                 self.initializeNewProductsPhotos(data);
             },
             loadBannerImage: function (imageList) {
@@ -382,20 +373,14 @@
                         }
                     });
                 }
-                app.swiper.create('.bestSellers-gallery .swiper-container', {
-                    centeredSlides: true,
-                    grabCursor: true,
-                    initialSlide: 3,
-                    loop: true,
-                    slidesPerView: 2,
-                    spaceBetween: 5
-                });
+                self.createInstantSwiper(0);
+                self.totalSwiperInstances[0].update();
+                $("#bestSellers-card").toggle();
                 for (let i = 0; i < data.items.length; i++) {
-                    listImg.push("https://wokpplapi.konbi.cloud/uploads/" + data.items[i].imageFileName);
+                    listImg.push(window.config.upload + data.items[i].imageFileName);
                 }
-                console.log('listImg', listImg);
-                self.$('.bestSellers-gallery .slide-media img').on('click', function () {
-                    var currentSlide = self.$('.bestSellers-gallery .slide-media img').parent().parent().parent('.swiper-slide-active').data('swiper-slide-index');
+                self.$('.instance-0 .slide-media img').on('click', function () {
+                    var currentSlide = self.$('.instance-0 .slide-media img').parent().parent().parent('.swiper-slide-active').data('swiper-slide-index');
                     var photoBrowser = app.photoBrowser.create({
                         photos: listImg,
                         swiper: {
@@ -423,20 +408,14 @@
                         }
                     });
                 }
-                app.swiper.create('.newProducts-gallery .swiper-container', {
-                    centeredSlides: true,
-                    grabCursor: true,
-                    initialSlide: 3,
-                    loop: true,
-                    slidesPerView: 2,
-                    spaceBetween: 5
-                });
+                self.createInstantSwiper(1);
+                self.totalSwiperInstances[1].update();
+                $("#newProducts-card").toggle();
                 for (let i = 0; i < data.items.length; i++) {
-                    listImg.push("https://wokpplapi.konbi.cloud/uploads/" + data.items[i].imageFileName);
+                    listImg.push(window.config.upload + data.items[i].imageFileName);
                 }
-                console.log('listImg', listImg);
-                self.$('.newProducts-gallery .slide-media img').on('click', function () {
-                    var currentSlide = self.$('.newProducts-gallery .slide-media img').parent().parent().parent('.swiper-slide-active').data('swiper-slide-index');
+                self.$('.instance-1 .slide-media img').on('click', function () {
+                    var currentSlide = self.$('.instance-1 .slide-media img').parent().parent().parent('.swiper-slide-active').data('swiper-slide-index');
                     var photoBrowser = app.photoBrowser.create({
                         photos: listImg,
                         swiper: {
@@ -493,7 +472,6 @@
             },
             loadSession: function () {
                 var self = this;
-
                 app.request.get(window.config.url + 'api/services/app/Preorder/GetSessions',
                     function (suc) {
                         let response = JSON.parse(suc)

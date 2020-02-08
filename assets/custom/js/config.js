@@ -275,8 +275,8 @@ window.config.theme = {
   navigation: 'hamburger'
 };
 //api url
-window.config.url = 'http://localhost:22742/';
+window.config.url = 'https://wokppl-api-staging.konbi.cloud/';
 //image path
-window.config.upload = 'https://wokpplapi.konbi.cloud/uploads/'
+window.config.upload = 'https://wokppl-api-staging.konbi.cloud/uploads/'
 //firebase config 
 window.config.appServerPublicKey = 'BB9U4DQ5jqQQQoCqRvLcoyajrFrha1qY75UaNykTLW52mbgMz3T_cIjB-Tf9tXBMQTwY6Inzchc_X30HfhrMqOQ'
