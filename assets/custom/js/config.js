@@ -277,6 +277,6 @@ window.config.theme = {
 //api url
 window.config.url = 'http://localhost:22742/';
 //image path
-window.config.upload = 'https://wokpplapi.konbi.cloud/uploads/'
+window.config.upload = 'https://http://localhost:22742/uploads/'
 //firebase config 
 window.config.appServerPublicKey = 'BB9U4DQ5jqQQQoCqRvLcoyajrFrha1qY75UaNykTLW52mbgMz3T_cIjB-Tf9tXBMQTwY6Inzchc_X30HfhrMqOQ'

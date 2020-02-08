@@ -22,7 +22,7 @@
             {{else}}
             <div class="block">
                 <img class="img-center"
-                    src="https://wokpplapi.konbi.cloud/uploads/{{detail.imageFileName}}" height="{{orgHeight}}" width="{{orgWidth}}" alt="" />
+                    src="https://wokppl-api-staging.konbi.cloud/uploads/{{detail.imageFileName}}" height="{{orgHeight}}" width="{{orgWidth}}" alt="" />
             </div>
             {{/if}}
             <div class="block">
@@ -373,7 +373,7 @@
                     tmpImg.src="assets/custom/img/" + self.detail.imageFileName;
                 }
                 else{
-                    tmpImg.src="https://wokpplapi.konbi.cloud/uploads/" + self.detail.imageFileName; //or  document.images[i].src;
+                    tmpImg.src="https://wokppl-api-staging.konbi.cloud/uploads/" + self.detail.imageFileName; //or  document.images[i].src;
                 }
                 $(tmpImg).one('load',function(){  
                     if ((($(window).height() / 2) < tmpImg.height) && (tmpImg.width < (($(window).width() * 80) / 100))){

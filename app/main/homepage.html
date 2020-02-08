@@ -51,7 +51,7 @@
                                     <div class="slide-media">
                                         <div class="slide-img">
                                             <img class="img-responsive bestSellersGallery{{this.number}}"
-                                                src="https://wokpplapi.konbi.cloud/uploads/{{this.imageFileName}}"
+                                                src="https://wokppl-api-staging.konbi.cloud/uploads/{{this.imageFileName}}"
                                                 alt="" />
                                         </div>
                                         <div class="details">
@@ -80,9 +80,9 @@
                                 <div class="swiper-slide">
                                     <div class="slide-media">
                                         <div class="slide-img">
-                                            <!-- <img class="img-responsive" src="https://wokpplapi.konbi.cloud/uploads/{{this.imgFileName}}" alt="" /> -->
+                                            <!-- <img class="img-responsive" src="https://wokppl-api-staging.konbi.cloud/uploads/{{this.imgFileName}}" alt="" /> -->
                                             <img class="img-responsive newProductsGallery{{this.number}}"
-                                                src="https://wokpplapi.konbi.cloud/uploads/{{this.imageFileName}}"
+                                                src="https://wokppl-api-staging.konbi.cloud/uploads/{{this.imageFileName}}"
                                                 alt="" />
                                         </div>
                                         <div class="details">
@@ -391,7 +391,7 @@
                     spaceBetween: 5
                 });
                 for (let i = 0; i < data.items.length; i++) {
-                    listImg.push("https://wokpplapi.konbi.cloud/uploads/" + data.items[i].imageFileName);
+                    listImg.push("https://wokppl-api-staging.konbi.cloud/uploads/" + data.items[i].imageFileName);
                 }
                 console.log('listImg', listImg);
                 self.$('.bestSellers-gallery .slide-media img').on('click', function () {
@@ -432,7 +432,7 @@
                     spaceBetween: 5
                 });
                 for (let i = 0; i < data.items.length; i++) {
-                    listImg.push("https://wokpplapi.konbi.cloud/uploads/" + data.items[i].imageFileName);
+                    listImg.push("https://wokppl-api-staging.konbi.cloud/uploads/" + data.items[i].imageFileName);
                 }
                 console.log('listImg', listImg);
                 self.$('.newProducts-gallery .slide-media img').on('click', function () {
