@@ -272,8 +272,14 @@
             },
             updateSwiper: function(position){
                 $(".slide-gallery .swiper-container").each(function(index, element){
-                    console.log('element',element)
-                    if (position == index){
+                    console.log('element',element);
+                    if (position != null){
+                        if (position == index){
+                            var swiper = this.swiper;
+                            swiper.update();
+                        }
+                    }
+                    else{
                         var swiper = this.swiper;
                         swiper.update();
                     }
@@ -586,6 +592,9 @@
             self.loadDataNewProducts();
             self.loadSession();
             self.loadCategory();
+            setTimeout(function() {
+                self.updateSwiper();
+            }, 2000);
             //subscription user
             swRegistration.pushManager.getSubscription()
                 .then(function (subscription) {
