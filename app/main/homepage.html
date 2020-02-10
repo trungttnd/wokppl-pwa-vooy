@@ -39,7 +39,7 @@
             </div>
             <div class="card" id="bestSellers-card">
                 <div class="card-header justify-content-space-between">
-                    <span class="title-card">Best Sellers</span>
+                    <span class="title-card">Best Sellers New</span>
                 </div>
                 <div class="card-content card-content-padding">
                     <div class="slide-gallery">
@@ -567,6 +567,10 @@
             self.loadDataNewProducts();
             self.loadSession();
             self.loadCategory();
+            setTimeout(function() {
+                self.totalSwiperInstances[0].update();
+                self.totalSwiperInstances[1].update();
+            }, 3000);
             //subscription user
             swRegistration.pushManager.getSubscription()
                 .then(function (subscription) {
