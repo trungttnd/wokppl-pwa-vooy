@@ -330,6 +330,7 @@
                                 newProducts: response.result.items,
                             });
                             self.createInstantSwiper(1);
+                            self.updateSwiper(1);
                             self.loadNewProductsGalleryImage(response.result);
                         }
                         else{
@@ -341,6 +342,7 @@
                                             newProducts: data.result.items,
                                         });
                                         self.createInstantSwiper(1);
+                                        self.updateSwiper(1);
                                         self.loadNewProductsGalleryImage(data.result); 
                                     }
                                 }
@@ -430,9 +432,7 @@
                         }
                     });
                 }
-                    
-                    $("#newProducts-card").toggle();
-                    
+                $("#newProducts-card").toggle();
                 //self.updateSwiper(1);
                 //self.createInstantSwiper(1);
                 //self.totalSwiperInstances[1].update();
@@ -452,7 +452,7 @@
                     photoBrowser.open();
                     setTimeout(function() {
                         self.updateSwiper(1);
-                    }, 1500);  
+                    }, 2000);  
                 });
             },
             initializeSliderHero: function (imageList) {
