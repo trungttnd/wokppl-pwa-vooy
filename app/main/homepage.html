@@ -271,7 +271,7 @@
                 });
             },
             updateSwiper: function(position){
-                $(".swiper-container").each(function(index, element){
+                $(".slide-gallery .swiper-container").each(function(index, element){
                     console.log('element',element)
                     if (position == index){
                         var swiper = this.swiper;
@@ -386,10 +386,12 @@
                         }
                     });
                 }
+                    self.updateSwiper(0);
+                    $("#bestSellers-card").toggle();
                 //self.updateSwiper(0);
                 //self.createInstantSwiper(0);
                 //self.totalSwiperInstances[0].update();
-                $("#bestSellers-card").toggle();
+                //$("#bestSellers-card").toggle();
                 for (let i = 0; i < data.items.length; i++) {
                     listImg.push(window.config.upload + data.items[i].imageFileName);
                 }
@@ -422,10 +424,12 @@
                         }
                     });
                 }
+                    self.updateSwiper(1);
+                    $("#newProducts-card").toggle();
                 //self.updateSwiper(1);
                 //self.createInstantSwiper(1);
                 //self.totalSwiperInstances[1].update();
-                $("#newProducts-card").toggle();
+                //$("#newProducts-card").toggle();
                 for (let i = 0; i < data.items.length; i++) {
                     listImg.push(window.config.upload + data.items[i].imageFileName);
                 }
