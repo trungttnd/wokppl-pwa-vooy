@@ -583,10 +583,6 @@
             self.loadSession();
             self.loadCategory();
             //subscription user
-            $(".swiper-container").one('load', function() {
-                self.updateSwiper(0);
-                self.updateSwiper(1);
-            });
             swRegistration.pushManager.getSubscription()
                 .then(function (subscription) {
                     console.log(subscription)

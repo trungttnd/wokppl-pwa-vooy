@@ -765,10 +765,16 @@
                 }
 
                 let message = "Collection time is invalid. Collection time should be range from " + self.messageTime + " to " + endDateTime.getHours() + ':' + (endDateTime.getMinutes() < 10 ? '0' + endDateTime.getMinutes() : endDateTime.getMinutes()) + "!";
-                if (self.compareDate(pickerDateTime, endDateTime)) {
-
+                if (self.compareDate(pickerDateTime, endDateTime) && self.compareDate(endDateTime, dateTimeNowPlus)) {
+                    console.log('so 1');
                     // if (pickerDateTime > dateTimeNowPlus)
                     // if (self.compareDate(dateTimeNowPlus, pickerDateTime))
+                    //message = "The time it takes for us to prepare your order at this session is not enough. Please select another session."
+                    self.openDialog(message).open();
+                    self.validateOk = false;
+                }
+                else if (self.compareDate(pickerDateTime, endDateTime) && self.compareDate(dateTimeNowPlus, endDateTime)){
+                    console.log('so 2');
                     message = "The time it takes for us to prepare your order at this session is not enough. Please select another session."
                     self.openDialog(message).open();
                     self.validateOk = false;
@@ -776,14 +782,26 @@
                 else {
                     acceptPicker = acceptPicker + 1;
                 }
+                console.log(self.compareDate(startDateTimeExtend, pickerDateTime));
+                console.log(self.compareDate(dateTimeNowPlus, pickerDateTime));
+                console.log(self.compareDate(endDateTime, dateTimeNowPlus));
+                
                 // if (pickerDateTime < startDateTimeExtend || pickerDateTime < dateTimeNowPlus) 
-                if (self.compareDate(startDateTimeExtend, pickerDateTime) || self.compareDate(dateTimeNowPlus, pickerDateTime)) {
+                if ((self.compareDate(startDateTimeExtend, pickerDateTime) || self.compareDate(dateTimeNowPlus, pickerDateTime)) && self.compareDate(endDateTime, dateTimeNowPlus)) {
+                    console.log('so 3');
                     //let message = "Collection time is not smaller " + self.messageTime + "!";
+                    self.openDialog(message).open();
+                    self.validateOk = false;
+                }
+                else if ((self.compareDate(startDateTimeExtend, pickerDateTime) || self.compareDate(dateTimeNowPlus, pickerDateTime)) && self.compareDate(dateTimeNowPlus, endDateTime)) {
+                    console.log('so 4');
+                    message = "The time it takes for us to prepare your order at this session is not enough. Please select another session."
                     self.openDialog(message).open();
                     self.validateOk = false;
                 }
                 // else if (pickerDateTime > dateTimeNow && pickerDateTime < endDateTime && dateTimeNowPlus > endDateTime)
                 else if (self.compareDate(pickerDateTime, dateTimeNow) && self.compareDate(endDateTime, pickerDateTime) && self.compareDate(dateTimeNowPlus, endDateTime)) {
+                    console.log('so 5');
                     message = "The time it takes for us to prepare your order at this session is not enough. Please select another session."
                     self.openDialog(message).open();
                     self.validateOk = false;
