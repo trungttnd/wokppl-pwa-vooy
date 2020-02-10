@@ -409,6 +409,7 @@
                     });
                 }
                 self.createInstantSwiper(1);
+                //self.createInstantSwiper(1).update();
                 //self.totalSwiperInstances[1].update();
                 $("#newProducts-card").toggle();
                 for (let i = 0; i < data.items.length; i++) {
@@ -568,8 +569,10 @@
             self.loadSession();
             self.loadCategory();
             setTimeout(function() {
-                self.totalSwiperInstances[0].update();
-                self.totalSwiperInstances[1].update();
+                $(".swiper-container").each(function(index, element){
+    var swiper = this.swiper;
+    swiper.update();
+});
             }, 3000);
             //subscription user
             swRegistration.pushManager.getSubscription()
