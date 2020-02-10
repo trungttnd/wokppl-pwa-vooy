@@ -392,7 +392,7 @@
                         }
                     });
                 }
-                    self.updateSwiper(0);
+                    
                     $("#bestSellers-card").toggle();
                 //self.updateSwiper(0);
                 //self.createInstantSwiper(0);
@@ -412,6 +412,7 @@
                     });
                     photoBrowser.open();
                 });
+                self.updateSwiper(0);
             },
             initializeNewProductsPhotos: function (data) {
                 var self = this;
@@ -430,8 +431,9 @@
                         }
                     });
                 }
-                    self.updateSwiper(1);
+                    
                     $("#newProducts-card").toggle();
+                    
                 //self.updateSwiper(1);
                 //self.createInstantSwiper(1);
                 //self.totalSwiperInstances[1].update();
@@ -449,6 +451,7 @@
                         theme: app.utils.theme.getLayout()
                     });
                     photoBrowser.open();
+                    self.updateSwiper(1);
                 });
             },
             initializeSliderHero: function (imageList) {
