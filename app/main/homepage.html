@@ -189,7 +189,6 @@
                 newProducts: null,
                 canteenName: 'Default',
                 logo: '',
-                totalSwiperInstances: {}
             }
         },
         methods: {
@@ -266,9 +265,7 @@
                     });
                     }
                 });
-                self.$setState({
-                    totalSwiperInstances: swiperInstances,
-                });
+                swiperInstances[position].update();
             },
             loadDataBestSellers: function(){
                 var self = this;
@@ -559,6 +556,12 @@
                             dialog.open();
                         });
                 }
+            },
+            updateSwiper: function(){
+                $(".swiper-container").each(function(index, element){
+                    var swiper = this.swiper;
+                    swiper.update();
+                });
             }
         },
         mounted() {
@@ -569,10 +572,10 @@
             self.loadSession();
             self.loadCategory();
             setTimeout(function() {
-                $(".swiper-container").each(function(index, element){
-    var swiper = this.swiper;
-    swiper.update();
-});
+                // $(".swiper-container").each(function(index, element){
+                //     var swiper = this.swiper;
+                //     swiper.update();
+                // });
             }, 3000);
             //subscription user
             swRegistration.pushManager.getSubscription()
