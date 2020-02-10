@@ -391,9 +391,8 @@
                             $('.bestSellersGallery' + i).height((($(window).width() / 2).toFixed(0) * 100 / 133.33).toFixed(0));
                         }
                     });
-                }
-                    
-                    $("#bestSellers-card").toggle();
+                }  
+                $("#bestSellers-card").toggle();
                 //self.updateSwiper(0);
                 //self.createInstantSwiper(0);
                 //self.totalSwiperInstances[0].update();
@@ -451,7 +450,9 @@
                         theme: app.utils.theme.getLayout()
                     });
                     photoBrowser.open();
-                    self.updateSwiper(1);
+                    setTimeout(function() {
+                        self.updateSwiper(1);
+                    }, 1500);  
                 });
             },
             initializeSliderHero: function (imageList) {
@@ -597,7 +598,7 @@
             self.loadCategory();
             setTimeout(function() {
                 self.updateSwiper();
-            }, 2000);
+            }, 3000);
             //subscription user
             swRegistration.pushManager.getSubscription()
                 .then(function (subscription) {
