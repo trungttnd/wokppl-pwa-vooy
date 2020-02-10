@@ -39,7 +39,7 @@
             </div>
             <div class="card" id="bestSellers-card">
                 <div class="card-header justify-content-space-between">
-                    <span class="title-card">Best Sellers New</span>
+                    <span class="title-card">Best Sellers</span>
                 </div>
                 <div class="card-content card-content-padding">
                     <div class="slide-gallery">
@@ -189,6 +189,7 @@
                 newProducts: null,
                 canteenName: 'Default',
                 logo: '',
+                totalSwiperInstances: {}
             }
         },
         methods: {
@@ -254,18 +255,29 @@
                 $(".slide-gallery .swiper-container").each(function(index, element){
                     var $this = $(this);
                     if (position == index){
-                    $this.addClass("instance-" + index);
-                    swiperInstances[index] = new Swiper(".instance-" + index, {
-                        centeredSlides: true,
-                        grabCursor: true,
-                        initialSlide: 3,
-                        loop: true,
-                        slidesPerView: 2,
-                        spaceBetween: 5
-                    });
+                        $this.addClass("instance-" + index);
+                        swiperInstances[index] = new Swiper(".instance-" + index, {
+                            centeredSlides: true,
+                            grabCursor: true,
+                            initialSlide: 3,
+                            loop: true,
+                            slidesPerView: 2,
+                            spaceBetween: 5
+                        });
                     }
                 });
-                swiperInstances[position].update();
+                self.$setState({
+                    totalSwiperInstances: swiperInstances,
+                });
+            },
+            updateSwiper: function(position){
+                $(".swiper-container").each(function(index, element){
+                    console.log('element',element)
+                    if (position == index){
+                        var swiper = this.swiper;
+                        swiper.update();
+                    }
+                });
             },
             loadDataBestSellers: function(){
                 var self = this;
@@ -278,6 +290,7 @@
                             self.$setState({
                                 bestSellers: response.result.items,
                             });
+                            self.createInstantSwiper(0);
                             self.loadBestSellersGalleryImage(response.result);
                         }
                         else{
@@ -288,6 +301,7 @@
                                         self.$setState({
                                             bestSellers: data.result.items,
                                         });
+                                        self.createInstantSwiper(0);
                                         self.loadBestSellersGalleryImage(data.result);                                       
                                     }
                                 }
@@ -309,6 +323,7 @@
                             self.$setState({
                                 newProducts: response.result.items,
                             });
+                            self.createInstantSwiper(1);
                             self.loadNewProductsGalleryImage(response.result);
                         }
                         else{
@@ -319,6 +334,7 @@
                                         self.$setState({
                                             newProducts: data.result.items,
                                         });
+                                        self.createInstantSwiper(1);
                                         self.loadNewProductsGalleryImage(data.result); 
                                     }
                                 }
@@ -370,7 +386,8 @@
                         }
                     });
                 }
-                self.createInstantSwiper(0);
+                //self.updateSwiper(0);
+                //self.createInstantSwiper(0);
                 //self.totalSwiperInstances[0].update();
                 $("#bestSellers-card").toggle();
                 for (let i = 0; i < data.items.length; i++) {
@@ -405,8 +422,8 @@
                         }
                     });
                 }
-                self.createInstantSwiper(1);
-                //self.createInstantSwiper(1).update();
+                //self.updateSwiper(1);
+                //self.createInstantSwiper(1);
                 //self.totalSwiperInstances[1].update();
                 $("#newProducts-card").toggle();
                 for (let i = 0; i < data.items.length; i++) {
@@ -556,12 +573,6 @@
                             dialog.open();
                         });
                 }
-            },
-            updateSwiper: function(){
-                $(".swiper-container").each(function(index, element){
-                    var swiper = this.swiper;
-                    swiper.update();
-                });
             }
         },
         mounted() {
@@ -571,12 +582,6 @@
             self.loadDataNewProducts();
             self.loadSession();
             self.loadCategory();
-            setTimeout(function() {
-                // $(".swiper-container").each(function(index, element){
-                //     var swiper = this.swiper;
-                //     swiper.update();
-                // });
-            }, 3000);
             //subscription user
             swRegistration.pushManager.getSubscription()
                 .then(function (subscription) {
