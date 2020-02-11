@@ -230,7 +230,7 @@
         </div>
         {{else}}
         <div class="fab fab-right-top color-orange" style="padding-top: 20px;">
-            <a href="#" class="link back" @click="closeButton()">
+            <a href="#" @click="closeButton()">
                 <i class="icon material-icons">close</i>
             </a>
         </div>
@@ -466,6 +466,7 @@
             },
             closeButton: function () {
                 localStorage.removeItem('isEdit');
+                app.views.current.router.navigate('/tab-order/');
             },
             compareDate: function (date1, date2) {
                 var self = this;
