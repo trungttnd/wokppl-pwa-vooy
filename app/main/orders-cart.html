@@ -806,7 +806,7 @@
                     self.openDialog(message).open();
                     self.validateOk = false;
                 }
-                else if (!self.compareDate(pickerDateTime, dateTimeNowPlus)){
+                else if (self.compareDate(dateTimeNowPlus, pickerDateTime)){
                     let message = "Collection time is invalid. Collection time should be range from " + self.messageTime + " to " + endDateTime.getHours() + ':' + (endDateTime.getMinutes() < 10 ? '0' + endDateTime.getMinutes() : endDateTime.getMinutes()) + "!";
                     self.openDialog(message).open();
                     self.validateOk = false;
