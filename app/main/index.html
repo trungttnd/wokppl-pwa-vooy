@@ -9,7 +9,7 @@
 
         <div class="toolbar tabbar tabbar-labels">
             <div class="toolbar-inner">
-                <a href="/" class="tab-link" data-route-tab-id="tab-home">
+                <a href="#" @click="redirectToHome()" class="tab-link" data-route-tab-id="tab-home">
                     <i class="icon material-icons">home</i>
                     <span class="tabbar-label">Home</span>
                 </a>
@@ -52,7 +52,12 @@
             }
         },
         methods: {
-            
+            redirectToHome: function(){
+                app.views.current.router.navigate("/", {
+                    reloadCurrent: true,
+                    ignoreCache: true,
+                });
+            },
         },
         mounted: function(){
             var self=this;
