@@ -134,8 +134,6 @@
                 app.request.getJSON(window.config.url + 'api/services/app/Preorder/GetTransactions',
                     { MaxResultCount: 1000 },
                     function (suc) {
-                        console.log('suc.result', suc.result)
-
                         self.$setState({
                             listOrders: suc.result.items,
                             det: suc.result.items.find(function (el) {
@@ -145,10 +143,14 @@
                         // console.log('listorders', self.listOrders);
                         console.log('det', self.det)
 
-                        let tempTotal = 0;
-                        for (let i = 0; i < self.det.orderItems.length; i++) {
-                            tempTotal += self.det.orderItems[i].price
+                        //let tempTotal = 0;
+                        if (self.det.taxType == "inclusive") {
+                            for (let i = 0; i < self.det.orderItems.length; i++) {
+                                //tempTotal += self.det.orderItems[i].price
+                                self.det.orderItems[i].price = self.det.orderItems[i].price * (1 - self.det.taxPercent/100);
+                            }
                         }
+
                         let colTime = new Date(self.det.collectionTimeDisplay);
                         //self.collectionTimeDisplay = colTime.toLocaleTimeString().substring(0,5) + ', ' + colTime.toLocaleDateString();
                         self.collectionTimeDisplay = colTime.getHours() + ':' + (colTime.getMinutes() < 10 ? '0' + colTime.getMinutes() : colTime.getMinutes()) + ', ' + colTime.getDate() + '/' + (colTime.getMonth() + 1) + '/' + colTime.getFullYear()
@@ -156,23 +158,23 @@
                         self.$setState({
                             detail: self.det,
                             orderItems: self.det.orderItems,
+                            gst: self.det.taxPercent,
                             //total: self.det.payments[0].amount,
-                            //grandTotal: self.det.payments[0].amount
-                            grandTotal: self.det.payments[0]?self.det.payments[0].amount:tempTotal,
+                            grandTotal: self.det.totalAmount
                         });
                     },
                     function (err) {
                         console.log(err)
                     })
             },
-            
+
         },
         on: {
             pageInit: function () {
                 var self = this;
                 console.log(self.id)
                 self.loadData();
-                
+
                 console.log('transaction-detail')
 
             }
