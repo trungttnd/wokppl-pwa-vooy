@@ -219,6 +219,10 @@
                                     canteenName: response.result.canteen.name,
                                     logo: response.result.canteen.logoUrl
                                 })
+                                if (response.result.canteen.tax != null && response.result.canteen.tax != 'null'){
+                                    localStorage.setItem('WOKPPL_gst', response.result.canteen.tax.value);
+                                    localStorage.setItem('WOKPPL_gstType', response.result.canteen.tax.type);
+                                }
                             }
                             else {
                                 app.request.json(
@@ -271,6 +275,7 @@
                 });
             },
             updateSwiper: function(position){
+                var self = this;
                 $(".slide-gallery .swiper-container").each(function(index, element){
                     //console.log('element',element);
                     if (position != null){

@@ -290,8 +290,8 @@
                 listOption: [],
                 updateCartList: [],
                 discount: 0,
-                gst: 0,
-                gstType: 1, //type: inclusive (0)/exclusive (1)
+                gst: +localStorage.getItem('WOKPPL_gst'),
+                gstType: localStorage.getItem('WOKPLL_gstType'), //type: inclusive (0)/exclusive (1)
                 grandTotal: 0,
                 redeem: 0,
                 checkToggle: false,
@@ -866,17 +866,19 @@
                                 if (response.result.canteen.tax != null && response.result.canteen.tax != 'null') {
                                     self.$setState({
                                         gst: response.result.canteen.tax.value,
-                                        gstType: response.result.canteen.tax.type //0: inclusive, 1: exclusive
+                                        gstType: response.result.canteen.tax.type //inclusive, exclusive
                                     })
+                                    localStorage.setItem('WOKPPL_gst', response.result.canteen.tax.value);
+                                    localStorage.setItem('WOKPPL_gstType', response.result.canteen.tax.type);
                                 }
                                 else {
                                     self.gst = 0;
-                                    self.gstType = 1;
+                                    self.gstType = 'exclusive';
                                 }
                             }
                             else {
                                 self.gst = 0;
-                                self.gstType = 1;
+                                self.gstType = 'exclusive';
                             }
                         }
                     },
@@ -920,7 +922,7 @@
                         self.$setState({
                             checkToggle: true,
                             //discount: self.discount - self.redeem,
-                            grandTotal: self.gstType == 0 ? (cartTemp.total - self.redeem > 0 ? cartTemp.total - self.redeem : 0) : (cartTemp.total * (1 + Number(self.gst) / 100) - self.redeem > 0 ? cartTemp.total * (1 + Number(self.gst) / 100) - self.redeem : 0),
+                            grandTotal: self.gstType == 'inclusive' ? (cartTemp.total - self.redeem > 0 ? cartTemp.total - self.redeem : 0) : (cartTemp.total * (1 + Number(self.gst) / 100) - self.redeem > 0 ? cartTemp.total * (1 + Number(self.gst) / 100) - self.redeem : 0),
                         })
 
                     }
@@ -928,7 +930,7 @@
                         self.$setState({
                             checkToggle: false,
                             //discount: self.discount + self.redeem,
-                            grandTotal: self.gstType == 0 ? cartTemp.total : cartTemp.total * (1 + Number(self.gst) / 100)
+                            grandTotal: self.gstType == 'inclusive' ? cartTemp.total : cartTemp.total * (1 + Number(self.gst) / 100)
                         })
                     }
                     console.log(self.checkToggle)
@@ -961,12 +963,12 @@
                         updateCartList: cartTemp,
 
                         quantity: cartTemp.quantity,
-                        total: self.gstType == 0 ? cartTemp.total * (1 - self.gst / 100) : cartTemp.total,
+                        total: self.gstType == 'inclusive' ? cartTemp.total * (1 - self.gst / 100) : cartTemp.total,
                         listOrderDate: cartTemp.listOrderDate,
                         listOrderSession: cartTemp.listOrderSession,
                         orderSessionName: cartTemp.listOrderSession.name,
                         orderSessionTime: cartTemp.listOrderSession.startTime + " - " + cartTemp.listOrderSession.endTime,
-                        grandTotal: self.gstType == 0 ? cartTemp.total : cartTemp.total * (1 + Number(self.gst) / 100),
+                        grandTotal: self.gstType == 'inclusive' ? cartTemp.total : cartTemp.total * (1 + Number(self.gst) / 100),
                         hourStart: arrStarTime[0],
                         hourEnd: arrEndTime[0],
                         minuteStart: arrStarTime[1],
@@ -975,7 +977,7 @@
                 }
                 console.log(cartTemp.items)
 
-                if (self.gstType == 0) {
+                if (self.gstType == 'inclusive') {
                     let temp = cartTemp.items;
                     temp.forEach(function (el) {
                         el.price = el.price * (1 - self.gst / 100);
