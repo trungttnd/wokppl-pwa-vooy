@@ -272,7 +272,7 @@
             },
             updateSwiper: function(position){
                 $(".slide-gallery .swiper-container").each(function(index, element){
-                    console.log('element',element);
+                    //console.log('element',element);
                     if (position != null){
                         if (position == index){
                             var swiper = this.swiper;
@@ -596,9 +596,34 @@
             self.loadDataNewProducts();
             self.loadSession();
             self.loadCategory();
-            setTimeout(function() {
-                self.updateSwiper();
-            }, 3000);
+            // setTimeout(function() {
+            //     self.updateSwiper();
+            // }, 3000);
+            document.addEventListener('scroll', function (event) {
+                var hT = $('#bestSellers-card').offset().top,
+                    hH = $('#bestSellers-card').outerHeight(),
+                    wH = $(window).height(),
+                    wS = $(this).scrollTop();
+                if (wS > (hT+hH-wH) && (hT > wS) && (wS+wH > hT+hH)){
+                    //console.log('den so 1');
+                    self.updateSwiper(1);
+                } else {
+                    //console.log('den so 2');
+                    self.updateSwiper(0);
+                }
+            }, true /*Capture event*/);
+            // window.scroll(function() {
+            //     console.log('scroll');
+            //     var hT = $('#newProducts-card').offset().top,
+            //         hH = $('#newProducts-card').outerHeight(),
+            //         wH = $(window).height(),
+            //         wS = $(this).scrollTop();
+            //     if (wS > (hT+hH-wH) && (hT > wS) && (wS+wH > hT+hH)){
+            //         self.updateSwiper(1);
+            //     } else {
+            //         self.updateSwiper(0);
+            //     }
+            // });
             //subscription user
             swRegistration.pushManager.getSubscription()
                 .then(function (subscription) {
