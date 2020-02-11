@@ -673,11 +673,13 @@
 						app.utils.custom.removeCookie();
 						app.views.current.router.navigate('/signin');
 					}
-					else{
-						if (response.result.canteen.tax != null && response.result.canteen.tax != 'null'){
-                                    localStorage.setItem('WOKPPL_gst', response.result.canteen.tax.value);
-                                    localStorage.setItem('WOKPPL_gstType', response.result.canteen.tax.type);
-                                }
+					else {
+						if (response.result.canteen != null && response.result.canteen != 'null') {
+							if (response.result.canteen.tax != null && response.result.canteen.tax != 'null') {
+								localStorage.setItem('WOKPPL_gst', response.result.canteen.tax.value);
+								localStorage.setItem('WOKPPL_gstType', response.result.canteen.tax.type);
+							}
+						}
 					}
 				},
 				function (err) {

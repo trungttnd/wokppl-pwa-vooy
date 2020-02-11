@@ -281,7 +281,7 @@
                     })
             },
         },
-        
+
         mounted() {
             var self = this;
 
@@ -298,10 +298,12 @@
                         localStorage.setItem('WOKPPL_mobile', response.result.user.userName);
                         localStorage.setItem('WOKPPL_name', response.result.user.name);
                         localStorage.setItem('WOKPPL_email', response.result.user.emailAddress);
-                        if (response.result.canteen.tax != null && response.result.canteen.tax != 'null'){
-                                    localStorage.setItem('WOKPPL_gst', response.result.canteen.tax.value);
-                                    localStorage.setItem('WOKPPL_gstType', response.result.canteen.tax.type);
-                                }
+                        if (response.result.canteen != null && response.result.canteen != 'null') {
+                            if (response.result.canteen.tax != null && response.result.canteen.tax != 'null') {
+                                localStorage.setItem('WOKPPL_gst', response.result.canteen.tax.value);
+                                localStorage.setItem('WOKPPL_gstType', response.result.canteen.tax.type);
+                            }
+                        }
                     }
                 },
                 function (err) {
