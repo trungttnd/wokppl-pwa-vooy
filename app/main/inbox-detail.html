@@ -75,7 +75,7 @@
                                 <div class="item-content">
                                     <div class="item-inner">
                                         <div class="item-title">GST</div>
-                                        <div class="item-after">$0.00</div>
+                                        <div class="item-after">{{gst}}%</div>
                                     </div>
                                 </div>
                             </li>
@@ -178,9 +178,12 @@
                         // console.log('listorders', self.listOrders);
                         console.log('det', self.det)
 
-                        let tempTotal = 0;
-                        for (let i = 0; i < self.det.orderItems.length; i++) {
-                            tempTotal += self.det.orderItems[i].price
+                        //let tempTotal = 0;
+                        if (self.det.taxType == "inclusive") {
+                            for (let i = 0; i < self.det.orderItems.length; i++) {
+                                //tempTotal += self.det.orderItems[i].price
+                                self.det.orderItems[i].price = self.det.orderItems[i].price * (1 - self.det.taxPercent/100);
+                            }
                         }
                         let colTime = new Date(self.det.collectionTimeDisplay);
                         //self.collectionTimeDisplay = colTime.toLocaleTimeString().substring(0,5) + ', ' + colTime.toLocaleDateString();
@@ -189,8 +192,9 @@
                         self.$setState({
                             detail: self.det,
                             orderItems: self.det.orderItems,
+                            gst: self.det.taxPercent,
                             // total: self.det.payments[0].amount,
-                            grandTotal: self.det.payments[0] ? self.det.payments[0].amount : tempTotal,
+                            grandTotal: self.det.totalAmount
                         });
                     },
                     function (err) {

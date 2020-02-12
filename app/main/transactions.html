@@ -140,7 +140,7 @@
                                 tempTotalPrice += tempItem[i].orderItems[j].price * tempItem[i].orderItems[j].quantity;
                                 //console.log(tempTotalPrice)
                             }
-                            tempItem[i].totalPrice = tempTotalPrice;
+                            tempItem[i].totalPrice = tempItem[i].taxType=="exclusive"? tempTotalPrice * (1 + tempItem[i].taxPercent/100): tempTotalPrice;
                         }
                         self.$setState({
                             transactions: tempItem,
