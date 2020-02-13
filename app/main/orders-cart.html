@@ -311,7 +311,6 @@
                 minuteStart: 0,
                 minuteEnd: 59,
                 isEnabledPoint: true,
-                loyalty: {},
                 ratePoint: {
                     earnPointRate: 0.0,
                     redeemPointRate: 0.0
@@ -345,7 +344,7 @@
                             let response = JSON.parse(suc)
                             console.log(response.result)
                             self.$setState({
-                                loyalty: response.result,
+                                isEnabledPoint: response.result.enabled,
                                 redeem: response.result.point * self.ratePoint.redeemPointRate
                             })
                         },

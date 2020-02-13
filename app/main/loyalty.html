@@ -23,9 +23,10 @@
 
                 <p>Loyalty points: {{loyalty.point}}</p>
                 <p>Corresponding: ${{displayRedeem.toFixed(2)}}</p>
-                {{#if loyalty.expiringPoints}}
-                <p> {{loyalty.expiringPoints.points}} points will expire on {{loyalty.expiringPoints.expiryDate}}</p>
-                {{/if}}
+                {{#js_if "this.loyalty.expiringPoints.points>'0'"}}
+                <p> {{loyalty.expiringPoints.points}} points will expire on 
+                    {{loyalty.expiringPoints.expiryDate.substr(8,2)}}/{{loyalty.expiringPoints.expiryDate.substr(5,2)}}/{{loyalty.expiringPoints.expiryDate.substr(0,4)}}</p>
+                {{/js_if}}
             </div>
             <div class="content-block text-align-center">
                 <span class="history-points">History points</span>
@@ -106,7 +107,10 @@
                 earnPointRateDisplay: 0.0,
                 redeemPointRateDisplay: 0.0,
                 loyalty: {
-                    point: 0.0
+                    point: 0.0,
+                    expiringPoints: {
+                        points: 0
+                    }
                 },
                 expirePoint: {},
                 historyLoy: {},
@@ -142,10 +146,14 @@
                     app.request.get(window.config.url + 'api/services/app/Preorder/GetCurrentLoyaltyPointInfo',
                         function (suc) {
                             let response = JSON.parse(suc)
+                            console.log(response)
+                            //let expDate = new Date(response.result.expiringPoints.expDate);
+                            //self.loyalty.expiringPoints.expDate = expDate.getDate() + '/' + expDate.getMonth() + '/' + expDate.getFullYear();
                             self.$setState({
                                 loyalty: response.result,
                                 displayRedeem: response.result.point * self.ratePoint.redeemPointRate
                             })
+                            
                         },
                         function (err) {
                             console.log(err)
