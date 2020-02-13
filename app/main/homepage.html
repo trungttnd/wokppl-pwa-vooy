@@ -1,10 +1,10 @@
 <template>
-    <div class="page no-swipeback">
+    <div class="page no-swipeback" id="homepage">
         <div class="navbar" style="height: 80px;">
             <div class="navbar-inner">
                 <div class="left"></div>
                 <div class="center">
-                    <img class="theme-light-only" src="https://wokppl-api-staging.konbi.cloud/uploads/{{this.logo}}" height="80px" alt="" />
+                    <img class="theme-light-only" src="{{uploadUrl}}{{this.logo}}" height="80px" alt="" />
                 </div>
                 <div class="right"></div>
             </div>
@@ -189,7 +189,8 @@
                 newProducts: null,
                 canteenName: 'Default',
                 logo: '',
-                totalSwiperInstances: {}
+                totalSwiperInstances: {},
+                uploadUrl: window.config.upload
             }
         },
         methods: {
@@ -276,6 +277,7 @@
             },
             updateSwiper: function(position){
                 var self = this;
+                console.log('hien update');
                 $(".slide-gallery .swiper-container").each(function(index, element){
                     //console.log('element',element);
                     if (position != null){
@@ -604,16 +606,17 @@
             // setTimeout(function() {
             //     self.updateSwiper();
             // }, 3000);
+            //self.updateSwiper();
             document.addEventListener('scroll', function (event) {
                 var hT = $('#bestSellers-card').offset().top,
                     hH = $('#bestSellers-card').outerHeight(),
                     wH = $(window).height(),
                     wS = $(this).scrollTop();
                 if (wS > (hT+hH-wH) && (hT > wS) && (wS+wH > hT+hH)){
-                    //console.log('den so 1');
-                    self.updateSwiper(1);
+                    console.log('den so 1');
+                    self.updateSwiper();
                 } else {
-                    //console.log('den so 2');
+                    console.log('den so 2');
                     self.updateSwiper(0);
                 }
             }, true /*Capture event*/);
