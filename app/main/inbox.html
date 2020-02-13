@@ -147,7 +147,7 @@
             },
             markAsRead: function (id) {
                 var self = this;
-                console.log(id)
+                //console.log(id)
                 app.request.postJSON(window.config.url + 'api/services/app/Notification/SetNotificationAsRead',
                     {
                         id: id
@@ -188,7 +188,7 @@
                         }
                     },
                     success: function (data, status, xhr) {
-                        console.log(data);
+                        //console.log(data);
                         if (data.success) {
                             app.toast.show({
                                 text: 'Delete Notification successful.',
@@ -199,7 +199,7 @@
                     },
                     error: function (xhr, status) {
                         let response = JSON.parse(xhr.response);
-                        console.log(response);
+                        //console.log(response);
                         var dialog = app.dialog.create({
                             content: '<div class="block no-margin margin-top text-align-center"><i class="fa-stack fa-3x"><span class="fas fa-stack-2x fa-circle text-color-red"></span><span class="fas fa-stack-1x fa-inverse fa-times"></span></i><p>' + response.error.message + '.</p></div>',
                             buttons: [
@@ -225,7 +225,7 @@
                     response.result.items.forEach(element => {
                         element.notification.creationTimeDisplay = moment(element.notification.creationTime).fromNow();
                     });
-                    console.log('inbox', response);
+                    //console.log('inbox', response);
                     self.$setState({
                         inboxItems: response.result.items,
                         inboxNumber: response.result.unreadCount

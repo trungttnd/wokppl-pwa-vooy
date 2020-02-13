@@ -26,7 +26,7 @@
                                 </i>
                             </div>
                             <div class="item-inner">
-                                <div class="item-title">Canteen name: {{canteenName}}</div>
+                                <div class="item-title">{{canteenName}}</div>
                                 <div class="item-after">({{canteenId}})</div>
                             </div>
                         </div>
@@ -143,8 +143,8 @@
                 self.$setState({
                     name: localStorage.getItem('WOKPPL_name'),
                     mobile: localStorage.getItem('WOKPPL_mobile'),
-                    canteenName: 'Default',
-                    canteenId: '1'
+                    canteenName: localStorage.getItem('WOKPPL_canteenName'),
+                    canteenId: localStorage.getItem('WOKPPL_canteenId')
                 })
             }
         }

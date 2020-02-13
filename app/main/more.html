@@ -133,12 +133,12 @@
                         }
                     })
                     .catch(function (error) {
-                        console.log('Error unsubscribing', error);
+                        //console.log('Error unsubscribing', error);
                     })
                     .then(function () {
                         self.updateSubscriptionOnServer();
 
-                        console.log('User is unsubscribed.');
+                        //console.log('User is unsubscribed.');
                         isSubscribed = false;
                     });
             },
@@ -171,7 +171,7 @@
 						}
 					},
 					success: function (data, status, xhr) {
-						console.log(data);
+						//console.log(data);
 						if (data.success) {
 							// app.toast.show({
 							// 	text: 'User unsubcription successful.',
@@ -202,7 +202,7 @@
 				//unsubscription unser
 				swRegistration.pushManager.getSubscription()
                     .then(function (subscription) {
-                        console.log(subscription)
+                        //console.log(subscription)
                         isSubscribed = subscription === null ? false : true;
 						if (subscription) {
                             let sss = JSON.stringify(subscription);
@@ -214,7 +214,7 @@
                             })
                         }
                         //self.updateSubscriptionOnServer(subscription);
-                        console.log('isSubscribed', isSubscribed)
+                        //console.log('isSubscribed', isSubscribed)
                         if (isSubscribed) {
 							self.unsubscribeUser();
                         }
@@ -223,11 +223,11 @@
 				//logout
 				app.request.get(window.config.url + 'api/TokenAuth/LogOut',
 					function (suc) {
-						console.log('Logout success')
+						//console.log('Logout success')
 						console.log(suc);
 					},
 					function (err) {
-						console.log('Logout error')
+						//console.log('Logout error')
 						console.log(err);
 					});
 				//remove cookie

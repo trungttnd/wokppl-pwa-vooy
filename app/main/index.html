@@ -77,7 +77,7 @@
                         app.request.get(window.config.url + 'api/services/app/Session/GetCurrentLoginInformations',
                             function (suc) {
                                 let response = JSON.parse(suc)
-                                console.log(response.result.user)
+                                //console.log(response.result.user)
                                 if (response.result.user == null || response.result.user == 'null') {
                                     app.utils.custom.removeCookie();
                                     app.views.current.router.navigate('/signin');
@@ -87,6 +87,8 @@
                                     localStorage.setItem('WOKPPL_name', response.result.user.name);
                                     localStorage.setItem('WOKPPL_email', response.result.user.emailAddress);
                                     if (response.result.canteen != null && response.result.canteen != 'null') {
+                                        localStorage.setItem('WOKPPL_canteenName', response.result.canteen.name);
+                                        localStorage.setItem('WOKPPL_canteenId', response.result.canteen.id)
                                         if (response.result.canteen.tax != null && response.result.canteen.tax != 'null') {
                                             localStorage.setItem('WOKPPL_gst', response.result.canteen.tax.value);
                                             localStorage.setItem('WOKPPL_gstType', response.result.canteen.tax.type);

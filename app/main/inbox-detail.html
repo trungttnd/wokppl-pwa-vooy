@@ -74,8 +74,8 @@
                             <li>
                                 <div class="item-content">
                                     <div class="item-inner">
-                                        <div class="item-title">GST</div>
-                                        <div class="item-after">{{gst}}%</div>
+                                        <div class="item-title">GST Amount</div>
+                                        <div class="item-after">${{gstAmount.toFixed(2)}}</div>
                                     </div>
                                 </div>
                             </li>
@@ -118,6 +118,7 @@
                 orderItems: [],
                 total: 0,
                 gst: 0,
+                gstAmount: 0,
                 grandTotal: 0,
                 collectionTimeDisplay: '',
                 id: '',
@@ -193,6 +194,7 @@
                             detail: self.det,
                             orderItems: self.det.orderItems,
                             gst: self.det.taxPercent,
+                            gstAmount: self.det.orderItems.reduce((total, item) => {return total+=item.price*item.quantity},0) * (Number(self.det.taxPercent) / 100),
                             // total: self.det.payments[0].amount,
                             grandTotal: self.det.totalAmount
                         });

@@ -188,9 +188,9 @@
                             <li>
                                 <div class="item-content">
                                     <div class="item-inner">
-                                        <div class="item-title">GST</div>
+                                        <div class="item-title">GST Amount</div>
                                         <div class="item-after">
-                                            <input type="text" value="{{gst}}%" readonly="readonly" id="gstValue"
+                                            <input type="text" value="${{gstAmount.toFixed(2)}}" readonly="readonly" id="gstValue"
                                                 style="width: 3.4rem;" />
                                         </div>
                                     </div>
@@ -291,6 +291,7 @@
                 updateCartList: [],
                 discount: 0,
                 gst: +localStorage.getItem('WOKPPL_gst'),
+                gstAmount: 0,
                 gstType: localStorage.getItem('WOKPLL_gstType'), //type: inclusive (0)/exclusive (1)
                 grandTotal: 0,
                 redeem: 0,
@@ -969,6 +970,7 @@
                         orderSessionName: cartTemp.listOrderSession.name,
                         orderSessionTime: cartTemp.listOrderSession.startTime + " - " + cartTemp.listOrderSession.endTime,
                         grandTotal: self.gstType == 'inclusive' ? cartTemp.total : cartTemp.total * (1 + Number(self.gst) / 100),
+                        gstAmount: cartTemp.total * (Number(self.gst) / 100),
                         hourStart: arrStarTime[0],
                         hourEnd: arrEndTime[0],
                         minuteStart: arrStarTime[1],

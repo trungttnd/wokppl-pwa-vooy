@@ -6,32 +6,6 @@
             </div>
         </div>
         <div class="page-content  infinite-scroll-content" style="padding-top: 72px;">
-            <!-- <div class="block">
-                <div class="row">
-                    <div class="col-25">
-                        <div class="item-inner">
-                            <div class="item-title item-label">From Date</div>
-                            <div class="item-input-wrap">
-                                <input type="date" name="fromDate" value="{{startDate}}" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-25">
-                        <div class="item-inner">
-                            <div class="item-title item-label">To Date</div>
-                            <div class="item-input-wrap">
-                                <input type="date" name="toDate" value="{{endDate}}" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-25">
-                        <div class="item-inner">
-                            <button type="button" @click=search()
-                                class="button button-small button-round button-fill">Search</button>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
             <div class="block text-align-left" style="margin: 10px;"></div>
             <div class="content-block block-card text-align-left">
                 <div class="your-cart">All orders</div>
@@ -115,10 +89,8 @@
                 let tempItem = [];
                 app.request.getJSON(window.config.url + 'api/services/app/Preorder/GetTransactions',
                     { MaxResultCount: 5000 },
-                    //console.log(window.config.url + 'api/services/app/Preorder/GetTransactions?StartDate=' + startDate + '&&EndDate=' + endDate);
-                    //app.request.getJSON(window.config.url + 'api/services/app/Preorder/GetTransactions?StartDate=' + startDate + '&&EndDate=' + endDate,
                     function (suc) {
-                        console.log('suc.result', suc.result)
+                        //console.log('suc.result', suc.result)
                         if (startDate != null && endDate != null) {
                             let compDate = new Date();
                             for (let i = 0; i < suc.result.items.length; i++) {
@@ -140,14 +112,14 @@
                                 tempTotalPrice += tempItem[i].orderItems[j].price * tempItem[i].orderItems[j].quantity;
                                 //console.log(tempTotalPrice)
                             }
-                            tempItem[i].totalPrice = tempItem[i].taxType=="exclusive"? tempTotalPrice * (1 + tempItem[i].taxPercent/100): tempTotalPrice;
+                            tempItem[i].totalPrice = tempItem[i].taxType == "exclusive" ? tempTotalPrice * (1 + tempItem[i].taxPercent / 100) : tempTotalPrice;
                         }
                         self.$setState({
                             transactions: tempItem,
                             totalCount: suc.result.totalCount,
                             items: tempItem
                         });
-                        console.log(tempItem)
+                        //console.log(tempItem)
                         var html = '';
                         for (var i = 0; i < self.itemsPerLoad; i++) {
                             if (i < self.totalCount) {
@@ -178,13 +150,7 @@
                 let det = self.items.find(function (el) {
                     return el.id == id;
                 })
-                //console.log(det)
-                //chuyen thoi gian Collection time lay tu api ve local time
-                //let collectionTime = new Date(det.collectionTime+'.000Z')
-                //let collectionTime = new Date('2019-12-27T09:59:00.000Z')
-                //console.log('Date Time:', collectionTime.toLocaleString())
-                //det.collectionTime = collectionTime.toLocaleString()
-                console.log(det.collectionTime)
+                //console.log(det.collectionTime)
                 localStorage.setItem('detTransactions', JSON.stringify(det))
                 app.views.current.router.navigate('/transactions-detail');
             },
@@ -270,7 +236,7 @@
                 app.request.get(window.config.url + 'api/services/app/Preorder/GetSessions',
                     function (suc) {
                         let response = JSON.parse(suc)
-                        console.log('get session success', response)
+                        //console.log('get session success', response)
                         // self.$setState({
                         // 	session: response.result.items
                         // })
@@ -285,11 +251,11 @@
         mounted() {
             var self = this;
 
-            console.log('4-getcurrent-history')
+            //console.log('4-getcurrent-history')
             app.request.get(window.config.url + 'api/services/app/Session/GetCurrentLoginInformations',
                 function (suc) {
                     let response = JSON.parse(suc)
-                    console.log(response.result.user)
+                    //console.log(response.result.user)
                     if (response.result.user == null || response.result.user == 'null') {
                         app.utils.custom.removeCookie();
                         app.views.current.router.navigate('/signin');
