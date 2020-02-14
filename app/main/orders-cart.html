@@ -190,8 +190,8 @@
                                     <div class="item-inner">
                                         <div class="item-title">GST Amount</div>
                                         <div class="item-after">
-                                            <input type="text" value="${{gstAmount.toFixed(2)}}" readonly="readonly" id="gstValue"
-                                                style="width: 3.4rem;" />
+                                            <input type="text" value="${{gstAmount.toFixed(2)}}" readonly="readonly"
+                                                id="gstValue" style="width: 3.4rem;" />
                                         </div>
                                     </div>
                                 </div>
@@ -796,22 +796,44 @@
                     self.openDialog(message).open();
                     self.validateOk = false;
                 }
-                else if (self.compareDate(pickerDateTime, endDateTime)&& self.compareDate(startDateTime, dateTimeNowPlus)) {
-                    let message = "Collection time is invalid. Collection time should be range from " + self.messageTime + " to " + endDateTime.getHours() + ':' + (endDateTime.getMinutes() < 10 ? '0' + endDateTime.getMinutes() : endDateTime.getMinutes()) + "!";
-                    self.openDialog(message).open();
-                    self.validateOk = false;
+                // else if (self.compareDate(pickerDateTime, endDateTime)&& self.compareDate(startDateTime, dateTimeNowPlus)) {
+                //     let message = "Collection time is invalid. Collection time should be range from " + self.messageTime + " to " + endDateTime.getHours() + ':' + (endDateTime.getMinutes() < 10 ? '0' + endDateTime.getMinutes() : endDateTime.getMinutes()) + "!";
+                //     self.openDialog(message).open();
+                //     self.validateOk = false;
+                // }
+                // else if (self.compareDate(dateTimeNowPlus, endDateTime)) {
+                //     message = "The time it takes for us to prepare your order at this session is not enough. Please select another session."
+                //     self.openDialog(message).open();
+                //     self.validateOk = false;
+                // }
+                // else if (self.compareDate(dateTimeNowPlus, pickerDateTime)){
+                //     let message = "Collection time is invalid. Collection time should be range from " + self.messageTime + " to " + endDateTime.getHours() + ':' + (endDateTime.getMinutes() < 10 ? '0' + endDateTime.getMinutes() : endDateTime.getMinutes()) + "!";
+                //     self.openDialog(message).open();
+                //     self.validateOk = false;
+                // }
+                else if (self.compareDate(pickerDateTime, endDateTime)) {
+                    if (self.compareDate(dateTimeNowPlus, endDateTime)) {
+                        message = "The time it takes for us to prepare your order at this session is not enough. Please select another session."
+                        self.openDialog(message).open();
+                        self.validateOk = false;
+                    }
+                    else {
+                        let message = "Collection time is invalid. Collection time should be range from " + self.messageTime + " to " + endDateTime.getHours() + ':' + (endDateTime.getMinutes() < 10 ? '0' + endDateTime.getMinutes() : endDateTime.getMinutes()) + "!";
+                        self.openDialog(message).open();
+                        self.validateOk = false;
+                    }
                 }
-                else if (self.compareDate(dateTimeNowPlus, endDateTime)) {
+                else if (self.compareDate(dateTimeNowPlus, endDateTime)){
                     message = "The time it takes for us to prepare your order at this session is not enough. Please select another session."
-                    self.openDialog(message).open();
-                    self.validateOk = false;
+                        self.openDialog(message).open();
+                        self.validateOk = false;
                 }
                 else if (self.compareDate(dateTimeNowPlus, pickerDateTime)){
                     let message = "Collection time is invalid. Collection time should be range from " + self.messageTime + " to " + endDateTime.getHours() + ':' + (endDateTime.getMinutes() < 10 ? '0' + endDateTime.getMinutes() : endDateTime.getMinutes()) + "!";
                     self.openDialog(message).open();
                     self.validateOk = false;
                 }
-                else{
+                else {
                     acceptPicker = acceptPicker + 1;
                 }
                 if (acceptPicker == 2) {

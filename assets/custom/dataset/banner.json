@@ -2,23 +2,23 @@
 	"items": [
 		{
 			"id": 1,
-			"imgFileName": "f1.jpg"
+			"image": "f1.jpg"
 		},
 		{
 			"id": 2,
-			"imgFileName": "f2.jpg"
+			"image": "f2.jpg"
 		},
 		{
 			"id": 3,
-			"imgFileName": "f3.jpg"
+			"image": "f3.jpg"
 		},
 		{
 			"id": 4,
-			"imgFileName": "f4.jpg"
+			"image": "f4.jpg"
 		},
 		{
 			"id": 5,
-			"imgFileName": "f5.jpg"
+			"image": "f5.jpg"
 		}
 	]
 }

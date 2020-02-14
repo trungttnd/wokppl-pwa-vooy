@@ -24,12 +24,8 @@
                         <div class="swiper-slide">
                             <!-- <div class="imgBtn"> -->
                             <div class="bannerImg">
-                                <img class="slider{{number}}" src="./assets/custom/food/{{imgFileName}}">
+                                <img class="slider{{number}}" src="https://wokppl-api-staging.konbi.cloud/uploads/{{image}}">
                             </div>
-                            <!-- <div class="details">
-                                <h3>Product Name</h3>
-                                <span>$15.00</span>
-                            </div> -->
                         </div>
                         {{/each}}
                     </div>
@@ -98,7 +94,7 @@
                     </div>
                 </div>
             </div>
-           
+
             <div class="block text-align-center">
                 <p class="row">
                     <span></span>
@@ -220,7 +216,7 @@
                                     canteenName: response.result.canteen.name,
                                     logo: response.result.canteen.logoUrl
                                 })
-                                if (response.result.canteen.tax != null && response.result.canteen.tax != 'null'){
+                                if (response.result.canteen.tax != null && response.result.canteen.tax != 'null') {
                                     localStorage.setItem('WOKPPL_gst', response.result.canteen.tax.value);
                                     localStorage.setItem('WOKPPL_gstType', response.result.canteen.tax.type);
                                 }
@@ -244,22 +240,35 @@
                     function (err) {
                         console.log(err)
                     })
-
-                app.request.json(
-                    'assets/custom/dataset/banner.json',
-                    function (data) {
-                        if (data) {
-                            self.loadBannerImage(data.items);
-                        }
+                //get promotions
+                app.request.get(window.config.url + 'api/services/app/Product/GetPromotions', function (suc) {
+                    let response = JSON.parse(suc);
+                    if (response.result.items.length != 0) {
+                        console.log(response.result.items)
+                        self.loadBannerImage(response.result.items)
                     }
-                );
+                    else {
+                        app.request.json(
+                            'assets/custom/dataset/banner.json',
+                            function (data) {
+                                if (data) {
+                                    self.loadBannerImage(data.items);
+                                }
+                            }
+                        );
+                    }
+                },
+                    function (err) {
+                        console.log(err)
+                    });
+
             },
-            createInstantSwiper: function(position){
+            createInstantSwiper: function (position) {
                 var swiperInstances = {};
                 var self = this;
-                $(".slide-gallery .swiper-container").each(function(index, element){
+                $(".slide-gallery .swiper-container").each(function (index, element) {
                     var $this = $(this);
-                    if (position == index){
+                    if (position == index) {
                         $this.addClass("instance-" + index);
                         swiperInstances[index] = new Swiper(".instance-" + index, {
                             centeredSlides: true,
@@ -275,38 +284,39 @@
                     totalSwiperInstances: swiperInstances,
                 });
             },
-            updateSwiper: function(position){
+            updateSwiper: function (position) {
                 var self = this;
                 console.log('hien update');
-                $(".slide-gallery .swiper-container").each(function(index, element){
+                $(".slide-gallery .swiper-container").each(function (index, element) {
                     //console.log('element',element);
-                    if (position != null){
-                        if (position == index){
+                    if (position != null) {
+                        if (position == index) {
                             var swiper = this.swiper;
                             swiper.update();
                         }
                     }
-                    else{
+                    else {
                         var swiper = this.swiper;
                         swiper.update();
                     }
                 });
             },
-            loadDataBestSellers: function(){
+            loadDataBestSellers: function () {
                 var self = this;
                 $("#bestSellers-card").hide();
                 app.request.get(window.config.url + 'api/services/app/Product/GetPopularProducts',
                     { MaxResultCount: 5 },
-                    function (suc) {                      
+                    function (suc) {
                         let response = JSON.parse(suc);
-                        if (response.result.items != ''){
+                        console.log(response.result.items)
+                        if (response.result.items.length != 0) {
                             self.$setState({
                                 bestSellers: response.result.items,
                             });
                             self.createInstantSwiper(0);
                             self.loadBestSellersGalleryImage(response.result);
                         }
-                        else{
+                        else {
                             app.request.json(
                                 'assets/custom/dataset/popular.json',
                                 function (data) {
@@ -315,7 +325,7 @@
                                             bestSellers: data.result.items,
                                         });
                                         self.createInstantSwiper(0);
-                                        self.loadBestSellersGalleryImage(data.result);                                       
+                                        self.loadBestSellersGalleryImage(data.result);
                                     }
                                 }
                             );
@@ -325,14 +335,14 @@
                         console.log(err)
                     })
             },
-            loadDataNewProducts: function(){
+            loadDataNewProducts: function () {
                 var self = this;
                 $("#newProducts-card").hide();
                 app.request.get(window.config.url + 'api/services/app/Product/GetNewProducts',
                     { MaxResultCount: 5 },
                     function (suc) {
                         let response = JSON.parse(suc);
-                        if (response.result.items != ''){
+                        if (response.result.items.length != 0) {
                             self.$setState({
                                 newProducts: response.result.items,
                             });
@@ -340,7 +350,7 @@
                             self.updateSwiper(1);
                             self.loadNewProductsGalleryImage(response.result);
                         }
-                        else{
+                        else {
                             app.request.json(
                                 'assets/custom/dataset/newproduct.json',
                                 function (data) {
@@ -350,7 +360,7 @@
                                         });
                                         self.createInstantSwiper(1);
                                         self.updateSwiper(1);
-                                        self.loadNewProductsGalleryImage(data.result); 
+                                        self.loadNewProductsGalleryImage(data.result);
                                     }
                                 }
                             );
@@ -400,7 +410,7 @@
                             $('.bestSellersGallery' + i).height((($(window).width() / 2).toFixed(0) * 100 / 133.33).toFixed(0));
                         }
                     });
-                }  
+                }
                 $("#bestSellers-card").toggle();
                 //self.updateSwiper(0);
                 //self.createInstantSwiper(0);
@@ -457,9 +467,9 @@
                         theme: app.utils.theme.getLayout()
                     });
                     photoBrowser.open();
-                    setTimeout(function() {
+                    setTimeout(function () {
                         self.updateSwiper(1);
-                    }, 2000);  
+                    }, 2000);
                 });
             },
             initializeSliderHero: function (imageList) {
@@ -612,7 +622,7 @@
                     hH = $('#bestSellers-card').outerHeight(),
                     wH = $(window).height(),
                     wS = $(this).scrollTop();
-                if (wS > (hT+hH-wH) && (hT > wS) && (wS+wH > hT+hH)){
+                if (wS > (hT + hH - wH) && (hT > wS) && (wS + wH > hT + hH)) {
                     console.log('den so 1');
                     self.updateSwiper();
                 } else {
