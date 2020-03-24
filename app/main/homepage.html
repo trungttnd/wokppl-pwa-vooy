@@ -1,10 +1,11 @@
+
 <template>
     <div class="page no-swipeback" id="homepage">
         <div class="navbar" style="height: 80px;">
             <div class="navbar-inner">
                 <div class="left"></div>
                 <div class="center">
-                    <img class="theme-light-only" src="{{uploadUrl}}{{this.logo}}" height="80px" alt="" />
+                    <img class="theme-light-only" src="{{uploadUrl}}{{logo}}" height="80px" alt="" />
                 </div>
                 <div class="right"></div>
             </div>
@@ -24,10 +25,11 @@
                         <div class="swiper-slide">
                             <!-- <div class="imgBtn"> -->
                             <div class="bannerImg">
-                                <img class="slider{{number}}" src="https://wokppl-api-staging.konbi.cloud/uploads/{{image}}">
+                                <img class="slider{{number}}" src="{{image}}">
                             </div>
                         </div>
                         {{/each}}
+
                     </div>
                     <!-- Add Pagination -->
                     <div class="swiper-pagination"></div>
@@ -46,9 +48,15 @@
                                 <div class="swiper-slide">
                                     <div class="slide-media">
                                         <div class="slide-img">
+                                            {{#js_if "this.imageFileName==null"}}
                                             <img class="img-responsive bestSellersGallery{{this.number}}"
-                                                src="https://wokppl-api-staging.konbi.cloud/uploads/{{this.imageFileName}}"
-                                                alt="" />
+                                                src="assets/custom/img/noimage.jpg" alt=""
+                                                style="max-height: 145px; min-height: 145px;" />
+                                            {{else}}
+                                            <img class="img-responsive bestSellersGallery{{this.number}}"
+                                                src="{{this.imageFileNameDisplay}}" alt=""
+                                                style="max-height: 145px; min-height: 145px;" />
+                                            {{/js_if}}
                                         </div>
                                         <div class="details">
                                             <h3>{{this.name}}</h3>
@@ -76,10 +84,15 @@
                                 <div class="swiper-slide">
                                     <div class="slide-media">
                                         <div class="slide-img">
-                                            <!-- <img class="img-responsive" src="https://wokppl-api-staging.konbi.cloud/uploads/{{this.imgFileName}}" alt="" /> -->
+                                            {{#js_if "this.imageFileName==null"}}
+                                            <img class="img-responsive bestSellersGallery{{this.number}}"
+                                                src="assets/custom/img/noimage.jpg" alt=""
+                                                style="max-height: 145px; min-height: 145px;" />
+                                            {{else}}
                                             <img class="img-responsive newProductsGallery{{this.number}}"
-                                                src="https://wokppl-api-staging.konbi.cloud/uploads/{{this.imageFileName}}"
-                                                alt="" />
+                                                src="{{this.imageFileNameDisplay}}" alt=""
+                                                style="max-height: 145px; min-height: 145px;" />
+                                            {{/js_if}}
                                         </div>
                                         <div class="details">
                                             <h3>{{this.name}}</h3>
@@ -160,7 +173,7 @@
 
     .swiper-slide .details {
         box-sizing: border-box;
-        padding: 0px;
+        padding-left: 10px;
         margin-top: 0px;
     }
 
@@ -174,19 +187,25 @@
     .swiper-slide .details span {
         color: red;
     }
+
+    .swiper-slide .slide-media .slide-img {
+        min-height: 145px;
+        max-height: 145px;
+    }
 </style>
 <script>
     return {
         data: function () {
             return {
                 sliderHero: null,
+                test: null,
                 bannerArr: null,
                 bestSellers: null,
                 newProducts: null,
                 canteenName: 'Default',
-                logo: '',
+                logo: 'wokppllogo.png',
                 totalSwiperInstances: {},
-                uploadUrl: window.config.upload
+                uploadUrl: window.config.upload,
             }
         },
         methods: {
@@ -198,11 +217,9 @@
                         'Content-Type': 'application/json'
                     }
                 });
-                console.log('2-getcurrent-home')
                 app.request.get(window.config.url + 'api/services/app/Session/GetCurrentLoginInformations',
                     function (suc) {
                         let response = JSON.parse(suc)
-                        console.log(response.result.user)
                         if (response.result.user == null || response.result.user == 'null') {
                             app.utils.custom.removeCookie();
                             app.views.current.router.navigate('/signin');
@@ -214,8 +231,9 @@
                             if (response.result.canteen != null && response.result.canteen != 'null') {
                                 self.$setState({
                                     canteenName: response.result.canteen.name,
-                                    logo: response.result.canteen.logoUrl
+                                    logo: response.result.canteen.logoUrl != null ? response.result.canteen.logoUrl : 'wokppllogo.png'
                                 })
+                                localStorage.setItem('WOKPPL_logoUrl', response.result.canteen.logoUrl != null ? response.result.canteen.logoUrl : 'wokppllogo.png')
                                 if (response.result.canteen.tax != null && response.result.canteen.tax != 'null') {
                                     localStorage.setItem('WOKPPL_gst', response.result.canteen.tax.value);
                                     localStorage.setItem('WOKPPL_gstType', response.result.canteen.tax.type);
@@ -229,7 +247,8 @@
                                             console.log('getcurrentlogin', data);
                                             self.$setState({
                                                 canteenName: data.result.canteen.name,
-                                                logo: data.result.canteen.logoUrl
+                                                logo: data.result.canteen.logoUrl,
+
                                             });
                                         }
                                     }
@@ -244,7 +263,6 @@
                 app.request.get(window.config.url + 'api/services/app/Product/GetPromotions', function (suc) {
                     let response = JSON.parse(suc);
                     if (response.result.items.length != 0) {
-                        console.log(response.result.items)
                         self.loadBannerImage(response.result.items)
                     }
                     else {
@@ -286,7 +304,7 @@
             },
             updateSwiper: function (position) {
                 var self = this;
-                console.log('hien update');
+                //console.log('hien update');
                 $(".slide-gallery .swiper-container").each(function (index, element) {
                     //console.log('element',element);
                     if (position != null) {
@@ -308,10 +326,13 @@
                     { MaxResultCount: 5 },
                     function (suc) {
                         let response = JSON.parse(suc);
-                        console.log(response.result.items)
                         if (response.result.items.length != 0) {
                             self.$setState({
                                 bestSellers: response.result.items,
+                            });
+                            self.bestSellers.forEach(element => {
+                                element.imageFileNameDisplay = element.imageFileName != null ? window.config.upload + element.imageFileName : null;
+                                //console.log(element.imageFileName)
                             });
                             self.createInstantSwiper(0);
                             self.loadBestSellersGalleryImage(response.result);
@@ -322,7 +343,9 @@
                                 function (data) {
                                     if (data) {
                                         self.$setState({
+                                            uploadUrl: window.config.upload,
                                             bestSellers: data.result.items,
+
                                         });
                                         self.createInstantSwiper(0);
                                         self.loadBestSellersGalleryImage(data.result);
@@ -344,8 +367,13 @@
                         let response = JSON.parse(suc);
                         if (response.result.items.length != 0) {
                             self.$setState({
+                                uploadUrl: window.config.upload,
                                 newProducts: response.result.items,
                             });
+                            self.newProducts.forEach(element => {
+                                            element.imageFileNameDisplay = element.imageFileName != null ? window.config.upload + element.imageFileName : null;
+                                            //console.log(element.imageFileName)
+                                        });
                             self.createInstantSwiper(1);
                             self.updateSwiper(1);
                             self.loadNewProductsGalleryImage(response.result);
@@ -356,8 +384,9 @@
                                 function (data) {
                                     if (data) {
                                         self.$setState({
-                                            newProducts: data.result.items,
+                                            newProducts: data.result.items
                                         });
+                                        
                                         self.createInstantSwiper(1);
                                         self.updateSwiper(1);
                                         self.loadNewProductsGalleryImage(data.result);
@@ -373,14 +402,17 @@
             loadBestSellersGalleryImage: function (data) {
                 var self = this;
                 for (let i = 0; i < data.items.length; i++) {
-                    data.items[i].number = i;
+					data.items[i].number = i;
+					data.items[i].imageFileNameDisplay = data.items[i].imageFileName!=null? window.config.upload+data.items[i].imageFileName:null;
+					
                 }
                 self.initializeBestSellersPhotos(data);
             },
             loadNewProductsGalleryImage: function (data) {
                 var self = this;
                 for (let i = 0; i < data.items.length; i++) {
-                    data.items[i].number = i;
+					data.items[i].number = i;
+					data.items[i].imageFileNameDisplay = data.items[i].imageFileName!=null? window.config.upload+data.items[i].imageFileName:null;
                 }
                 self.initializeNewProductsPhotos(data);
             },
@@ -388,6 +420,7 @@
                 var self = this;
                 for (let i = 0; i < imageList.length; i++) {
                     imageList[i].number = i;
+                    imageList[i].image = imageList[i].image != null ? window.config.upload + imageList[i].image : null;
                 }
                 self.$setState({
                     bannerArr: imageList,
@@ -399,18 +432,18 @@
                 var listImg = [];
                 var tempWidth = 0;
                 var tempHeight = 0;
-                for (let i = 0; i < data.items.length; i++) {
-                    $('.bestSellersGallery' + i).on('load', function (event) {
-                        // Lay ti le 4:3
-                        // 133.33 la ti le % cua width va height
-                        tempWidth = $('.bestSellersGallery' + i).prop('naturalWidth');
-                        tempHeight = $('.bestSellersGallery' + i).prop('naturalHeight');
-                        if (tempWidth > $(window).width() || ((tempWidth * 100 / tempHeight).toFixed(2) != 133.33)) {
-                            //$('.bestSellersGallery' + i).width((($(window).width() - 10) / 3).toFixed(0));
-                            $('.bestSellersGallery' + i).height((($(window).width() / 2).toFixed(0) * 100 / 133.33).toFixed(0));
-                        }
-                    });
-                }
+                // for (let i = 0; i < data.items.length; i++) {
+                //     $('.bestSellersGallery' + i).on('load', function (event) {
+                //         // Lay ti le 4:3
+                //         // 133.33 la ti le % cua width va height
+                //         tempWidth = $('.bestSellersGallery' + i).prop('naturalWidth');
+                //         tempHeight = $('.bestSellersGallery' + i).prop('naturalHeight');
+                //         if (tempWidth > $(window).width() || ((tempWidth * 100 / tempHeight).toFixed(2) != 133.33)) {
+                //             //$('.bestSellersGallery' + i).width((($(window).width() - 10) / 3).toFixed(0));
+                //             $('.bestSellersGallery' + i).height((($(window).width() / 2).toFixed(0) * 100 / 133.33).toFixed(0));
+                //         }
+                //     });
+                // }
                 $("#bestSellers-card").toggle();
                 //self.updateSwiper(0);
                 //self.createInstantSwiper(0);
@@ -437,18 +470,18 @@
                 var listImg = [];
                 var tempWidth = 0;
                 var tempHeight = 0;
-                for (let i = 0; i < data.items.length; i++) {
-                    $('.newProductsGallery' + i).on('load', function (event) {
-                        // Lay ti le 4:3
-                        // 133.33 la ti le % cua width va height
-                        tempWidth = $('.newProductsGallery' + i).prop('naturalWidth');
-                        tempHeight = $('.newProductsGallery' + i).prop('naturalHeight');
-                        if (tempWidth > $(window).width() || ((tempWidth * 100 / tempHeight).toFixed(2) != 133.33)) {
-                            //$('.newProductsGallery' + i).width((($(window).width() - 10) / 3).toFixed(0));
-                            $('.newProductsGallery' + i).height((($(window).width() / 2).toFixed(0) * 100 / 133.33).toFixed(0));
-                        }
-                    });
-                }
+                // for (let i = 0; i < data.items.length; i++) {
+                //     $('.newProductsGallery' + i).on('load', function (event) {
+                //         // Lay ti le 4:3
+                //         // 133.33 la ti le % cua width va height
+                //         tempWidth = $('.newProductsGallery' + i).prop('naturalWidth');
+                //         tempHeight = $('.newProductsGallery' + i).prop('naturalHeight');
+                //         if (tempWidth > $(window).width() || ((tempWidth * 100 / tempHeight).toFixed(2) != 133.33)) {
+                //             //$('.newProductsGallery' + i).width((($(window).width() - 10) / 3).toFixed(0));
+                //             $('.newProductsGallery' + i).height((($(window).width() / 2).toFixed(0) * 100 / 133.33).toFixed(0));
+                //         }
+                //     });
+                // }
                 $("#newProducts-card").toggle();
                 //self.updateSwiper(1);
                 //self.createInstantSwiper(1);
@@ -521,7 +554,6 @@
                 app.request.get(window.config.url + 'api/services/app/Preorder/GetSessions',
                     function (suc) {
                         let response = JSON.parse(suc)
-                        console.log('get session success', response)
                         // self.$setState({
                         // 	session: response.result.items
                         // })
@@ -536,7 +568,6 @@
                 app.request.get(window.config.url + 'api/services/app/Preorder/GetCategories',
                     function (suc) {
                         let response = JSON.parse(suc)
-                        console.log('get category success', response)
                         // self.$setState({
                         // 	categories: response.result.items
                         // })
@@ -554,7 +585,6 @@
                     applicationServerKey: applicationServerKey
                 })
                     .then(function (subscription) {
-                        console.log('User is subscribed');
                         self.updateSubscriptionOnServer(subscription);
                         isSubscribed = true;
                     })
@@ -564,16 +594,6 @@
                 if (subscription) {
                     let sss = JSON.stringify(subscription);
                     let output = JSON.parse(sss)
-                    // self.$setState({
-                    //     endpoint: output.endpoint,
-                    //     p256dh: output.keys.p256dh,
-                    //     auth: output.keys.auth
-                    // })
-                    // //console.log('subscription',subscription)
-                    // console.log('sss',output)
-                    console.log('endpoint', output.endpoint);
-                    console.log('p256dh', output.keys.p256dh)
-                    console.log('auth', output.keys.auth)
                     app.request.postJSON(window.config.url + 'api/services/app/Device/Create', {
                         name: 'Name',
                         pushEndPoint: output.endpoint,
@@ -581,7 +601,6 @@
                         pushAuth: output.keys.auth
                     },
                         function (suc) {
-                            console.log(suc);
                             app.toast.show({
                                 text: 'User subcription successful.',
                                 position: 'bottom',
@@ -608,11 +627,18 @@
         },
         mounted() {
             var self = this;
+            self.$setState({
+                uploadUrl: window.config.upload
+            });
+
             self.loadData();
             self.loadDataBestSellers();
             self.loadDataNewProducts();
             self.loadSession();
             self.loadCategory();
+
+
+
             // setTimeout(function() {
             //     self.updateSwiper();
             // }, 3000);
@@ -623,10 +649,10 @@
                     wH = $(window).height(),
                     wS = $(this).scrollTop();
                 if (wS > (hT + hH - wH) && (hT > wS) && (wS + wH > hT + hH)) {
-                    console.log('den so 1');
+                    //console.log('den so 1');
                     self.updateSwiper();
                 } else {
-                    console.log('den so 2');
+                    //console.log('den so 2');
                     self.updateSwiper(0);
                 }
             }, true /*Capture event*/);
@@ -645,10 +671,10 @@
             //subscription user
             swRegistration.pushManager.getSubscription()
                 .then(function (subscription) {
-                    console.log(subscription)
+                    //console.log(subscription)
                     isSubscribed = subscription === null ? false : true;
                     //self.updateSubscriptionOnServer(subscription);
-                    console.log('isSubscribed', isSubscribed)
+                    //console.log('isSubscribed', isSubscribed)
                     if (!isSubscribed) {
                         self.subscribeUser();
                     }
@@ -657,6 +683,7 @@
         on: {
             pageInit: function () {
                 console.log('pageInit');
+
             }
         }
     }

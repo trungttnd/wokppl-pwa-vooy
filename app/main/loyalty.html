@@ -2,7 +2,7 @@
     <div class="page">
         <div class="navbar" style="height: 72px;">
             <div class="navbar-inner">
-                <img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="60px" alt="" />
+                <img class="theme-light-only" src="{{uploadUrl}}{{logo}}" height="60px" alt="" />
                 <div class="right">
                     <a href="#" class="link back">
                         <span>Back</span>
@@ -23,13 +23,11 @@
 
                 <p>Loyalty points: {{loyalty.point}}</p>
                 <p>Corresponding: ${{displayRedeem.toFixed(2)}}</p>
-                {{#if this.loyalty.expiringPoints.reminder}}
                 {{#js_if "this.loyalty.expiringPoints.points>'0'"}}
                 <p> {{loyalty.expiringPoints.points}} points will expire on
                     {{loyalty.expiringPoints.expiryDate.substr(8,2)}}/{{loyalty.expiringPoints.expiryDate.substr(5,2)}}/{{loyalty.expiringPoints.expiryDate.substr(0,4)}}
                 </p>
                 {{/js_if}}
-                {{/if}}
             </div>
             <div class="content-block text-align-center">
                 <span class="history-points">History points</span>
@@ -118,7 +116,9 @@
                 displayRedeem: 0.00,
                 historyLoyList: [],
                 earnedList: [],
-                usedList: []
+                usedList: [],
+                uploadUrl: window.config.upload, 
+                logo: localStorage.getItem('WOKPPL_logoUrl') 
             }
         },
         methods: {
@@ -143,7 +143,6 @@
                 app.request.get(window.config.url + 'api/services/app/Preorder/GetCurrentLoyaltyPointInfo',
                     function (suc) {
                         let response = JSON.parse(suc)
-                        console.log(response.result)
                         self.$setState({
                             loyalty: response.result,
                             displayRedeem: response.result.point * response.result.redeemPointRate,

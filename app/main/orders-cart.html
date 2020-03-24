@@ -2,7 +2,7 @@
     <div class="page">
         <div class="navbar" style="height: 72px;">
             <div class="navbar-inner">
-                <img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="60px" alt="" />
+                <img class="theme-light-only" src="{{uploadUrl}}{{logo}}" height="60px" alt="" />
                 <div class="right">
 
                 </div>
@@ -87,9 +87,7 @@
                                         width="80" />
                                 </div>
                                 {{else}}
-                                <div class="item-media"><img
-                                        src="https://wokppl-api-staging.konbi.cloud/uploads/{{this.imageFileName}}"
-                                        width="80" />
+                                <div class="item-media"><img src="{{this.imageFileNameDisplay}}" width="80" />
                                 </div>
                                 {{/if}}
                                 <div class="item-inner">
@@ -279,10 +277,10 @@
     return {
         data: function () {
             return {
+                uploadUrl: window.config.upload,
                 quantity: 0,
                 total: 0,
-                productList: [
-                ],
+                productList: [],
                 listOrderDate: null,
                 listOrderSession: null,
                 orderSessionName: null,
@@ -317,6 +315,8 @@
                 },
                 defaultPickerDate: new Date(),
                 isFutureOrder: false,
+                uploadUrl: window.config.upload, 
+                logo: localStorage.getItem('WOKPPL_logoUrl')
 
             }
         },
@@ -339,7 +339,8 @@
 
                 //API GetCurrentLoyaltyPointInfo
                 setTimeout(function () {
-                    app.request.get(window.config.url + 'api/services/app/Preorder/GetCurrentLoyaltyPointInfo',
+                    app.request.get(window.config.url +
+                        'api/services/app/Preorder/GetCurrentLoyaltyPointInfo',
                         function (suc) {
                             let response = JSON.parse(suc)
                             console.log(response.result)
@@ -371,9 +372,12 @@
                 console.log(id);
                 for (let i = 0; i < self.updateCartList.items.length; i++) {
                     if (self.updateCartList.items[i].indexProduct == indexProduct) {
-                        self.updateCartList.quantity = self.updateCartList.quantity - self.updateCartList.items[i].orderQuantity;
-                        self.updateCartList.total = self.updateCartList.total - self.updateCartList.items[i].price * self.updateCartList.items[i].orderQuantity;
-                        tempGrandTotal = self.grandTotal - self.updateCartList.items[i].price * self.updateCartList.items[i].orderQuantity;
+                        self.updateCartList.quantity = self.updateCartList.quantity - self.updateCartList.items[i]
+                            .orderQuantity;
+                        self.updateCartList.total = self.updateCartList.total - self.updateCartList.items[i].price *
+                            self.updateCartList.items[i].orderQuantity;
+                        tempGrandTotal = self.grandTotal - self.updateCartList.items[i].price * self.updateCartList
+                            .items[i].orderQuantity;
                         tempAvailableNumbers = self.updateCartList.items[i].orderQuantity;
                         console.log('tempAvailableNumbers', tempAvailableNumbers);
                         self.updateCartList.items.splice(i, 1);
@@ -404,7 +408,8 @@
                 for (let i = 0; i < self.updateCartList.items.length; i++) {
                     if (self.updateCartList.items[i].id == id) {
                         self.updateCartList.items[i].availableNumbers += tempAvailableNumbers;
-                        console.log('self.updateCartList.items[i].availableNumbers', self.updateCartList.items[i].availableNumbers);
+                        console.log('self.updateCartList.items[i].availableNumbers', self.updateCartList.items[i]
+                            .availableNumbers);
                     }
                 }
                 console.log(self.updateCartList);
@@ -516,8 +521,10 @@
                     // var hours = dat.getHours();
                     // hours += offset;
                     // dat.setHours(hours);
-                    let startTime = new Date(arr[2], arr[1] - 1, arr[0], sessionTemp.startTime.split(':')[0], sessionTemp.startTime.split(':')[1])
-                    let endTime = new Date(arr[2], arr[1] - 1, arr[0], sessionTemp.endTime.split(':')[0], sessionTemp.endTime.split(':')[1])
+                    let startTime = new Date(arr[2], arr[1] - 1, arr[0], sessionTemp.startTime.split(':')[0],
+                        sessionTemp.startTime.split(':')[1])
+                    let endTime = new Date(arr[2], arr[1] - 1, arr[0], sessionTemp.endTime.split(':')[0],
+                        sessionTemp.endTime.split(':')[1])
                     self.newOrder.collectionTime = dat.toISOString();
                     //self.newOrder.type = 
                     self.newOrder.sessionId = self.listOrderSession.id;
@@ -555,8 +562,7 @@
                     console.log('newOrder', self.newOrder)
                     //app.views.current.router.navigate('/orders-finish'); 
                     //create new order
-                    app.request.postJSON(window.config.url + 'api/services/app/Preorder/Checkout',
-                        {
+                    app.request.postJSON(window.config.url + 'api/services/app/Preorder/Checkout', {
                             payWithPointEnabled: self.checkToggle,
                             //totalAmount: self.grandTotal,
                             collectionTime: self.newOrder.collectionTime,
@@ -579,19 +585,18 @@
                             let response = JSON.parse(err.response)
                             self.disableCloseButton = false;
                             var dialog = app.dialog.create({
-                                content: '<div class="block no-margin margin-top text-align-center"><i class="fa-stack fa-3x"><span class="fas fa-stack-2x fa-circle text-color-red"></span><span class="fas fa-stack-1x fa-inverse fa-times"></span></i><p>' + response.error.message + '.</p></div>',
-                                buttons: [
-                                    {
-                                        text: 'Cancel',
-                                        bold: true,
-                                        color: 'red',
-                                        onClick: function () {
-                                            self.$setState({
-                                                disableCloseButton: false,
-                                            })
-                                        }
+                                content: '<div class="block no-margin margin-top text-align-center"><i class="fa-stack fa-3x"><span class="fas fa-stack-2x fa-circle text-color-red"></span><span class="fas fa-stack-1x fa-inverse fa-times"></span></i><p>' +
+                                    response.error.message + '.</p></div>',
+                                buttons: [{
+                                    text: 'Cancel',
+                                    bold: true,
+                                    color: 'red',
+                                    onClick: function () {
+                                        self.$setState({
+                                            disableCloseButton: false,
+                                        })
                                     }
-                                ]
+                                }]
                             });
                             dialog.open();
                         })
@@ -612,8 +617,10 @@
                 let orderDateTempDefault = orderDateTempNew
                 orderDateTempNew = new Date(orderDateTempNew);
                 let todayNew = new Date();
-                let todayWithDayOnly = new Date((todayNew.getMonth() + 1) + '/' + todayNew.getDate() + '/' + todayNew.getFullYear());
-                let orderDateTempWithDayOnly = new Date((orderDateTempNew.getMonth() + 1) + '/' + orderDateTempNew.getDate() + '/' + orderDateTempNew.getFullYear());
+                let todayWithDayOnly = new Date((todayNew.getMonth() + 1) + '/' + todayNew.getDate() + '/' +
+                    todayNew.getFullYear());
+                let orderDateTempWithDayOnly = new Date((orderDateTempNew.getMonth() + 1) + '/' + orderDateTempNew
+                    .getDate() + '/' + orderDateTempNew.getFullYear());
                 if (orderDateTempWithDayOnly > todayWithDayOnly) {
                     let dateTimeDefault = orderDateTempDefault + ' ' + sessionTemp.startTime;
                     dateTimeDefault = new Date(dateTimeDefault);
@@ -625,7 +632,8 @@
                 console.log('today', today);
                 // Het doan compare
 
-                today.setTime(today.getTime() + (sessionTemp.preparationTime * 60 * 1000) + (sessionTemp.bufferTime * 60 * 1000));
+                today.setTime(today.getTime() + (sessionTemp.preparationTime * 60 * 1000) + (sessionTemp
+                    .bufferTime * 60 * 1000));
                 console.log('today', today);
                 today = new Date(today);
                 console.log('today.getHours()', today.getHours());
@@ -637,7 +645,9 @@
                     rotateEffect: true,
                     url: "/orders-cart",
                     value: [
-                        (today.getHours() >= +self.hourStart && today.getHours() <= +self.hourEnd) ? (today.getHours() < 10 ? '0' + today.getHours() : today.getHours()) : self.hourStart,
+                        (today.getHours() >= +self.hourStart && today.getHours() <= +self.hourEnd) ? (
+                            today.getHours() < 10 ? '0' + today.getHours() : today.getHours()) : self
+                        .hourStart,
                         today.getMinutes() < 10 ? '0' + today.getMinutes() : today.getMinutes()
                     ],
                     formatValue: function (values) {
@@ -648,7 +658,9 @@
                         {
                             values: (function () {
                                 var arr = [];
-                                for (var i = +self.hourStart; i <= +self.hourEnd; i++) { i < 10 ? arr.push('0' + i) : arr.push(i); }
+                                for (var i = +self.hourStart; i <= +self.hourEnd; i++) {
+                                    i < 10 ? arr.push('0' + i) : arr.push(i);
+                                }
                                 return arr;
                             })(),
                         },
@@ -661,7 +673,9 @@
                         {
                             values: (function () {
                                 var arr = [];
-                                for (var i = minStart; i <= minEnd; i++) { arr.push(i < 10 ? '0' + i : i); }
+                                for (var i = minStart; i <= minEnd; i++) {
+                                    arr.push(i < 10 ? '0' + i : i);
+                                }
                                 return arr;
                             })(),
                         }
@@ -686,21 +700,20 @@
                 var self = this;
                 var dialog = app.dialog.create({
                     title: '',
-                    content: '<div class="block no-margin no-padding text-align-center" style="font-size: 14px;"><img src="' + window.config.app.logo + '" width="84" alt="" /><p>' + message + '</p></div>',
+                    content: '<div class="block no-margin no-padding text-align-center" style="font-size: 14px;"><img src="' +
+                        window.config.app.logo + '" width="84" alt="" /><p>' + message + '</p></div>',
                     verticalButtons: true,
-                    buttons: [
-                        {
-                            text: 'Ok',
-                            bold: true,
-                            color: 'green',
-                            onClick: function () {
-                                self.$('input[id=timepicker-24]').val(self.setTimeNow());
-                                self.$setState({
-                                    disableCloseButton: false,
-                                })
-                            }
-                        },
-                    ]
+                    buttons: [{
+                        text: 'Ok',
+                        bold: true,
+                        color: 'green',
+                        onClick: function () {
+                            self.$('input[id=timepicker-24]').val(self.setTimeNow());
+                            self.$setState({
+                                disableCloseButton: false,
+                            })
+                        }
+                    }, ]
                 });
                 return dialog;
             },
@@ -708,10 +721,12 @@
                 var self = this;
                 let nowDateTime = new Date();
                 let sessionTemp = JSON.parse(localStorage.getItem('listOrderSession'));
-                nowDateTime.setTime(nowDateTime.getTime() + (sessionTemp.preparationTime * 60 * 1000) + (sessionTemp.bufferTime * 60 * 1000));
+                nowDateTime.setTime(nowDateTime.getTime() + (sessionTemp.preparationTime * 60 * 1000) + (sessionTemp
+                    .bufferTime * 60 * 1000));
                 nowDateTime = new Date(nowDateTime);
                 var nowHours = nowDateTime.getHours() < 10 ? '0' + nowDateTime.getHours() : nowDateTime.getHours();
-                var nowMinutes = nowDateTime.getMinutes() < 10 ? '0' + nowDateTime.getMinutes() : nowDateTime.getMinutes();
+                var nowMinutes = nowDateTime.getMinutes() < 10 ? '0' + nowDateTime.getMinutes() : nowDateTime
+                    .getMinutes();
                 var timeNow = nowHours + ':' + nowMinutes;
                 return timeNow;
             },
@@ -720,15 +735,15 @@
 
                 if (values == null) {
                     var timePicker = self.$('input[id=timepicker-24]').val();
-                }
-                else {
+                } else {
                     var timePicker = values[0] + ':' + values[1];
                 }
                 let startDateTimeExtend = new Date();
                 let dateTimeNow = new Date();
                 let dateTimeNowExtend = new Date();
                 let dateTimeNowPlus = new Date();
-                let dayNow = (dateTimeNow.getMonth() + 1) + '/' + dateTimeNow.getDate() + '/' + dateTimeNow.getFullYear();
+                let dayNow = (dateTimeNow.getMonth() + 1) + '/' + dateTimeNow.getDate() + '/' + dateTimeNow
+                    .getFullYear();
                 let acceptPicker = 0;
                 let sessionTemp = JSON.parse(localStorage.getItem('listOrderSession'));
                 let orderDateTemp = JSON.parse(localStorage.getItem('listOrderDate'));
@@ -741,7 +756,8 @@
                 startDateTime = new Date(startDateTime);
                 console.log('Chan lai startDateTime', startDateTime, startDateTime.getHours());
                 console.log('sessionTemp', sessionTemp);
-                startDateTimeExtend.setTime(startDateTime.getTime() + (sessionTemp.preparationTime * 60 * 1000) + (sessionTemp.bufferTime * 60 * 1000));
+                startDateTimeExtend.setTime(startDateTime.getTime() + (sessionTemp.preparationTime * 60 * 1000) + (
+                    sessionTemp.bufferTime * 60 * 1000));
                 startDateTimeExtend = new Date(startDateTimeExtend);
                 console.log('Chan lai startDateTimeExtend', startDateTimeExtend);
                 // Gan ngay lay tu session voi endtime
@@ -753,17 +769,20 @@
                 // Gan ngay hien tai voi timepicker
                 let tempDateTimeNow = dayNow + ' ' + timePicker;
                 tempDateTimeNow = new Date(tempDateTimeNow);
-                dateTimeNowPlus.setTime(dateTimeNow.getTime() + (sessionTemp.preparationTime * 60 * 1000) + (sessionTemp.bufferTime * 60 * 1000));
+                dateTimeNowPlus.setTime(dateTimeNow.getTime() + (sessionTemp.preparationTime * 60 * 1000) + (
+                    sessionTemp.bufferTime * 60 * 1000));
                 dateTimeNowExtend.setTime(tempDateTimeNow.getTime());
                 dateTimeNowExtend = new Date(dateTimeNowExtend);
 
-                console.log(startDateTimeExtend, dateTimeNowPlus, self.compareDate(startDateTimeExtend, dateTimeNowPlus))
+                console.log(startDateTimeExtend, dateTimeNowPlus, self.compareDate(startDateTimeExtend,
+                    dateTimeNowPlus))
                 // if (startDateTimeExtend > dateTimeNowPlus) 
                 if (self.compareDate(startDateTimeExtend, dateTimeNowPlus)) {
-                    self.messageTime = startDateTimeExtend.getHours() + ':' + (startDateTimeExtend.getMinutes() < 10 ? '0' + startDateTimeExtend.getMinutes() : startDateTimeExtend.getMinutes());
-                }
-                else {
-                    self.messageTime = dateTimeNowPlus.getHours() + ':' + (dateTimeNowPlus.getMinutes() < 10 ? '0' + dateTimeNowPlus.getMinutes() : dateTimeNowPlus.getMinutes());
+                    self.messageTime = startDateTimeExtend.getHours() + ':' + (startDateTimeExtend.getMinutes() <
+                        10 ? '0' + startDateTimeExtend.getMinutes() : startDateTimeExtend.getMinutes());
+                } else {
+                    self.messageTime = dateTimeNowPlus.getHours() + ':' + (dateTimeNowPlus.getMinutes() < 10 ? '0' +
+                        dateTimeNowPlus.getMinutes() : dateTimeNowPlus.getMinutes());
                 }
 
                 // let message = "Collection time is invalid. Collection time should be range from " + self.messageTime + " to " + endDateTime.getHours() + ':' + (endDateTime.getMinutes() < 10 ? '0' + endDateTime.getMinutes() : endDateTime.getMinutes()) + "!";
@@ -792,52 +811,37 @@
                 //     acceptPicker = acceptPicker + 1;
                 // }
                 if (self.compareDate(startDateTimeExtend, pickerDateTime)) {
-                    let message = "Collection time is invalid. Collection time should be range from " + self.messageTime + " to " + endDateTime.getHours() + ':' + (endDateTime.getMinutes() < 10 ? '0' + endDateTime.getMinutes() : endDateTime.getMinutes()) + "!";
+                    let message = "Collection time is invalid. Collection time should be range from " + self
+                        .messageTime + " to " + endDateTime.getHours() + ':' + (endDateTime.getMinutes() < 10 ?
+                            '0' + endDateTime.getMinutes() : endDateTime.getMinutes()) + "!";
                     self.openDialog(message).open();
                     self.validateOk = false;
-                }
-                // else if (self.compareDate(pickerDateTime, endDateTime)&& self.compareDate(startDateTime, dateTimeNowPlus)) {
-                //     let message = "Collection time is invalid. Collection time should be range from " + self.messageTime + " to " + endDateTime.getHours() + ':' + (endDateTime.getMinutes() < 10 ? '0' + endDateTime.getMinutes() : endDateTime.getMinutes()) + "!";
-                //     self.openDialog(message).open();
-                //     self.validateOk = false;
-                // }
-                // else if (self.compareDate(dateTimeNowPlus, endDateTime)) {
-                //     message = "The time it takes for us to prepare your order at this session is not enough. Please select another session."
-                //     self.openDialog(message).open();
-                //     self.validateOk = false;
-                // }
-                // else if (self.compareDate(dateTimeNowPlus, pickerDateTime)){
-                //     let message = "Collection time is invalid. Collection time should be range from " + self.messageTime + " to " + endDateTime.getHours() + ':' + (endDateTime.getMinutes() < 10 ? '0' + endDateTime.getMinutes() : endDateTime.getMinutes()) + "!";
-                //     self.openDialog(message).open();
-                //     self.validateOk = false;
-                // }
-                else if (self.compareDate(pickerDateTime, endDateTime)) {
-                    if (self.compareDate(dateTimeNowPlus, endDateTime)) {
-                        message = "The time it takes for us to prepare your order at this session is not enough. Please select another session."
-                        self.openDialog(message).open();
-                        self.validateOk = false;
-                    }
-                    else {
-                        let message = "Collection time is invalid. Collection time should be range from " + self.messageTime + " to " + endDateTime.getHours() + ':' + (endDateTime.getMinutes() < 10 ? '0' + endDateTime.getMinutes() : endDateTime.getMinutes()) + "!";
-                        self.openDialog(message).open();
-                        self.validateOk = false;
-                    }
-                }
-                else if (self.compareDate(dateTimeNowPlus, endDateTime)){
-                    message = "The time it takes for us to prepare your order at this session is not enough. Please select another session."
-                        self.openDialog(message).open();
-                        self.validateOk = false;
-                }
-                else if (self.compareDate(dateTimeNowPlus, pickerDateTime)){
-                    let message = "Collection time is invalid. Collection time should be range from " + self.messageTime + " to " + endDateTime.getHours() + ':' + (endDateTime.getMinutes() < 10 ? '0' + endDateTime.getMinutes() : endDateTime.getMinutes()) + "!";
+                } else if (self.compareDate(pickerDateTime, endDateTime) && self.compareDate(startDateTime,
+                        dateTimeNowPlus)) {
+                    let message = "Collection time is invalid. Collection time should be range from " + self
+                        .messageTime + " to " + endDateTime.getHours() + ':' + (endDateTime.getMinutes() < 10 ?
+                            '0' + endDateTime.getMinutes() : endDateTime.getMinutes()) + "!";
                     self.openDialog(message).open();
                     self.validateOk = false;
-                }
-                else {
+                } else if (self.compareDate(dateTimeNowPlus, endDateTime)) {
+                    message =
+                        "The time it takes for us to prepare your order at this session is not enough. Please select another session."
+                    self.openDialog(message).open();
+                    self.validateOk = false;
+                } else if (self.compareDate(dateTimeNowPlus, pickerDateTime)) {
+                    let message = "Collection time is invalid. Collection time should be range from " + self
+                        .messageTime + " to " + endDateTime.getHours() + ':' + (endDateTime.getMinutes() < 10 ?
+                            '0' + endDateTime.getMinutes() : endDateTime.getMinutes()) + "!";
+                    self.openDialog(message).open();
+                    self.validateOk = false;
+                } else {
                     acceptPicker = acceptPicker + 1;
                 }
                 if (acceptPicker == 2) {
-                    self.$('input[id=timepicker-24]').val((dateTimeNowExtend.getHours() < 10 ? '0' + dateTimeNowExtend.getHours() : dateTimeNowExtend.getHours()) + ':' + (dateTimeNowExtend.getMinutes() < 10 ? '0' + dateTimeNowExtend.getMinutes() : dateTimeNowExtend.getMinutes()));
+                    self.$('input[id=timepicker-24]').val((dateTimeNowExtend.getHours() < 10 ? '0' +
+                        dateTimeNowExtend.getHours() : dateTimeNowExtend.getHours()) + ':' + (
+                        dateTimeNowExtend.getMinutes() < 10 ? '0' + dateTimeNowExtend.getMinutes() :
+                        dateTimeNowExtend.getMinutes()));
                 }
 
                 console.log('startDateTime', startDateTime);
@@ -879,26 +883,24 @@
                         if (response.result.user == null || response.result.user == 'null') {
                             app.utils.custom.removeCookie();
                             app.views.current.router.navigate('/signin');
-                        }
-                        else {
+                        } else {
                             localStorage.setItem('WOKPPL_mobile', response.result.user.userName);
                             localStorage.setItem('WOKPPL_name', response.result.user.name);
                             localStorage.setItem('WOKPPL_email', response.result.user.emailAddress);
                             if (response.result.canteen != null && response.result.canteen != 'null') {
-                                if (response.result.canteen.tax != null && response.result.canteen.tax != 'null') {
+                                if (response.result.canteen.tax != null && response.result.canteen.tax !=
+                                    'null') {
                                     self.$setState({
                                         gst: response.result.canteen.tax.value,
                                         gstType: response.result.canteen.tax.type //inclusive, exclusive
                                     })
                                     localStorage.setItem('WOKPPL_gst', response.result.canteen.tax.value);
                                     localStorage.setItem('WOKPPL_gstType', response.result.canteen.tax.type);
-                                }
-                                else {
+                                } else {
                                     self.gst = 0;
                                     self.gstType = 'exclusive';
                                 }
-                            }
-                            else {
+                            } else {
                                 self.gst = 0;
                                 self.gstType = 'exclusive';
                             }
@@ -924,8 +926,7 @@
                     self.$setState({
                         disableCheckout: false,
                     })
-                }
-                else {
+                } else {
                     self.$setState({
                         disableCheckout: true,
                     })
@@ -944,15 +945,19 @@
                         self.$setState({
                             checkToggle: true,
                             //discount: self.discount - self.redeem,
-                            grandTotal: self.gstType == 'inclusive' ? (cartTemp.total - self.redeem > 0 ? cartTemp.total - self.redeem : 0) : (cartTemp.total * (1 + Number(self.gst) / 100) - self.redeem > 0 ? cartTemp.total * (1 + Number(self.gst) / 100) - self.redeem : 0),
+                            grandTotal: self.gstType == 'inclusive' ? (cartTemp.total - self
+                                .redeem > 0 ? cartTemp.total - self.redeem : 0) : (cartTemp
+                                .total * (1 + Number(self.gst) / 100) - self.redeem > 0 ?
+                                cartTemp.total * (1 + Number(self.gst) / 100) - self.redeem : 0
+                            ),
                         })
 
-                    }
-                    else {
+                    } else {
                         self.$setState({
                             checkToggle: false,
                             //discount: self.discount + self.redeem,
-                            grandTotal: self.gstType == 'inclusive' ? cartTemp.total : cartTemp.total * (1 + Number(self.gst) / 100)
+                            grandTotal: self.gstType == 'inclusive' ? cartTemp.total : cartTemp
+                                .total * (1 + Number(self.gst) / 100)
                         })
                     }
                     console.log(self.checkToggle)
@@ -985,12 +990,15 @@
                         updateCartList: cartTemp,
 
                         quantity: cartTemp.quantity,
-                        total: self.gstType == 'inclusive' ? cartTemp.total * (1 - self.gst / 100) : cartTemp.total,
+                        total: self.gstType == 'inclusive' ? cartTemp.total * (1 - self.gst / 100) :
+                            cartTemp.total,
                         listOrderDate: cartTemp.listOrderDate,
                         listOrderSession: cartTemp.listOrderSession,
                         orderSessionName: cartTemp.listOrderSession.name,
-                        orderSessionTime: cartTemp.listOrderSession.startTime + " - " + cartTemp.listOrderSession.endTime,
-                        grandTotal: self.gstType == 'inclusive' ? cartTemp.total : cartTemp.total * (1 + Number(self.gst) / 100),
+                        orderSessionTime: cartTemp.listOrderSession.startTime + " - " + cartTemp
+                            .listOrderSession.endTime,
+                        grandTotal: self.gstType == 'inclusive' ? cartTemp.total : cartTemp.total * (1 +
+                            Number(self.gst) / 100),
                         gstAmount: cartTemp.total * (Number(self.gst) / 100),
                         hourStart: arrStarTime[0],
                         hourEnd: arrEndTime[0],
@@ -1008,8 +1016,7 @@
                     self.$setState({
                         productList: temp
                     })
-                }
-                else self.$setState({
+                } else self.$setState({
                     productList: cartTemp.items
                 })
                 console.log('productList', self.productList, self.total, self.grandTotal);

@@ -36,7 +36,7 @@ var app = new Framework7({
 	init: false,
 	cache: false,
 
-	data: function() {
+	data: function () {
 		return {
 			a2hs: null,
 			config: window.config
@@ -93,15 +93,14 @@ var app = new Framework7({
 		fastClicksExclude: '.ap-dropdown-menu, .pac-container .pac-item'
 	},
 	view: {
-		pushState: (function() {
+		pushState: (function () {
 			if (window.config.theme.navigation == 'hamburger') {
 				return !Framework7.device.cordova;
-			}
-			else {
+			} else {
 				return false;
 			}
 		})(),
-		pushStateRoot: (function() {
+		pushStateRoot: (function () {
 			return location.pathname;
 		})(),
 		pushStateSeparator: '#!'
@@ -114,7 +113,7 @@ var app = new Framework7({
 |------------------------------------------------------------------------------
 */
 
-app.on('init', function() {
+app.on('init', function () {
 	initializeServiceWorker();
 	initializeViews();
 	initializeTheme();
@@ -127,19 +126,19 @@ app.on('init', function() {
 	// initializeFacebookJsSdk();
 });
 
-app.on('pageInit', function() {
+app.on('pageInit', function () {
 	localizeApp();
 });
 
-app.on('panelOpen', function() {
+app.on('panelOpen', function () {
 	app.$('.navbar .hamburger').addClass('is-active');
 });
 
-app.on('panelClose', function() {
+app.on('panelClose', function () {
 	app.$('.navbar .hamburger').removeClass('is-active');
 });
 
-app.on('routerAjaxError', function() {
+app.on('routerAjaxError', function () {
 	app.toast.show({
 		text: 'No Internet Connection',
 		position: 'bottom',
@@ -157,15 +156,14 @@ function initializeServiceWorker() {
 	if ('serviceWorker' in navigator && 'PushManager' in window) {
 		console.log('Service Worker and Push is supported');
 		navigator.serviceWorker.register('./service-worker.js')
-		.then(function (swReg) {
-			//console.log('Service Worker is registered', swReg);
-			swRegistration = swReg;
-		})
-		.catch(function (error) {
-			console.error('Service Worker Error', error);
-		});
-	}
-	else {
+			.then(function (swReg) {
+				//console.log('Service Worker is registered', swReg);
+				swRegistration = swReg;
+			})
+			.catch(function (error) {
+				console.error('Service Worker Error', error);
+			});
+	} else {
 		console.warn('Push messaging is not supported');
 	}
 }
@@ -218,18 +216,18 @@ function initializeI18n() {
 	i18next
 		.use(i18nextXHRBackend)
 		.init({
-		lng: language.lang,
-		fallbackLng: 'en',
-		whitelist: ['en', 'hi', 'ar'],
-		nonExplicitWhitelist: true,
-		preload: ['en', 'hi', 'ar'],
-		backend: {
-			loadPath: 'assets/custom/i18n/{{lng}}.json'
-		}
-	},
-					function() {
-		app.utils.i18n.setLanguage(language);
-	});
+				lng: language.lang,
+				fallbackLng: 'en',
+				whitelist: ['en', 'hi', 'ar'],
+				nonExplicitWhitelist: true,
+				preload: ['en', 'hi', 'ar'],
+				backend: {
+					loadPath: 'assets/custom/i18n/{{lng}}.json'
+				}
+			},
+			function () {
+				app.utils.i18n.setLanguage(language);
+			});
 }
 
 /*
@@ -258,38 +256,36 @@ function localizeApp() {
 //   }
 
 function initializeA2HS() {
-	window.addEventListener('beforeinstallprompt', function(event) {
+	window.addEventListener('beforeinstallprompt', function (event) {
 		event.preventDefault();
 		app.a2hs = event;
 		var dialog = app.dialog.create({
 			title: '',
-			content: '<div class="block no-margin no-padding text-align-center" style="font-size: 14px;"><img src="'+ window.config.app.logo +'" width="84" alt="" /><p><b>Add Konbi to your Home Screen?</b></p><p>Install Konbi on your home screen for quick and easy access when you\'re on the go.</p></div>',
+			content: '<div class="block no-margin no-padding text-align-center" style="font-size: 14px;"><img src="' + window.config.app.logo + '" width="84" alt="" /><p><b>Add Konbi to your Home Screen?</b></p><p>Install Konbi on your home screen for quick and easy access when you\'re on the go.</p></div>',
 			verticalButtons: true,
-			buttons: [
-				{
+			buttons: [{
 					text: 'Add to Home Screen',
 					bold: true,
 					color: 'green',
-					onClick: function() {
+					onClick: function () {
 						app.a2hs.prompt();
 						app.a2hs.userChoice
-							.then(function(choice) {
-							if (choice.outcome == 'accepted') {
-								app.toast.show({
-									text: 'Yaay! Added to Home Screen',
-									position:'bottom',
-									cssClass: 'toast-round bg-color-green'
-								});
-							}
-							else {
-								app.toast.show({
-									text: 'Oops! Could not add to Home Screen',
-									position:'bottom',
-									cssClass: 'toast-round bg-color-red'
-								});
-							}
-							app.a2hs = null;
-						});
+							.then(function (choice) {
+								if (choice.outcome == 'accepted') {
+									app.toast.show({
+										text: 'Yaay! Added to Home Screen',
+										position: 'bottom',
+										cssClass: 'toast-round bg-color-green'
+									});
+								} else {
+									app.toast.show({
+										text: 'Oops! Could not add to Home Screen',
+										position: 'bottom',
+										cssClass: 'toast-round bg-color-red'
+									});
+								}
+								app.a2hs = null;
+							});
 						app.dialog.close();
 					}
 				},
@@ -299,7 +295,7 @@ function initializeA2HS() {
 				}
 			]
 		});
-		setTimeout(function() {
+		setTimeout(function () {
 			dialog.open();
 		}, 60000);
 	});
@@ -312,14 +308,13 @@ function initializeA2HS() {
 */
 
 function initializeBackButton() {
-	document.addEventListener('backbutton', function(event) {
+	document.addEventListener('backbutton', function (event) {
 		event.preventDefault();
 		var dismissibleModals = app.$('.actions-modal.modal-in').length + app.$('.login-screen.modal-in').length + app.$('.notification.modal-in').length + app.$('.panel-active').length + app.$('.popover.modal-in').length + app.$('.popup.modal-in').length + app.$('.sheet-modal.modal-in').length + app.$('.swipeout-opened').length + app.$('.td-wrap').length + app.$('.toast.modal-in').length + app.$('.tooltip.tooltip-in').length;
 		var nonDismissibleModals = app.$('.dialog.modal-in').length;
 		if (nonDismissibleModals) {
 			return false;
-		}
-		else if (dismissibleModals) {
+		} else if (dismissibleModals) {
 			app.actions.close();
 			app.loginScreen.close();
 			app.notification.close();
@@ -331,14 +326,13 @@ function initializeBackButton() {
 			app.$('.td-wrap').removeClass('td-show');
 			app.toast.close();
 			app.$('.tooltip').remove();
-		}
-		else {
+		} else {
 			var currentRoute = app.views.current.router.currentRoute.url;
 			if (currentRoute == '/main' || currentRoute == '/') {
 				app.dialog.confirm(
 					'<div class="text-align-center"><img src="assets/custom/img/exit.svg" width="80" alt="" /><div>Do you want to exit the app?</div></div>',
 					'',
-					function() {
+					function () {
 						navigator.app.exitApp();
 					}
 				);
@@ -349,8 +343,7 @@ function initializeBackButton() {
 			else {
 				if (app.$('.page.page-current .navbar .back').length) {
 					app.views.current.router.back();
-				}
-				else {
+				} else {
 					return false;
 				}
 			}
@@ -365,14 +358,14 @@ function initializeBackButton() {
 */
 
 function getInternetConnectionStatus() {
-	window.addEventListener('online', function() {
+	window.addEventListener('online', function () {
 		app.toast.show({
 			text: 'Connected to Internet',
 			position: 'bottom',
 			cssClass: 'bg-color-green'
 		});
 	});
-	window.addEventListener('offline', function() {
+	window.addEventListener('offline', function () {
 		app.toast.show({
 			text: 'No Internet Connection',
 			position: 'bottom',
@@ -391,12 +384,13 @@ function setAJAXDefaults() {
 	app.request.setup({
 		headers: {
 			'Authorization': 'bearer ' + localStorage.getItem('WOKPPL_accessToken'),
+			'Abp.TenantId': window.config.tenantId,
 			'Content-Type': 'application/json'
 		},
-		beforeSend: function() {
+		beforeSend: function () {
 			app.preloader.show();
 		},
-		complete: function() {
+		complete: function () {
 			app.preloader.hide();
 		}
 	});
@@ -410,8 +404,8 @@ function setAJAXDefaults() {
 
 function setFormValidatorDefaults() {
 	jQuery.validator.setDefaults({
-		errorElement : 'div',
-		errorPlacement: function(error, element) {
+		errorElement: 'div',
+		errorPlacement: function (error, element) {
 			error.appendTo(element.siblings('.input-error-message'));
 		}
 	});
@@ -424,8 +418,8 @@ function setFormValidatorDefaults() {
 */
 
 function initializeFacebookJsSdk() {
-	LazyLoad.js(['https://connect.facebook.net/en_US/sdk.js'], function() {
-		window.fbAsyncInit = function() {
+	LazyLoad.js(['https://connect.facebook.net/en_US/sdk.js'], function () {
+		window.fbAsyncInit = function () {
 			FB.init({
 				appId: window.config.facebook.appId,
 				autoLogAppEvents: true,
@@ -433,10 +427,10 @@ function initializeFacebookJsSdk() {
 				version: 'v3.3'
 			});
 		};
-		app.on('pageInit', function() {
+		app.on('pageInit', function () {
 			FB.XFBML.parse();
 		});
-		app.on('pageReInit', function() {
+		app.on('pageReInit', function () {
 			FB.XFBML.parse();
 		});
 	});

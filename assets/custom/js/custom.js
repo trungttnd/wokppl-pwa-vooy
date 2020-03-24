@@ -45,5 +45,10 @@ Framework7.utils.custom = {
     localStorage.removeItem('sessions');
     localStorage.removeItem('detTransactions');
     localStorage.removeItem('cartAvailable');
+    localStorage.removeItem('WOKPPL_logoUrl');
+    localStorage.removeItem('WOKPPL_canteenName');
+    localStorage.removeItem('WOKPPL_canteenId');
+    localStorage.removeItem('WOKPPL_gstType');
+    localStorage.removeItem('WOKPPL_gst');
   },
 }

@@ -2,7 +2,7 @@
     <div class="page">
         <div class="navbar" style="height: 72px;">
             <div class="navbar-inner">
-                <img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="60px" alt="" />
+                <img class="theme-light-only" src="{{uploadUrl}}{{logo}}" height="60px" alt="" />
             </div>
         </div>
         <div class="page-content  infinite-scroll-content" style="padding-top: 72px;">
@@ -80,15 +80,18 @@
                 endDate: '2099-12-31',
                 allowInfinite: true,
                 itemsPerLoad: 20,
-                lastItemIndex: null
+                lastItemIndex: null,
+                uploadUrl: window.config.upload, 
+                logo: localStorage.getItem('WOKPPL_logoUrl') 
             }
         },
         methods: {
             loadData: function (startDate, endDate) {
                 var self = this;
                 let tempItem = [];
-                app.request.getJSON(window.config.url + 'api/services/app/Preorder/GetTransactions',
-                    { MaxResultCount: 5000 },
+                app.request.getJSON(window.config.url + 'api/services/app/Preorder/GetTransactions', {
+                        MaxResultCount: 5000
+                    },
                     function (suc) {
                         //console.log('suc.result', suc.result)
                         if (startDate != null && endDate != null) {
@@ -100,19 +103,20 @@
                                     tempItem.push(suc.result.items[i]);
                                 }
                             }
-                        }
-                        else {
+                        } else {
                             tempItem = suc.result.items;
                         }
                         for (let i = 0; i < tempItem.length; i++) {
-                            let orderTime = new Date(tempItem[i].orderTimeDisplay);
                             let tempTotalPrice = 0;
-                            tempItem[i].orderTime = ("0" + orderTime.getDate()).slice(-2) + "/" + ("0" + orderTime.getMonth() + 1).slice(-2) + "/" + orderTime.getFullYear() + " " + ("0" + orderTime.getHours()).slice(-2) + ":" + ("0" + orderTime.getMinutes()).slice(-2);
+                            tempItem[i].orderTime = moment(tempItem[i].orderTimeDisplay).format(
+                                'DD/MM/YYYY, H:mm:ss');
                             for (let j = 0; j < tempItem[i].orderItems.length; j++) {
-                                tempTotalPrice += tempItem[i].orderItems[j].price * tempItem[i].orderItems[j].quantity;
+                                tempTotalPrice += tempItem[i].orderItems[j].price * tempItem[i].orderItems[j]
+                                    .quantity;
                                 //console.log(tempTotalPrice)
                             }
-                            tempItem[i].totalPrice = tempItem[i].taxType == "exclusive" ? tempTotalPrice * (1 + tempItem[i].taxPercent / 100) : tempTotalPrice;
+                            tempItem[i].totalPrice = tempItem[i].taxType == "exclusive" ? tempTotalPrice * (1 +
+                                tempItem[i].taxPercent / 100) : tempTotalPrice;
                         }
                         self.$setState({
                             transactions: tempItem,
@@ -124,15 +128,22 @@
                         for (var i = 0; i < self.itemsPerLoad; i++) {
                             if (i < self.totalCount) {
                                 html += '<li>'
-                                html += '<a href="/transactions-detail/' + self.items[i].orderNumber + '" class="item-link">'
+                                html += '<a href="/transactions-detail/' + self.items[i].orderNumber +
+                                    '" class="item-link">'
                                 html += '<div class="item-content"><div class="item-media"><i class="fa-stack">'
                                 html += '<span class="fas fa-circle fa-stack-2x text-color-red"></span>'
-                                html += '<span class="fas fa-shopping-cart fa-stack-1x fa-inverse"></span></i></div>'
-                                html += '<div class="item-inner"><div class="item-title"><span>' + self.items[i].orderNumber + '</span>'
+                                html +=
+                                    '<span class="fas fa-shopping-cart fa-stack-1x fa-inverse"></span></i></div>'
+                                html += '<div class="item-inner"><div class="item-title"><span>' + self.items[i]
+                                    .orderNumber + '</span>'
                                 html += '<div class="item-header">' + self.items[i].orderTime + '</div> </div>'
-                                html += '<div class="item-title" style="text-align: right;"><div class="item-header text-color-red">$'
+                                html +=
+                                    '<div class="item-title" style="text-align: right;"><div class="item-header text-color-red">$'
                                 html += self.items[i].totalPrice.toFixed(2) + '</div>'
-                                html += self.items[i].status == 5 ? '<span class="badge color-green">' + self.items[i].statusName + '</span>' : self.items[i].status == 3 ? '<span class="badge color-yellow">' + self.items[i].statusName + '</span>' : '<span class="badge color-red">' + self.items[i].statusName + '</span>'
+                                html += self.items[i].status == 5 ? '<span class="badge color-green">' + self
+                                    .items[i].statusName + '</span>' : self.items[i].status == 3 ?
+                                    '<span class="badge color-yellow">' + self.items[i].statusName + '</span>' :
+                                    '<span class="badge color-red">' + self.items[i].statusName + '</span>'
                                 html += '</div> </div></div></a>'
                                 html += '</li>'
                             }
@@ -166,7 +177,9 @@
                     hours += offset;
                     givenDate.setHours(hours);
                     // format the date
-                    element.creationTime = ("0" + givenDate.getDate()).slice(-2) + '/' + ("0" + (givenDate.getMonth() + 1)).slice(-2) + '/' + givenDate.getFullYear() + ' ' + ("0" + givenDate.getHours()).slice(-2) + ':' + ("0" + givenDate.getMinutes()).slice(-2);
+                    element.creationTime = ("0" + givenDate.getDate()).slice(-2) + '/' + ("0" + (givenDate
+                        .getMonth() + 1)).slice(-2) + '/' + givenDate.getFullYear() + ' ' + ("0" +
+                        givenDate.getHours()).slice(-2) + ':' + ("0" + givenDate.getMinutes()).slice(-2);
                     //convert amount: cent>>dollar
                     element.amount = element.amount / 100;
                 });
@@ -211,15 +224,22 @@
                     for (var i = self.lastItemIndex; i < self.lastItemIndex + self.itemsPerLoad; i++) {
                         if (i < self.totalCount) {
                             html += '<li>'
-                            html += '<a href="/transactions-detail/' + self.items[i].orderNumber + '" class="item-link">'
+                            html += '<a href="/transactions-detail/' + self.items[i].orderNumber +
+                                '" class="item-link">'
                             html += '<div class="item-content"><div class="item-media"><i class="fa-stack">'
                             html += '<span class="fas fa-circle fa-stack-2x text-color-red"></span>'
-                            html += '<span class="fas fa-shopping-cart fa-stack-1x fa-inverse"></span></i></div>'
-                            html += '<div class="item-inner"><div class="item-title"><span>' + self.items[i].orderNumber + '</span>'
+                            html +=
+                                '<span class="fas fa-shopping-cart fa-stack-1x fa-inverse"></span></i></div>'
+                            html += '<div class="item-inner"><div class="item-title"><span>' + self.items[i]
+                                .orderNumber + '</span>'
                             html += '<div class="item-header">' + self.items[i].orderTime + '</div> </div>'
-                            html += '<div class="item-title" style="text-align: right;"><div class="item-header text-color-red">'
+                            html +=
+                                '<div class="item-title" style="text-align: right;"><div class="item-header text-color-red">'
                             html += self.items[i].totalPrice.toFixed(2) + '</div>'
-                            html += self.items[i].status == 5 ? '<span class="badge color-green">' + self.items[i].statusName + '</span>' : self.items[i].status == 3 ? '<span class="badge color-yellow">' + self.items[i].statusName + '</span>' : '<span class="badge color-red">' + self.items[i].statusName + '</span>'
+                            html += self.items[i].status == 5 ? '<span class="badge color-green">' + self
+                                .items[i].statusName + '</span>' : self.items[i].status == 3 ?
+                                '<span class="badge color-yellow">' + self.items[i].statusName + '</span>' :
+                                '<span class="badge color-red">' + self.items[i].statusName + '</span>'
                             html += '</div> </div></div></a>'
                             html += '</li>'
                         }
@@ -259,8 +279,7 @@
                     if (response.result.user == null || response.result.user == 'null') {
                         app.utils.custom.removeCookie();
                         app.views.current.router.navigate('/signin');
-                    }
-                    else {
+                    } else {
                         localStorage.setItem('WOKPPL_mobile', response.result.user.userName);
                         localStorage.setItem('WOKPPL_name', response.result.user.name);
                         localStorage.setItem('WOKPPL_email', response.result.user.emailAddress);

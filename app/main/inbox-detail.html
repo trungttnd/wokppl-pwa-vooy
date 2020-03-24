@@ -2,7 +2,7 @@
     <div class="page">
         <div class="navbar" style="height: 72px;">
             <div class="navbar-inner">
-                <img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="60px" alt="" />
+                <img class="theme-light-only" src="{{uploadUrl}}{{logo}}" height="60px" alt="" />
                 <div class="right">
                     <a href="/tab-inbox/" class="link item">
                         <span>Back</span>
@@ -124,7 +124,9 @@
                 id: '',
                 listOrders: null,
                 det: null,
-                statusName: ''
+                statusName: '',
+                uploadUrl: window.config.upload, 
+                logo: localStorage.getItem('WOKPPL_logoUrl') 
             }
         },
         methods: {
@@ -134,8 +136,7 @@
                     self.$setState({
                         id: self.getUrlVars().orderNumber,
                     });
-                }
-                else {
+                } else {
                     self.$setState({
                         id: this.$route.params.id,
                     });
@@ -148,13 +149,13 @@
                         if (response.result.user == null || response.result.user == 'null') {
                             app.utils.custom.removeCookie();
                             app.views.current.router.navigate('/signin');
-                        }
-                        else {
+                        } else {
                             localStorage.setItem('WOKPPL_mobile', response.result.user.userName);
                             localStorage.setItem('WOKPPL_name', response.result.user.name);
                             localStorage.setItem('WOKPPL_email', response.result.user.emailAddress);
-                            if (response.result.canteen != null && response.result.canteen != 'null'){
-                                if (response.result.canteen.tax != null && response.result.canteen.tax != 'null'){
+                            if (response.result.canteen != null && response.result.canteen != 'null') {
+                                if (response.result.canteen.tax != null && response.result.canteen.tax !=
+                                    'null') {
                                     localStorage.setItem('WOKPPL_gst', response.result.canteen.tax.value);
                                     localStorage.setItem('WOKPPL_gstType', response.result.canteen.tax.type);
                                 }
@@ -165,8 +166,9 @@
                         console.log(err)
                     })
                 //list orders
-                app.request.getJSON(window.config.url + 'api/services/app/Preorder/GetTransactions',
-                    { MaxResultCount: 1000 },
+                app.request.getJSON(window.config.url + 'api/services/app/Preorder/GetTransactions', {
+                        MaxResultCount: 1000
+                    },
                     function (suc) {
                         console.log('suc.result', suc.result)
 
@@ -183,18 +185,22 @@
                         if (self.det.taxType == "inclusive") {
                             for (let i = 0; i < self.det.orderItems.length; i++) {
                                 //tempTotal += self.det.orderItems[i].price
-                                self.det.orderItems[i].price = self.det.orderItems[i].price * (1 - self.det.taxPercent/100);
+                                self.det.orderItems[i].price = self.det.orderItems[i].price * (1 - self.det
+                                    .taxPercent / 100);
                             }
                         }
-                        let colTime = new Date(self.det.collectionTimeDisplay);
+
                         //self.collectionTimeDisplay = colTime.toLocaleTimeString().substring(0,5) + ', ' + colTime.toLocaleDateString();
-                        self.collectionTimeDisplay = colTime.getHours() + ':' + (colTime.getMinutes() < 10 ? '0' + colTime.getMinutes() : colTime.getMinutes()) + ', ' + colTime.getDate() + '/' + (colTime.getMonth() + 1) + '/' + colTime.getFullYear()
+                        self.collectionTimeDisplay = moment(self.det.collectionTimeDisplay).format(
+                            'DD/MM/YYYY, H:mm:ss');
                         self.statusName = self.det.statusName;
                         self.$setState({
                             detail: self.det,
                             orderItems: self.det.orderItems,
                             gst: self.det.taxPercent,
-                            gstAmount: self.det.orderItems.reduce((total, item) => {return total+=item.price*item.quantity},0) * (Number(self.det.taxPercent) / 100),
+                            gstAmount: self.det.orderItems.reduce((total, item) => {
+                                return total += item.price * item.quantity
+                            }, 0) * (Number(self.det.taxPercent) / 100),
                             // total: self.det.payments[0].amount,
                             grandTotal: self.det.totalAmount
                         });
@@ -204,7 +210,8 @@
                     })
             },
             getUrlVars: function () {
-                var vars = [], hash;
+                var vars = [],
+                    hash;
                 var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
                 for (var i = 0; i < hashes.length; i++) {
                     hash = hashes[i].split('=');

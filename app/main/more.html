@@ -3,7 +3,7 @@
 
 		<div class="navbar" style="height: 72px;">
 			<div class="navbar-inner">
-				<img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="60px" alt="" />
+				<img class="theme-light-only" src="{{uploadUrl}}{{logo}}" height="60px" alt="" />
 				<div class="right">
 
 				</div>
@@ -105,7 +105,9 @@
 				_name: '',
 				_email: '',
 				userId: localStorage.getItem('WOKPPL_userId'),
-				endpoint: ''
+				endpoint: '',
+				uploadUrl: window.config.upload, 
+                logo: localStorage.getItem('WOKPPL_logoUrl') 
 			}
 		},
 		methods: {

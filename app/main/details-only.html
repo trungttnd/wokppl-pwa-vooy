@@ -2,7 +2,7 @@
     <div class="page">
         <div class="navbar" style="height: 72px;">
             <div class="navbar-inner">
-                <img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="60px" alt="" />
+                <img class="theme-light-only" src="{{uploadUrl}}{{logo}}" height="60px" alt="" />
                 <div class="right">
                     <a href="#" @click="goCart" class="link icon-only">
                         <i class="icon material-icons" style="font-size: 40px;">shopping_cart<span
@@ -22,7 +22,7 @@
             {{else}}
             <div class="block">
                 <img class="img-center"
-                    src="https://wokppl-api-staging.konbi.cloud/uploads/{{detail.imageFileName}}" height="{{orgHeight}}" width="{{orgWidth}}" alt="" />
+                    src="{{detail.imageFileNameDisplay}}" height="{{orgHeight}}" width="{{orgWidth}}" alt="" />
             </div>
             {{/if}}
             <div class="block">
@@ -123,6 +123,8 @@
                 availableNumbers: 0,
                 orgWidth: 0,
                 orgHeight: 0,
+                uploadUrl: window.config.upload, 
+                logo: localStorage.getItem('WOKPPL_logoUrl')
             }
         },
         methods: {

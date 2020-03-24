@@ -2,7 +2,7 @@
 	<div class="page no-swipeback">
 		<div class="navbar" style="height: 72px;">
 			<div class="navbar-inner">
-				<img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="60px" alt="" />
+				<img class="theme-light-only" src="{{uploadUrl}}{{logo}}" height="60px" alt="" />
 				<div class="right">
 					<a href="#" @click="goCart" class="link icon-only">
 						<i class="icon material-icons" style="font-size: 40px;">shopping_cart<span
@@ -79,7 +79,7 @@
 							{{else}}
 							<div class="item-media"><a href="#" @click="selectOption('{{this.id}}')"
 									class="item-link"><img
-										src="https://wokppl-api-staging.konbi.cloud/uploads/{{this.imageFileName}}"
+										src="{{this.imageFileNameDisplay}}"
 										width="80" /></a>
 							</div>
 							{{/if}}
@@ -205,19 +205,29 @@
 				sessChoose: null,
 				isNoProduct: false,
 				yearNow: null,
+				uploadUrl: window.config.upload, 
+                logo: localStorage.getItem('WOKPPL_logoUrl') 
 			}
 		},
 		methods: {
 			goCart: function () {
 				var self = this;
 				if (self.cartItems.quantity > 0)
-					app.views.main.router.navigate('/orders-cart', { animate: false });
-				
+					app.views.main.router.navigate('/orders-cart', {
+						animate: false
+					});
+
 			},
 			formatDate: function (date, langCode) {
-				var day = date.toLocaleString(langCode, { day: '2-digit' });   // DD
-				var month = date.toLocaleString(langCode, { month: '2-digit' }); // MM
-				var year = date.toLocaleString(langCode, { year: 'numeric' }); // YYYY
+				var day = date.toLocaleString(langCode, {
+					day: '2-digit'
+				}); // DD
+				var month = date.toLocaleString(langCode, {
+					month: '2-digit'
+				}); // MM
+				var year = date.toLocaleString(langCode, {
+					year: 'numeric'
+				}); // YYYY
 				//console.log('year', year)
 				return `${day}/${month}/${year}`;
 			},
@@ -227,8 +237,10 @@
 				let dt = $('#date').val();
 				let changePrevDate = '';
 				let tempDate = new Date();
-				let prevDateInput = (tempDate.getMonth() + 1) + '/' + tempDate.getDate() + '/' + tempDate.getFullYear();
-				let prevtimeNow = (tempDate.getHours() < 10 ? '0' + tempDate.getHours() : tempDate.getHours()) + ":" + (tempDate.getMinutes() < 10 ? '0' + tempDate.getMinutes() : tempDate.getMinutes());
+				let prevDateInput = (tempDate.getMonth() + 1) + '/' + tempDate.getDate() + '/' + tempDate
+					.getFullYear();
+				let prevtimeNow = (tempDate.getHours() < 10 ? '0' + tempDate.getHours() : tempDate.getHours()) + ":" +
+					(tempDate.getMinutes() < 10 ? '0' + tempDate.getMinutes() : tempDate.getMinutes());
 				//console.log('now', now.toLocaleDateString())
 				//console.log('dt', dt)
 				if (dt + "/" + self.yearNow != self.formatDate(now, 'en')) {
@@ -252,8 +264,7 @@
 				if (self.today == orderDateTemp) {
 					self.$('select[name=session]').val(self.cartItems.listOrderSession.id);
 					//console.log('session', self.cartItems.listOrderSession)
-				}
-				else {
+				} else {
 					if (self.session.length > 0)
 						self.$('select[name=session]').val(self.session[0].id);
 					else self.$('select[name=session]').val(undefined)
@@ -265,8 +276,10 @@
 				let dt = $('#date').val();
 				let arr = dt.split('/');
 				let tempDate = new Date();
-				let nextDateInput = (tempDate.getMonth() + 1) + '/' + tempDate.getDate() + '/' + tempDate.getFullYear();
-				let nexttimeNow = (tempDate.getHours() < 10 ? '0' + tempDate.getHours() : tempDate.getHours()) + ":" + (tempDate.getMinutes() < 10 ? '0' + tempDate.getMinutes() : tempDate.getMinutes());
+				let nextDateInput = (tempDate.getMonth() + 1) + '/' + tempDate.getDate() + '/' + tempDate
+					.getFullYear();
+				let nexttimeNow = (tempDate.getHours() < 10 ? '0' + tempDate.getHours() : tempDate.getHours()) + ":" +
+					(tempDate.getMinutes() < 10 ? '0' + tempDate.getMinutes() : tempDate.getMinutes());
 				//console.log('dt1', dt)
 				dt = self.yearNow + '/' + arr[1] + '/' + arr[0]
 				//console.log('dt2', dt)
@@ -299,8 +312,7 @@
 				if (self.today == orderDateTemp) {
 					self.$('select[name=session]').val(self.cartItems.listOrderSession.id);
 					//console.log('session', self.cartItems.listOrderSession)
-				}
-				else if (self.session.length > 0)
+				} else if (self.session.length > 0)
 					self.$('select[name=session]').val(self.session[0].id);
 				else self.$('select[name=session]').val(undefined);
 				self.updateProducts();
@@ -332,19 +344,17 @@
 				//console.log('det.isAvailable', det.isAvailable)
 				//console.log('orderDate', orderDate);
 				//console.log('orderSession', orderSession);
-				if ((self.cartItems.quantity == 0) || (orderDate == self.cartItems.listOrderDate && orderSession == self.cartItems.listOrderSession.id)) {
+				if ((self.cartItems.quantity == 0) || (orderDate == self.cartItems.listOrderDate && orderSession ==
+						self.cartItems.listOrderSession.id)) {
 					if (det.isAvailable) {
 						if (det.quantity != null && det.quantity > 0) {
 							localStorage.setItem('listOrderDate', JSON.stringify(self.listOrderDate));
 							localStorage.setItem('listOrderSession', JSON.stringify(self.listOrderSession));
 							app.views.current.router.navigate('/orders-options');
-						}
-						else
+						} else
 							app.views.current.router.navigate('/details-only');
-					}
-					else app.views.current.router.navigate('/details-only');
-				}
-				else {
+					} else app.views.current.router.navigate('/details-only');
+				} else {
 					if (det.isAvailable && det.quantity > 0) self.openDialog().open();
 					else app.views.current.router.navigate('/details-only');
 					// app.views.current.router.navigate('/orders-options');
@@ -357,8 +367,7 @@
 				$('a').attr('id', function (i, id) {
 					if (id == selected) {
 						$('a[id=' + id + ']').addClass('tab-link-active');
-					}
-					else
+					} else
 						$('a[id=' + id + ']').removeClass('tab-link-active');
 				})
 
@@ -373,8 +382,7 @@
 						isNoProduct: self.allProducts.length == 0 ? true : false,
 					})
 
-				}
-				else {
+				} else {
 					// self.loadProduct(dateInput, sess, selected);
 					let tempList = []
 					for (let i = 0; i < self.allProducts.length; i++) {
@@ -388,8 +396,7 @@
 						self.$setState({
 							isNoProduct: true,
 						})
-					}
-					else {
+					} else {
 						self.$setState({
 							isNoProduct: false,
 						})
@@ -433,9 +440,11 @@
 				var self = this;
 				//console.log('query', date, sessionId, categoryId)
 				if (sessionId == "undefined") sessionId = undefined;
-				app.request.get(window.config.url + 'api/services/app/Preorder/GetProductMenuBrowsingList',
-					{
-						Date: date, SessionId: sessionId, CategoryId: categoryId, MaxResultCount: 5000
+				app.request.get(window.config.url + 'api/services/app/Preorder/GetProductMenuBrowsingList', {
+						Date: date,
+						SessionId: sessionId,
+						CategoryId: categoryId,
+						MaxResultCount: 5000
 					},
 					function (suc) {
 						//console.log('suc', JSON.parse(suc))
@@ -453,8 +462,7 @@
 									}
 								}
 							}
-						}
-						else {
+						} else {
 							for (let i = 0; i < response.result.items.length; i++) {
 								response.result.items[i].availableNumbers = response.result.items[i].quantity
 							}
@@ -463,15 +471,15 @@
 							if (response.result.items[i].quantity == null || response.result.items[i].quantity == 0) {
 								response.result.items[i].quantity = 0;
 								response.result.items[i].isSoldOut = true;
-							}
-							else {
+							} else {
 								response.result.items[i].isSoldOut = false;
 							}
-							if (response.result.items[i].imageFileName == '' || response.result.items[i].imageFileName == null) {
+							if (response.result.items[i].imageFileName == '' || response.result.items[i]
+								.imageFileName == null) {
 								response.result.items[i].imageFileName = 'noimage.png';
 								response.result.items[i].isNoImage = true;
-							}
-							else {
+							} else {
+								response.result.items[i].imageFileNameDisplay = window.config.upload + response.result.items[i].imageFileName
 								response.result.items[i].isNoImage = false;
 							}
 						}
@@ -495,8 +503,7 @@
 				$('a').attr('id', function (i, id) {
 					if (id == undefined) {
 						$('a[id=' + id + ']').addClass('tab-link-active');
-					}
-					else
+					} else
 						$('a[id=' + id + ']').removeClass('tab-link-active');
 				})
 				self.loadProduct(dt, sess, '')
@@ -509,8 +516,7 @@
 				//console.log('listSession', listSession)
 				if (changeDate == '') {
 					newDate = dateInput;
-				}
-				else {
+				} else {
 					newDate = changeDate;
 				}
 				//console.log('newDate', newDate);
@@ -519,10 +525,10 @@
 				for (let i = 0; i < listSession.length; i++) {
 					listSession[i].startTime = self.convertIsoDateToHourMin(listSession[i].startTimeDisplay);
 					listSession[i].endTime = self.convertIsoDateToHourMin(listSession[i].endTimeDisplay);
-					if (Date.parse(newDate + ' ' + listSession[i].startTime) < Date.parse(dateInput + ' ' + timeNow) && Date.parse(dateInput + ' ' + timeNow) > Date.parse(newDate + ' ' + listSession[i].endTime)) {
+					if (Date.parse(newDate + ' ' + listSession[i].startTime) < Date.parse(dateInput + ' ' + timeNow) &&
+						Date.parse(dateInput + ' ' + timeNow) > Date.parse(newDate + ' ' + listSession[i].endTime)) {
 						count++;
-					}
-					else {
+					} else {
 						arr.push(listSession[i])
 					}
 				}
@@ -543,17 +549,20 @@
 				var self = this;
 				var dialog = app.dialog.create({
 					title: '',
-					content: '<div class="block no-margin no-padding text-align-center" style="font-size: 14px;"><img src="' + window.config.app.logo + '" width="84" alt="" /><p><b>Your cart has a product from a different session!</b></p><p>Clear cart and add product from this session?</p></div>',
+					content: '<div class="block no-margin no-padding text-align-center" style="font-size: 14px;"><img src="' +
+						window.config.app.logo +
+						'" width="84" alt="" /><p><b>Your cart has a product from a different session!</b></p><p>Clear cart and add product from this session?</p></div>',
 					verticalButtons: true,
-					buttons: [
-						{
+					buttons: [{
 							text: 'Yes!',
 							bold: true,
 							color: 'green',
 							onClick: function () {
 								self.clearCartWhenSessionExpired();
-								localStorage.setItem('listOrderDate', JSON.stringify(self.listOrderDate));
-								localStorage.setItem('listOrderSession', JSON.stringify(self.listOrderSession));
+								localStorage.setItem('listOrderDate', JSON.stringify(self
+									.listOrderDate));
+								localStorage.setItem('listOrderSession', JSON.stringify(self
+									.listOrderSession));
 								app.views.current.router.navigate('/orders-options');
 							}
 						},
@@ -572,10 +581,11 @@
 				var self = this;
 				var dialog = app.dialog.create({
 					title: '',
-					content: '<div class="block no-margin no-padding text-align-center" style="font-size: 14px;"><img src="' + window.config.app.logo + '" width="84" alt="" /><p><b>Over time!</b></p><p>Please empty your cart before continue!.</p></div>',
+					content: '<div class="block no-margin no-padding text-align-center" style="font-size: 14px;"><img src="' +
+						window.config.app.logo +
+						'" width="84" alt="" /><p><b>Over time!</b></p><p>Please empty your cart before continue!.</p></div>',
 					verticalButtons: true,
-					buttons: [
-						{
+					buttons: [{
 							text: 'Empty cart!',
 							bold: true,
 							color: 'green',
@@ -615,7 +625,8 @@
 			convertIsoDateToHourMin: function (date) {
 				var self = this;
 				let dateTime = new Date(date);
-				return (dateTime.getHours() < 10 ? '0' + dateTime.getHours() : dateTime.getHours()) + ':' + (dateTime.getMinutes() < 10 ? '0' + dateTime.getMinutes() : dateTime.getMinutes())
+				return (dateTime.getHours() < 10 ? '0' + dateTime.getHours() : dateTime.getHours()) + ':' + (dateTime
+					.getMinutes() < 10 ? '0' + dateTime.getMinutes() : dateTime.getMinutes())
 			},
 		},
 
@@ -630,8 +641,7 @@
 					if (response.result.user == null || response.result.user == 'null') {
 						app.utils.custom.removeCookie();
 						app.views.current.router.navigate('/signin');
-					}
-					else {
+					} else {
 						if (response.result.canteen != null && response.result.canteen != 'null') {
 							if (response.result.canteen.tax != null && response.result.canteen.tax != 'null') {
 								localStorage.setItem('WOKPPL_gst', response.result.canteen.tax.value);
@@ -655,7 +665,11 @@
 			self.$setState({
 				today: self.getDayMonthOnly(self.formatDate(date, 'en')),
 				yearNow: self.yearNow(),
-				cartItems: JSON.parse(localStorage.getItem('cartItems')) == undefined ? { quantity: 0, total: 0.00, items: [] } : JSON.parse(localStorage.getItem('cartItems')),
+				cartItems: JSON.parse(localStorage.getItem('cartItems')) == undefined ? {
+					quantity: 0,
+					total: 0.00,
+					items: []
+				} : JSON.parse(localStorage.getItem('cartItems')),
 				//session: JSON.parse(localStorage.getItem('sessions')),
 				//session: listSession,
 				categories: JSON.parse(localStorage.getItem('categories'))
@@ -663,8 +677,7 @@
 
 			if (orderDateTemp == null) {
 				firstLoadDay = '';
-			}
-			else {
+			} else {
 				let arrFirstDay = orderDateTemp.split('/');
 				firstLoadDay = arrFirstDay[1] + '/' + arrFirstDay[0] + '/' + arrFirstDay[2];
 				//console.log('Ngay session', firstLoadDay + ' ' + sessionTemp.endTime);
@@ -710,8 +723,7 @@
 			//console.log('orderDateTemp', orderDateTemp);
 			if (sessionTemp != null) {
 				self.$('select[name=session]').val(sessionTemp.id);
-			}
-			else {
+			} else {
 				if (self.session.length > 0)
 					self.$('select[name=session]').val(self.session[0].id);
 				else {
@@ -728,8 +740,7 @@
 
 			if (orderDateTemp != null) {
 				self.loadProduct(firstLoadDay, sessionInput, '')
-			}
-			else {
+			} else {
 				self.loadProduct(dateInput, sessionInput, '')
 			}
 
@@ -742,7 +753,7 @@
 				let arrDate = $('#date').val().split('/');
 				let changeDate = arrDate[1] + '/' + arrDate[0] + '/' + self.yearNow;
 				let onlyDayMonth = arrDate[0] + '/' + arrDate[1];
-				
+
 				self.checkListSession(dateInput, timeNow, changeDate);
 				self.updateProducts();
 			})

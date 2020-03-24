@@ -9,11 +9,11 @@ window.config = {};
 */
 
 window.config.app = {
-	id: 'website.nectar.classic',
-	version: '2.8.0',
-	title: 'Konbini',
-	tagline: 'Mobile Web App Kit',
-	logo: 'assets/custom/img/wokppllogo.png'
+  id: 'website.nectar.classic',
+  version: '2.8.0',
+  title: 'Konbini',
+  tagline: 'Mobile Web App Kit',
+  logo: 'assets/custom/img/wokppllogo.png'
 };
 
 /*
@@ -23,8 +23,8 @@ window.config.app = {
 */
 
 window.config.algoliaPlaces = {
-	appId: null,
-	apiKey: null
+  appId: null,
+  apiKey: null
 };
 
 /*
@@ -34,7 +34,7 @@ window.config.algoliaPlaces = {
 */
 
 window.config.envato = {
-	itemUrl: 'https://themeforest.net/item/nectar-mobile-web-app-kit/20466093?ref=pmsgz'
+  itemUrl: 'https://themeforest.net/item/nectar-mobile-web-app-kit/20466093?ref=pmsgz'
 };
 
 /*
@@ -44,7 +44,7 @@ window.config.envato = {
 */
 
 window.config.facebook = {
-	appId: '649779638781363'
+  appId: '649779638781363'
 };
 
 /*
@@ -54,9 +54,9 @@ window.config.facebook = {
 */
 
 window.config.admob = {
-	bannerId: 'ca-app-pub-3940256099942544/6300978111',
-	interstitialId: 'ca-app-pub-3940256099942544/1033173712',
-	rewardedVideoId: 'ca-app-pub-3940256099942544/5224354917'
+  bannerId: 'ca-app-pub-3940256099942544/6300978111',
+  interstitialId: 'ca-app-pub-3940256099942544/1033173712',
+  rewardedVideoId: 'ca-app-pub-3940256099942544/5224354917'
 };
 
 /*
@@ -66,7 +66,7 @@ window.config.admob = {
 */
 
 window.config.googleMaps = {
-	apiKey: 'AIzaSyCtiPGi_U05PWnEaFdu6SY62pxz57kBNvw'
+  apiKey: 'AIzaSyCtiPGi_U05PWnEaFdu6SY62pxz57kBNvw'
 };
 
 /*
@@ -76,8 +76,8 @@ window.config.googleMaps = {
 */
 
 window.config.i18n = {
-	lang: 'en',
-	dir: 'ltr'
+  lang: 'en',
+  dir: 'ltr'
 };
 
 /*
@@ -87,9 +87,9 @@ window.config.i18n = {
 */
 
 window.config.mailchimp = {
-	subscribeUrl: 'https://gmail.us20.list-manage.com/subscribe/post-json',
-	userId: '61e096fdff69bc5a03377380c',
-	audienceId: 'edf9a19615'
+  subscribeUrl: 'https://gmail.us20.list-manage.com/subscribe/post-json',
+  userId: '61e096fdff69bc5a03377380c',
+  audienceId: 'edf9a19615'
 };
 
 /*
@@ -99,27 +99,27 @@ window.config.mailchimp = {
 */
 
 window.config.colors = {
-	ios: {
-		red: '#FF3B30',
-		green: '#4CD964',
-		blue: '#007AFF',
-		pink: '#FF2D55',
-		yellow: '#FFCC00',
-		orange: '#FF9500',
-		gray: '#8E8E93',
-		black: '#000000',
+  ios: {
+    red: '#FF3B30',
+    green: '#4CD964',
+    blue: '#007AFF',
+    pink: '#FF2D55',
+    yellow: '#FFCC00',
+    orange: '#FF9500',
+    gray: '#8E8E93',
+    black: '#000000',
     statusbar_light: '#F7F7F8',
     statusbar_dark: '#1B1B1B'
-	},
-	md: {
-		red: '#F44336',
-		green: '#4CAF50',
-		blue: '#2196F3',
-		pink: '#E91E63',
-		yellow: '#FFEB3B',
-		orange: '#FF9800',
-		gray: '#9E9E9E',
-		black: '#000000',
+  },
+  md: {
+    red: '#F44336',
+    green: '#4CAF50',
+    blue: '#2196F3',
+    pink: '#E91E63',
+    yellow: '#FFEB3B',
+    orange: '#FF9800',
+    gray: '#9E9E9E',
+    black: '#000000',
     statusbar_red: '#D2190B',
     statusbar_green: '#357A38',
     statusbar_blue: '#0A6EBD',
@@ -128,7 +128,7 @@ window.config.colors = {
     statusbar_orange: '#B36A00',
     statusbar_gray: '#787878',
     statusbar_black: '#000000',
-	},
+  },
   oc: {
     gray0: '#F8F9FA',
     gray1: '#F1F3F5',
@@ -270,13 +270,19 @@ window.config.colors = {
 */
 
 window.config.theme = {
-	color: 'red',
-	layout: 'light',
+  color: 'red',
+  layout: 'light',
   navigation: 'hamburger'
 };
+// if multiple tenancy enabled, when logging in need to specify tenant Id
+window.config.tenantId = 2;
 //api url
-window.config.url = 'http://localhost:22742/';
+//window.config.url = 'https://wokppl-api-staging.konbi.cloud/';
+//window.config.url = 'http://wokppl.api.ordersystem.konbi.cloud/';
+window.config.url = 'https://wokpplapi.konbi.cloud/';
+//app url
+window.config.appUrl = 'https://wokpplapp.konbi.cloud/';
 //image path
-window.config.upload = 'http://localhost:22742/uploads/'
+window.config.upload = window.config.url + 'uploads/';
 //firebase config 
 window.config.appServerPublicKey = 'BB9U4DQ5jqQQQoCqRvLcoyajrFrha1qY75UaNykTLW52mbgMz3T_cIjB-Tf9tXBMQTwY6Inzchc_X30HfhrMqOQ'

@@ -67,9 +67,16 @@ self.addEventListener('push', function (event) {
     options.data = {
       id: arr[0].substr(1)
     }
-    options.actions = [
-      { "action": "yes", "title": "Yes", "icon": "images/yes.png" },
-      { "action": "no", "title": "No", "icon": "images/no.png" }
+    options.actions = [{
+        "action": "yes",
+        "title": "Yes",
+        "icon": "images/yes.png"
+      },
+      {
+        "action": "no",
+        "title": "No",
+        "icon": "images/no.png"
+      }
     ]
   }
 
@@ -80,7 +87,7 @@ self.addEventListener('push', function (event) {
 self.addEventListener('notificationclick', function (event) {
   console.log('[Service Worker] Notification click Received.');
   console.log(event)
-  let message = event.notification.body;  
+  let message = event.notification.body;
   let data = event.notification.data
   event.notification.close();
 
@@ -91,15 +98,15 @@ self.addEventListener('notificationclick', function (event) {
       return el.substr(0, 1) == "#"
     }).substr(1)
     event.waitUntil(
-      clients.openWindow('http://localhost:81/wokppl-pwa-vooy/#!inbox-detail?orderNumber=' + id)
+      //this is APP url, not api url
+      clients.openWindow(window.config.appUrl+'#!inbox-detail?orderNumber=' + id)
     );
-  }
-  else {
+  } else {
 
     switch (event.action) {
       case 'yes':
         event.waitUntil(
-          clients.openWindow('http://localhost:81/wokppl-pwa-vooy/#!survey?surveyId=' + data.id)
+          clients.openWindow(window.config.appUrl+'#!survey?surveyId=' + data.id)
         );
         break;
       default:

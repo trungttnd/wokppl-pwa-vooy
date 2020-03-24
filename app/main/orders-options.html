@@ -2,7 +2,7 @@
     <div class="page">
         <div class="navbar" style="height: 72px;">
             <div class="navbar-inner">
-                <img class="theme-light-only" src="assets/custom/img/wokppllogo.png" height="60px" alt="" />
+                <img class="theme-light-only" src="{{uploadUrl}}{{logo}}" height="60px" alt="" />
                 <div class="right">
                     <a href="#" @click="goCart" class="link icon-only">
                         <i class="icon material-icons" style="font-size: 40px;">shopping_cart<span
@@ -16,13 +16,13 @@
             {{#if detail}}
             {{#if detail.isNoImage}}
             <div class="block">
-                <img class="img-center"
-                    src="assets/custom/img/{{detail.imageFileName}}" height="{{orgHeight}}" width="{{orgWidth}}" alt="" />
+                <img class="img-center" src="assets/custom/img/{{detail.imageFileName}}" height="{{orgHeight}}"
+                    width="{{orgWidth}}" alt="" />
             </div>
             {{else}}
             <div class="block">
-                <img class="img-center"
-                    src="https://wokppl-api-staging.konbi.cloud/uploads/{{detail.imageFileName}}" height="{{orgHeight}}" width="{{orgWidth}}" alt="" />
+                <img class="img-center" src="{{uploadUrl}}{{detail.imageFileName}}" height="{{orgHeight}}"
+                    width="{{orgWidth}}" alt="" />
             </div>
             {{/if}}
             <div class="block">
@@ -111,11 +111,11 @@
 </template>
 
 <style scoped>
-.halfwidth {
-    width: 100%;
-    height: 50vw;
-    background-color: #e0e0e0;
-}
+    .halfwidth {
+        width: 100%;
+        height: 50vw;
+        background-color: #e0e0e0;
+    }
 </style>
 
 <script>
@@ -140,11 +140,12 @@
                 updateCartList: [],
                 quantity: 0,
                 total: 0,
-                productList: [
-                ],
+                productList: [],
                 availableNumbers: 0,
                 orgWidth: '',
                 orgHeight: '',
+                uploadUrl: window.config.upload,
+                logo: localStorage.getItem('WOKPPL_logoUrl') 
             }
         },
         methods: {
@@ -173,7 +174,7 @@
             },
             closeButton: function () {
                 let checkCarts = JSON.parse(localStorage.getItem('cartItems'))
-                if (checkCarts == [] || checkCarts == null){
+                if (checkCarts == [] || checkCarts == null) {
                     localStorage.removeItem('isEdit');
                     localStorage.removeItem('listOrderDate');
                     localStorage.removeItem('listOrderSession');
@@ -201,7 +202,8 @@
                 self.detail.orderQuantity = quan;
                 for (let i = 0; i < self.cartItems.items.length; i++) {
                     let tempIndexProduct = i + '-' + self.cartItems.items[i].id;
-                    if (self.cartItems.items[i].editornew == true && self.cartItems.items[i].indexProduct == tempIndexProduct) {
+                    if (self.cartItems.items[i].editornew == true && self.cartItems.items[i].indexProduct ==
+                        tempIndexProduct) {
                         self.cartItems.items[i] = self.detail;
                         self.cartItems.items[i].editornew = false;
                         console.log(self.cartItems.items[i]);
@@ -210,8 +212,8 @@
                 }
                 // self.cartItems.items.push(self.detail);
                 availableNumbers = self.detail.availableNumbers - increaseQuan;
-                for (let i = 0; i < self.cartItems.items.length; i++){
-                    if (self.cartItems.items[i].id == self.detail.id){
+                for (let i = 0; i < self.cartItems.items.length; i++) {
+                    if (self.cartItems.items[i].id == self.detail.id) {
                         self.cartItems.items[i].availableNumbers = availableNumbers;
                     }
                 }
@@ -282,8 +284,8 @@
                 // self.detail.price += self.modPrice;
                 // self.detail.quantity = quan;
                 availableNumbers = self.detail.availableNumbers - quan;
-                for (let i = 0; i < self.cartItems.items.length; i++){
-                    if (self.cartItems.items[i].id == self.detail.id){
+                for (let i = 0; i < self.cartItems.items.length; i++) {
+                    if (self.cartItems.items[i].id == self.detail.id) {
                         self.cartItems.items[i].availableNumbers = availableNumbers;
                     }
                 }
@@ -300,10 +302,10 @@
                 //     }
                 //     localStorage.setItem('cartAvailable', JSON.stringify(cartAvailable))
                 // }
-                
+
                 // localStorage.setItem('cartAvailable', JSON.stringify(cartAvailable))
                 // console.log('cartAvailable', cartAvailable);
-                console.log('self.cartItems',self.cartItems);
+                console.log('self.cartItems', self.cartItems);
                 app.toast.show({
                     icon: '<i class="fas fa-fw fa-lg fa-cart-plus"></i>',
                     text: self.detail.name + ' is added to Cart',
@@ -331,8 +333,7 @@
                         editButton: true,
                         availableNumbers: det.availableNumbers + det.orderQuantity,
                     })
-                }
-                else{
+                } else {
                     self.$setState({
                         availableNumbers: det.availableNumbers,
                     })
@@ -342,7 +343,11 @@
                 let listOrderSession = JSON.parse(localStorage.getItem('listOrderSession'))
                 self.$setState({
                     detail: det,
-                    cartItems: JSON.parse(localStorage.getItem('cartItems')) == undefined ? { quantity: 0, total: 0.00, items: [] } : JSON.parse(localStorage.getItem('cartItems')),
+                    cartItems: JSON.parse(localStorage.getItem('cartItems')) == undefined ? {
+                        quantity: 0,
+                        total: 0.00,
+                        items: []
+                    } : JSON.parse(localStorage.getItem('cartItems')),
                     price: det.price,
                     defaultQuan: det.orderQuantity == null ? 1 : det.orderQuantity,
                     templistOrderDate: listOrderDate,
@@ -361,7 +366,8 @@
                                     self.detail.modifierGroups[i].modifiers[j].isChoose = true;
                                     self.modPrice += self.detail.modifierGroups[i].modifiers[j].price;
                                     self.$setState({
-                                        price: self.price + self.detail.modifierGroups[i].modifiers[j].price,
+                                        price: self.price + self.detail.modifierGroups[i].modifiers[
+                                            j].price,
                                     })
                                 }
                             }
@@ -374,7 +380,8 @@
                                     self.detail.modifierGroups[i].modifiers[j].isChoose = false;
                                     self.modPrice -= self.detail.modifierGroups[i].modifiers[j].price;
                                     self.$setState({
-                                        price: self.price - self.detail.modifierGroups[i].modifiers[j].price,
+                                        price: self.price - self.detail.modifierGroups[i].modifiers[
+                                            j].price,
                                     })
                                 }
                             }
@@ -391,45 +398,43 @@
                 // });
                 // console.log('chay den cuoi 2');
                 var tmpImg = new Image();
-                if (self.detail.isNoImage == true){
-                    tmpImg.src="assets/custom/img/" + self.detail.imageFileName;
+                if (self.detail.isNoImage == true) {
+                    tmpImg.src = "assets/custom/img/" + self.detail.imageFileName;
+                } else {
+                    tmpImg.src = window.config.upload + self.detail.imageFileName; //or  document.images[i].src;
                 }
-                else{
-                    tmpImg.src=window.config.upload + self.detail.imageFileName; //or  document.images[i].src;
-                }
-                $(tmpImg).one('load',function(){  
-                    if ((($(window).height() / 2) < tmpImg.height) && (tmpImg.width < (($(window).width() * 80) / 100))){
+                $(tmpImg).one('load', function () {
+                    if ((($(window).height() / 2) < tmpImg.height) && (tmpImg.width < (($(window).width() *
+                            80) / 100))) {
                         console.log('Vao 1')
                         self.$setState({
                             orgWidth: '',
                             orgHeight: $(window).height() / 2 + 'px',
                         });
-                    }
-                    else if (tmpImg.height < (($(window).height() / 2)) && ((($(window).width() * 80) / 100) < tmpImg.width)){
+                    } else if (tmpImg.height < (($(window).height() / 2)) && ((($(window).width() * 80) /
+                            100) < tmpImg.width)) {
                         console.log('Vao 2')
                         self.$setState({
                             orgWidth: $(window).width() * 80 / 100 + 'px',
                             orgHeight: '',
                         });
-                    }
-                    else if ((($(window).height() / 2) < tmpImg.height) && ((($(window).width() * 80) / 100) < tmpImg.width)){
+                    } else if ((($(window).height() / 2) < tmpImg.height) && ((($(window).width() * 80) /
+                            100) < tmpImg.width)) {
                         console.log('Vao 3')
-                        if (tmpImg.height > tmpImg.width){
+                        if (tmpImg.height > tmpImg.width) {
                             console.log('Vao 3.1')
                             self.$setState({
                                 orgWidth: '',
                                 orgHeight: $(window).height() / 2 + 'px',
                             });
-                        }
-                        else{
+                        } else {
                             console.log('Vao 3.2')
                             self.$setState({
                                 orgWidth: $(window).width() * 80 / 100 + 'px',
                                 orgHeight: '',
                             });
                         }
-                    }
-                    else{
+                    } else {
                         console.log('Khong vao dau')
                         self.$setState({
                             orgWidth: tmpImg.width + 'px',
