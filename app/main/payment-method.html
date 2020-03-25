@@ -243,6 +243,7 @@
         on: {
             pageInit: function(){
                 var self = this;
+                localStorage.setItem("currentView", "payment-method");
                 self.loadCreditCards();
             }
         }

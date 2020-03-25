@@ -479,7 +479,7 @@
 								response.result.items[i].imageFileName = 'noimage.png';
 								response.result.items[i].isNoImage = true;
 							} else {
-								response.result.items[i].imageFileNameDisplay = window.config.upload + response.result.items[i].imageFileName
+								response.result.items[i].imageFileNameDisplay = window.config.upload + 'thumb_' + response.result.items[i].imageFileName
 								response.result.items[i].isNoImage = false;
 							}
 						}

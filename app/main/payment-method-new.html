@@ -57,8 +57,7 @@
                                     <div class="item-inner">
                                         <div class="item-title item-floating-label">YYYY</div>
                                         <div class="item-input-wrap">
-                                            <input type="text" name="year" data-encrypt="year" maxlength="4" 
-                                                required />
+                                            <input type="text" name="year" data-encrypt="year" maxlength="4" required />
                                             <div class="item-input-info input-error-message"></div>
                                         </div>
                                     </div>
@@ -105,68 +104,68 @@
     return {
         data: function () {
             return {
-                uploadUrl: window.config.upload, 
-                logo: localStorage.getItem('WOKPPL_logoUrl') 
+                uploadUrl: window.config.upload,
+                logo: localStorage.getItem('WOKPPL_logoUrl')
             }
-            
+
         },
         methods: {
             initializeFormValidator: function () {
-				var self = this;
-				self.formValidator = jQuery('form[name=creditcard]').validate({
-					rules: {						
-						credit_card: {
+                var self = this;
+                self.formValidator = jQuery('form[name=creditcard]').validate({
+                    rules: {
+                        credit_card: {
                             required: true,
                             minlength: 16,
-						},
-						month: {
-							required: true,
+                        },
+                        month: {
+                            required: true,
                             minlength: 2,
                             digits: true
                         },
                         year: {
-							required: true,
+                            required: true,
                             minlength: 4,
                             digits: true
                         },
                         cvv: {
-							required: true,
+                            required: true,
                             minlength: 3,
                             digits: true
                         },
                         name: {
-							required: true,
+                            required: true,
                         },
-					},
-					messages: {						
-						credit_card: {
-							required: 'Please enter credit card number.',
-							minlength: 'Incorrect credit card number.',
-						},
-						month: {
-							required: 'Incorrect month',
+                    },
+                    messages: {
+                        credit_card: {
+                            required: 'Please enter credit card number.',
+                            minlength: 'Incorrect credit card number.',
+                        },
+                        month: {
+                            required: 'Incorrect month',
                             minlength: 'Incorrect month',
                             digits: 'Incorrect month',
                         },
                         year: {
-							required: 'Incorrect year',
+                            required: 'Incorrect year',
                             minlength: 'Incorrect year',
                             digits: 'Incorrect year',
                         },
                         cvv: {
-							required: 'Incorrect CVV2',
+                            required: 'Incorrect CVV2',
                             minlength: 'Incorrect CVV2',
                             digits: 'Incorrect CVV2',
                         },
                         name: {
-							required: 'Please enter name.',
+                            required: 'Please enter name.',
                         },
-					},
-					submitHandler: function () {
-						self.submitForm();
-					}
+                    },
+                    submitHandler: function () {
+                        self.submitForm();
+                    }
 
-				});
+                });
             },
             submitForm: function () {
                 var self = this;
@@ -206,7 +205,10 @@
                                         position: 'bottom',
                                         cssClass: 'toast-round bg-color-green'
                                     });
-                                    app.views.current.router.navigate('/more/payment-method');
+                                    let currentView = localStorage.getItem("currentView");
+                                    if (currentView == "payment-method")
+                                        app.views.current.router.navigate('/more/payment-method');
+                                    else app.views.current.router.navigate('/orders-cart');
                                 }
                                 else {
                                     var dialog = app.dialog.create({
@@ -241,7 +243,7 @@
                         )
                     }
                 });
-			},
+            },
         },
         on: {
             pageInit: function () {
@@ -251,7 +253,7 @@
                 //     if(this.value.length==16)
                 //         $(this).val($(this).val().match(/(\d{4})/g).join(' '));  
                 // });
-			}
+            }
         }
     }
 </script>
