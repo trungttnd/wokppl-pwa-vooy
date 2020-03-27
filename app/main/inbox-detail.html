@@ -192,7 +192,7 @@
 
                         //self.collectionTimeDisplay = colTime.toLocaleTimeString().substring(0,5) + ', ' + colTime.toLocaleDateString();
                         self.collectionTimeDisplay = moment(self.det.collectionTimeDisplay).format(
-                            'DD/MM/YYYY, H:mm:ss');
+                            'DD/MM/YYYY, H:mm');
                         self.statusName = self.det.statusName;
                         self.$setState({
                             detail: self.det,
