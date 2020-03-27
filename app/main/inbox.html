@@ -6,7 +6,7 @@
                 <div class="right">
                     <a href="#" @click="readAll" class="link icon-only" title="Read All">
                         <i class="icon material-icons" style="width: 24px;">done_all</i>
-					</a>
+                    </a>
                 </div>
             </div>
         </div>
@@ -32,9 +32,10 @@
                                         <span class="far fa-bell fa-stack-1x"></span>
                                     </i>
                                 </div>
-                                <div class="item-inner" style="margin-left: unset; padding-right:5px; background-image:unset;">
-                                    <div class="item-text text-color-black" style="-webkit-line-clamp: unset;">                                        
-                                        {{this.notification.data.properties.Message}}                                        
+                                <div class="item-inner"
+                                    style="margin-left: unset; padding-right:5px; background-image:unset;">
+                                    <div class="item-text text-color-black" style="-webkit-line-clamp: unset;">
+                                        {{this.notification.data.properties.Message}}
                                     </div>
                                     <div class="item-after" style="font-size: smaller;">
                                         <!-- {{this.notification.creationTime.substr(8,2)}}-{{this.notification.creationTime.substr(5,2)}}-{{this.notification.creationTime.substr(0,4)}} -->
@@ -55,21 +56,52 @@
                             </div>
                         </a>
                         {{else}}
+                        {{#js_if "this.notification.notificationName == 'Survey'"}}
+                        <a href="/survey?surveyId={{this.notification.data.properties.surveyId}}"
+                            @click="markAsRead('{{this.id}}'))" class="item-link item-content swipeout-content"
+                            style="padding-left: unset;">
+                            <div class="item-content" style="padding-left: unset; width: 100%;">
+                                <div class="item-media text-color-red">
+                                    <i class="fa-stack">
+                                        <span class="far fa-bell fa-stack-1x"></span>
+                                    </i>
+                                </div>
+                                <div class="item-inner"
+                                    style="margin-left: unset; padding-right:5px; background-image:unset;">
+                                    <div class="item-text text-color-black" style="-webkit-line-clamp: unset;">
+                                        {{this.notification.data.properties.Message}}
+                                    </div>
+                                    <div class="item-after" style="font-size: smaller;">
+                                        <!-- {{this.notification.creationTime.substr(8,2)}}-{{this.notification.creationTime.substr(5,2)}}-{{this.notification.creationTime.substr(0,4)}} -->
+                                        {{this.notification.creationTimeDisplay}}
+                                    </div>
+
+                                </div>
+                            </div>
+                        </a>
+                        {{else}}
+                        <!-- <a href="/survey?surveyId=5"
+                            @click="markAsRead('{{this.id}}'))" class="item-link item-content swipeout-content"
+                            style="padding-left: unset;"> -->
                         <div class="item-content" style="padding-left: unset; width: 100%;">
                             <div class="item-media text-color-red">
                                 <i class="fa-stack">
                                     <span class="far fa-bell fa-stack-1x"></span>
                                 </i>
                             </div>
-                            <div class="item-inner" style="margin-left: unset; padding-right:5px; background-image:unset;">
-                                <div class="item-text text-color-black"  style="-webkit-line-clamp: unset;">                                    
-                                    {{this.notification.data.properties.Message}}                                    
+                            <div class="item-inner"
+                                style="margin-left: unset; padding-right:5px; background-image:unset;">
+                                <div class="item-text text-color-black" style="-webkit-line-clamp: unset;">
+                                    {{this.notification.data.properties.Message}}
                                 </div>
                                 <div class="item-after" style="font-size: smaller;">
                                     {{this.notification.creationTime.substr(8,2)}}-{{this.notification.creationTime.substr(5,2)}}-{{this.notification.creationTime.substr(0,4)}}
                                 </div>
                             </div>
                         </div>
+                        <!-- </a> -->
+                        {{/js_if}}
+
                         {{/js_if}}
                         <div class="swipeout-actions swipeout-actions-left">
                             <a href="#" @click="deleteNoti('{{this.id}}')"
@@ -125,27 +157,27 @@
             return {
                 inboxItems: null,
                 inboxNumber: 0,
-                uploadUrl: window.config.upload, 
-                logo: localStorage.getItem('WOKPPL_logoUrl') 
+                uploadUrl: window.config.upload,
+                logo: localStorage.getItem('WOKPPL_logoUrl')
             }
         },
         methods: {
-            readAll: function(){
+            readAll: function () {
                 var self = this;
                 app.request.post(window.config.url + 'api/services/app/Notification/SetAllNotificationsAsRead',
-                function (suc){
-                    console.log(suc)
-                    app.toast.show({
-                                text: 'Set all Notifications as read successful.',
-                                position: 'bottom',
-                                cssClass: 'toast-round bg-color-green'
-                            });
-                            app.views.current.router.refreshPage()
-                },
-                function (err){
-                    console.log(err)
+                    function (suc) {
+                        console.log(suc)
+                        app.toast.show({
+                            text: 'Set all Notifications as read successful.',
+                            position: 'bottom',
+                            cssClass: 'toast-round bg-color-green'
+                        });
+                        app.views.current.router.refreshPage()
+                    },
+                    function (err) {
+                        console.log(err)
 
-                })
+                    })
             },
             markAsRead: function (id) {
                 var self = this;
@@ -223,7 +255,7 @@
                 { MaxResultCount: 1000 },
                 function (suc) {
                     let response = JSON.parse(suc);
-                    
+
                     response.result.items.forEach(element => {
                         element.notification.creationTimeDisplay = moment(element.notification.creationTime).fromNow();
                     });
