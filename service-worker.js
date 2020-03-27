@@ -47,12 +47,16 @@ workbox.routing.registerRoute(
   })
 );
 
+//app url
+const appUrl = 'https://wokpplapp.konbi.cloud/';
+// const appUrl = 'http://localhost:81/wokppl-pwa-vooy/';
+
 /*Notify*/
 self.addEventListener('push', function (event) {
   //console.log('[Service Worker] Push Received.');
   //console.log(`[Service Worker] Push had this data: "${event.data.text()}"`);
   let dataContent = JSON.parse(event.data.text());
-
+  console.log("appUrl", appUrl)
   const title = dataContent.title;
   const options = {
     body: dataContent.message,
@@ -65,22 +69,20 @@ self.addEventListener('push', function (event) {
     let arr = message.split(' ');
     options.body = arr.slice(1, arr.length).join(' ')
     options.data = {
-      id: arr[0].substr(1)
+      id: arr[0]
     }
     options.actions = [{
-        "action": "yes",
-        "title": "Yes",
-        "icon": "images/yes.png"
-      },
-      {
-        "action": "no",
-        "title": "No",
-        "icon": "images/no.png"
-      }
+      "action": "yes",
+      "title": "Yes",
+      "icon": "images/yes.png"
+    },
+    {
+      "action": "no",
+      "title": "No",
+      "icon": "images/no.png"
+    }
     ]
   }
-
-
   event.waitUntil(self.registration.showNotification(title, options));
 });
 
@@ -90,27 +92,28 @@ self.addEventListener('notificationclick', function (event) {
   let message = event.notification.body;
   let data = event.notification.data
   event.notification.close();
-
+  //if order notify
   if (!event.action) {
     let arr = message.split(' ');
-    console.log(arr)
+    //console.log(arr)
     let id = arr.find(function (el) {
       return el.substr(0, 1) == "#"
     }).substr(1)
     event.waitUntil(
       //this is APP url, not api url
-      clients.openWindow(window.config.appUrl+'#!inbox-detail?orderNumber=' + id)
+      clients.openWindow(appUrl + '#!inbox-detail?orderNumber=' + id)
     );
-  } else {
-
+  }
+  //if survey 
+  else {
     switch (event.action) {
       case 'yes':
         event.waitUntil(
-          clients.openWindow(window.config.appUrl+'#!survey?surveyId=' + data.id)
+          clients.openWindow(appUrl + '#!survey?surveyId=' + data.id)
         );
         break;
       default:
-        break
+        break;
     }
   }
 

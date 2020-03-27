@@ -280,8 +280,7 @@ window.config.tenantId = 2;
 //window.config.url = 'https://wokppl-api-staging.konbi.cloud/';
 //window.config.url = 'http://wokppl.api.ordersystem.konbi.cloud/';
 window.config.url = 'https://wokpplapi.konbi.cloud/';
-//app url
-window.config.appUrl = 'https://wokpplapp.konbi.cloud/';
+
 //image path
 window.config.upload = window.config.url + 'uploads/';
 //firebase config 

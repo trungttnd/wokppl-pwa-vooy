@@ -378,7 +378,7 @@
                 uploadUrl: window.config.upload,
                 logo: localStorage.getItem('WOKPPL_logoUrl'),
                 listCard: null,
-                cardId: 0
+                paymentMethodId: 0
             }
         },
         methods: {
@@ -549,7 +549,7 @@
                 self.checkCollectionTime(arrTime)
                 if (self.validateOk == true)
                     self.checkout();
-                //console.log(self.cardId)
+                //console.log(self.paymentMethodId)
             },
             checkout: function () {
                 var self = this;
@@ -634,7 +634,7 @@
                         sessionId: self.newOrder.sessionId,
                         startTime: startTime.toISOString(),
                         endTime: endTime.toISOString(),
-                        paymentMethodId: cardId
+                        paymentMethodId: self.paymentMethodId
                     },
                         function (suc) {
                             console.log('suc', suc)
@@ -990,7 +990,7 @@
                                     if (el.isDefault) return el;
                                     else return null;
                                 });
-                                self.cardId = card==null? 0: card.id
+                                self.paymentMethodId = card==null? 0: card.id
                             }
                         }
                     },
@@ -1017,7 +1017,7 @@
 
                     self.$setState({
                         listCard: list,
-                        cardId: id
+                        paymentMethodId: id
                     })
                     //set Default card
                     app.request.post(window.config.url + 'api/services/app/Card/SetDefault?id=' + id,

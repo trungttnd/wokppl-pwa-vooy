@@ -5,7 +5,7 @@
             <div class="navbar-inner">
                 <img class="theme-light-only" src="{{uploadUrl}}{{logo}}" height="60px" alt="" />
                 <div class="right">
-                    <a href="#" class="link back">
+                    <a href="/more/payment-method" class="link">
                         <span>Back</span>
                     </a>
                 </div>
@@ -28,7 +28,7 @@
                 </i>
             </div>
 
-            <form id="2c2p-payment-form" name="creditcard" action="#" method="POST" enctype="application/json">
+            <form name="creditcard" action="#" method="POST" enctype="application/json">
                 <div class="list no-hairlines no-hairlines-between">
                     <ul>
                         <li class="item-content item-input item-input-with-info">
@@ -90,7 +90,8 @@
                 </div>
                 <div class="block">
                     <div class="row">
-                        <button type="submit" class="button button-big button-fill" @click="unlink({{cardID}})">Unlink</button>
+                        <!-- <button class="button button-big button-fill" @click="unlink({{cardID}})">Unlink1</button> -->
+                        <button type="button" class="button button-big button-fill" @click="unlink({{cardID}})">Unlink</button>
                     </div>
                 </div>
             </form>
@@ -117,9 +118,10 @@
         methods: {
             unlink: function (id) {
                 var self = this;
+                //console.log("id==>",id)
                 self.deleteCard(id)
 
-                app.views.current.router.navigate('/more/payment-method');
+                
             },
             deleteCard: function (id) {
                 var self = this;
@@ -157,7 +159,8 @@
                                 position: 'bottom',
                                 cssClass: 'toast-round bg-color-green'
                             });
-                            app.popup.close('.popup-cardDetail', false);
+                            app.views.current.router.navigate('/more/payment-method');
+                            //app.popup.close('.popup-cardDetail', false);
                         }
                     },
                     error: function (xhr, status) {
