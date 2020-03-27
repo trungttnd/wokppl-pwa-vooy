@@ -1,4 +1,3 @@
-
 <template>
     <div class="page no-swipeback" id="homepage">
         <div class="navbar" style="height: 80px;">
@@ -327,13 +326,13 @@
                     function (suc) {
                         let response = JSON.parse(suc);
                         if (response.result.items.length != 0) {
+                            response.result.items.forEach(element => {
+                                element.imageFileNameDisplay = element.imageFileName != null ? window.config.upload + element.imageFileName : null;
+                            });
                             self.$setState({
                                 bestSellers: response.result.items,
                             });
-                            self.bestSellers.forEach(element => {
-                                element.imageFileNameDisplay = element.imageFileName != null ? window.config.upload + element.imageFileName : null;
-                                //console.log(element.imageFileName)
-                            });
+
                             self.createInstantSwiper(0);
                             self.loadBestSellersGalleryImage(response.result);
                         }
@@ -366,14 +365,13 @@
                     function (suc) {
                         let response = JSON.parse(suc);
                         if (response.result.items.length != 0) {
+                            response.result.items.forEach(element => {
+                                element.imageFileNameDisplay = element.imageFileName != null ? window.config.upload + element.imageFileName : null;
+                            });
                             self.$setState({
-                                uploadUrl: window.config.upload,
                                 newProducts: response.result.items,
                             });
-                            self.newProducts.forEach(element => {
-                                            element.imageFileNameDisplay = element.imageFileName != null ? window.config.upload + element.imageFileName : null;
-                                            //console.log(element.imageFileName)
-                                        });
+
                             self.createInstantSwiper(1);
                             self.updateSwiper(1);
                             self.loadNewProductsGalleryImage(response.result);
@@ -386,7 +384,7 @@
                                         self.$setState({
                                             newProducts: data.result.items
                                         });
-                                        
+
                                         self.createInstantSwiper(1);
                                         self.updateSwiper(1);
                                         self.loadNewProductsGalleryImage(data.result);
@@ -402,17 +400,17 @@
             loadBestSellersGalleryImage: function (data) {
                 var self = this;
                 for (let i = 0; i < data.items.length; i++) {
-					data.items[i].number = i;
-					data.items[i].imageFileNameDisplay = data.items[i].imageFileName!=null? window.config.upload+data.items[i].imageFileName:null;
-					
+                    data.items[i].number = i;
+                    data.items[i].imageFileNameDisplay = data.items[i].imageFileName != null ? window.config.upload + data.items[i].imageFileName : null;
+
                 }
                 self.initializeBestSellersPhotos(data);
             },
             loadNewProductsGalleryImage: function (data) {
                 var self = this;
                 for (let i = 0; i < data.items.length; i++) {
-					data.items[i].number = i;
-					data.items[i].imageFileNameDisplay = data.items[i].imageFileName!=null? window.config.upload+data.items[i].imageFileName:null;
+                    data.items[i].number = i;
+                    data.items[i].imageFileNameDisplay = data.items[i].imageFileName != null ? window.config.upload + data.items[i].imageFileName : null;
                 }
                 self.initializeNewProductsPhotos(data);
             },
@@ -453,15 +451,23 @@
                     listImg.push(window.config.upload + data.items[i].imageFileName);
                 }
                 self.$('.instance-0 .slide-media img').on('click', function () {
-                    var currentSlide = self.$('.instance-0 .slide-media img').parent().parent().parent('.swiper-slide-active').data('swiper-slide-index');
-                    var photoBrowser = app.photoBrowser.create({
-                        photos: listImg,
-                        swiper: {
-                            initialSlide: currentSlide
-                        },
-                        theme: app.utils.theme.getLayout()
+                    let productClicked = data.items.find((el) => {
+                        return el.imageFileNameDisplay == this.src;
                     });
-                    photoBrowser.open();
+                    // var photoBrowser = app.photoBrowser.create({
+                    //     photos: listImg,
+                    //     swiper: {
+                    //         initialSlide: currentSlide
+                    //     },
+                    //     theme: app.utils.theme.getLayout()
+                    // });
+                    // photoBrowser.open();
+                    // localStorage.setItem('addProduct', JSON.stringify(productClicked))
+                    // localStorage.setItem('listOrderDate', JSON.stringify(moment(new Date()).format(
+                    //     'DD/MM/YYYY')));
+                    // localStorage.setItem('listOrderSession', JSON.stringify(productClicked.session));
+                    // app.views.current.router.navigate('/orders-options');
+                    console.log(productClicked);
                 });
                 self.updateSwiper(0);
             },
@@ -491,18 +497,22 @@
                     listImg.push(window.config.upload + data.items[i].imageFileName);
                 }
                 self.$('.instance-1 .slide-media img').on('click', function () {
-                    var currentSlide = self.$('.instance-1 .slide-media img').parent().parent().parent('.swiper-slide-active').data('swiper-slide-index');
-                    var photoBrowser = app.photoBrowser.create({
-                        photos: listImg,
-                        swiper: {
-                            initialSlide: currentSlide
-                        },
-                        theme: app.utils.theme.getLayout()
+                    // var currentSlide = self.$('.instance-1 .slide-media img').parent().parent().parent('.swiper-slide-active').data('swiper-slide-index');
+                    // var photoBrowser = app.photoBrowser.create({
+                    //     photos: listImg,
+                    //     swiper: {
+                    //         initialSlide: currentSlide
+                    //     },
+                    //     theme: app.utils.theme.getLayout()
+                    // });
+                    // photoBrowser.open();
+                    // setTimeout(function () {
+                    //     self.updateSwiper(1);
+                    // }, 2000);
+                    let productClicked = data.items.find((el) => {
+                        return el.imageFileNameDisplay == this.src;
                     });
-                    photoBrowser.open();
-                    setTimeout(function () {
-                        self.updateSwiper(1);
-                    }, 2000);
+                    console.log(productClicked);
                 });
             },
             initializeSliderHero: function (imageList) {
