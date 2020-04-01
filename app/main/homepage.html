@@ -58,8 +58,8 @@
                                             {{/js_if}}
                                         </div>
                                         <div class="details">
-                                            <h3>{{this.name}}</h3>
-                                            <span>${{this.price}}</span>
+                                            <h3 style="max-height: 40px; overflow: hidden;">{{this.name}}</h3>
+                                            <span>${{this.price.toFixed(2)}}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -94,8 +94,8 @@
                                             {{/js_if}}
                                         </div>
                                         <div class="details">
-                                            <h3>{{this.name}}</h3>
-                                            <span>${{this.price}}</span>
+                                            <h3 style="max-height: 40px; overflow: hidden;">{{this.name}}</h3>
+                                            <span>${{this.price.toFixed(2)}}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -430,23 +430,8 @@
                 var listImg = [];
                 var tempWidth = 0;
                 var tempHeight = 0;
-                // for (let i = 0; i < data.items.length; i++) {
-                //     $('.bestSellersGallery' + i).on('load', function (event) {
-                //         // Lay ti le 4:3
-                //         // 133.33 la ti le % cua width va height
-                //         tempWidth = $('.bestSellersGallery' + i).prop('naturalWidth');
-                //         tempHeight = $('.bestSellersGallery' + i).prop('naturalHeight');
-                //         if (tempWidth > $(window).width() || ((tempWidth * 100 / tempHeight).toFixed(2) != 133.33)) {
-                //             //$('.bestSellersGallery' + i).width((($(window).width() - 10) / 3).toFixed(0));
-                //             $('.bestSellersGallery' + i).height((($(window).width() / 2).toFixed(0) * 100 / 133.33).toFixed(0));
-                //         }
-                //     });
-                // }
+
                 $("#bestSellers-card").toggle();
-                //self.updateSwiper(0);
-                //self.createInstantSwiper(0);
-                //self.totalSwiperInstances[0].update();
-                //$("#bestSellers-card").toggle();
                 for (let i = 0; i < data.items.length; i++) {
                     listImg.push(window.config.upload + data.items[i].imageFileName);
                 }
@@ -454,61 +439,21 @@
                     let productClicked = data.items.find((el) => {
                         return el.imageFileNameDisplay == this.src;
                     });
-                    // var photoBrowser = app.photoBrowser.create({
-                    //     photos: listImg,
-                    //     swiper: {
-                    //         initialSlide: currentSlide
-                    //     },
-                    //     theme: app.utils.theme.getLayout()
-                    // });
-                    // photoBrowser.open();
-                    // localStorage.setItem('addProduct', JSON.stringify(productClicked))
-                    // localStorage.setItem('listOrderDate', JSON.stringify(moment(new Date()).format(
-                    //     'DD/MM/YYYY')));
-                    // localStorage.setItem('listOrderSession', JSON.stringify(productClicked.session));
-                    // app.views.current.router.navigate('/orders-options');
                     console.log(productClicked);
                 });
-                self.updateSwiper(0);
+                //self.updateSwiper(0);
             },
             initializeNewProductsPhotos: function (data) {
                 var self = this;
                 var listImg = [];
                 var tempWidth = 0;
                 var tempHeight = 0;
-                // for (let i = 0; i < data.items.length; i++) {
-                //     $('.newProductsGallery' + i).on('load', function (event) {
-                //         // Lay ti le 4:3
-                //         // 133.33 la ti le % cua width va height
-                //         tempWidth = $('.newProductsGallery' + i).prop('naturalWidth');
-                //         tempHeight = $('.newProductsGallery' + i).prop('naturalHeight');
-                //         if (tempWidth > $(window).width() || ((tempWidth * 100 / tempHeight).toFixed(2) != 133.33)) {
-                //             //$('.newProductsGallery' + i).width((($(window).width() - 10) / 3).toFixed(0));
-                //             $('.newProductsGallery' + i).height((($(window).width() / 2).toFixed(0) * 100 / 133.33).toFixed(0));
-                //         }
-                //     });
-                // }
+                
                 $("#newProducts-card").toggle();
-                //self.updateSwiper(1);
-                //self.createInstantSwiper(1);
-                //self.totalSwiperInstances[1].update();
-                //$("#newProducts-card").toggle();
                 for (let i = 0; i < data.items.length; i++) {
                     listImg.push(window.config.upload + data.items[i].imageFileName);
                 }
                 self.$('.instance-1 .slide-media img').on('click', function () {
-                    // var currentSlide = self.$('.instance-1 .slide-media img').parent().parent().parent('.swiper-slide-active').data('swiper-slide-index');
-                    // var photoBrowser = app.photoBrowser.create({
-                    //     photos: listImg,
-                    //     swiper: {
-                    //         initialSlide: currentSlide
-                    //     },
-                    //     theme: app.utils.theme.getLayout()
-                    // });
-                    // photoBrowser.open();
-                    // setTimeout(function () {
-                    //     self.updateSwiper(1);
-                    // }, 2000);
                     let productClicked = data.items.find((el) => {
                         return el.imageFileNameDisplay == this.src;
                     });
@@ -647,37 +592,20 @@
             self.loadSession();
             self.loadCategory();
 
-
-
-            // setTimeout(function() {
-            //     self.updateSwiper();
-            // }, 3000);
-            //self.updateSwiper();
-            document.addEventListener('scroll', function (event) {
-                var hT = $('#bestSellers-card').offset().top,
-                    hH = $('#bestSellers-card').outerHeight(),
-                    wH = $(window).height(),
-                    wS = $(this).scrollTop();
-                if (wS > (hT + hH - wH) && (hT > wS) && (wS + wH > hT + hH)) {
-                    //console.log('den so 1');
-                    self.updateSwiper();
-                } else {
-                    //console.log('den so 2');
-                    self.updateSwiper(0);
-                }
-            }, true /*Capture event*/);
-            // window.scroll(function() {
-            //     console.log('scroll');
-            //     var hT = $('#newProducts-card').offset().top,
-            //         hH = $('#newProducts-card').outerHeight(),
+            // document.addEventListener('scroll', function (event) {
+            //     var hT = $('#bestSellers-card').offset().top,
+            //         hH = $('#bestSellers-card').outerHeight(),
             //         wH = $(window).height(),
             //         wS = $(this).scrollTop();
-            //     if (wS > (hT+hH-wH) && (hT > wS) && (wS+wH > hT+hH)){
-            //         self.updateSwiper(1);
+            //     if (wS > (hT + hH - wH) && (hT > wS) && (wS + wH > hT + hH)) {
+            //         //console.log('den so 1');
+            //         self.updateSwiper();
             //     } else {
+            //         //console.log('den so 2');
             //         self.updateSwiper(0);
             //     }
-            // });
+            // }, true /*Capture event*/);
+
             //subscription user
             swRegistration.pushManager.getSubscription()
                 .then(function (subscription) {

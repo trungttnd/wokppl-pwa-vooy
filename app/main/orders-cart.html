@@ -337,7 +337,6 @@
     return {
         data: function () {
             return {
-                uploadUrl: window.config.upload,
                 quantity: 0,
                 total: 0,
                 productList: [],
@@ -378,7 +377,8 @@
                 uploadUrl: window.config.upload,
                 logo: localStorage.getItem('WOKPPL_logoUrl'),
                 listCard: null,
-                paymentMethodId: 0
+                paymentMethodId: 0,
+                busyBtn: true
             }
         },
         methods: {
@@ -389,31 +389,32 @@
                 app.request.get(window.config.url + 'api/services/app/Preorder/GetLoyaltyPointRateInfo',
                     function (suc) {
                         let response = JSON.parse(suc)
-                        console.log(response.result)
+                        //console.log(response.result)
                         self.$setState({
                             ratePoint: response.result
                         });
+                        //API GetCurrentLoyaltyPointInfo
+                        setTimeout(function () {
+                            app.request.get(window.config.url +
+                                'api/services/app/Preorder/GetCurrentLoyaltyPointInfo',
+                                function (suc) {
+                                    let res = JSON.parse(suc)
+                                    //console.log(res.result)
+                                    self.$setState({
+                                        isEnabledPoint: res.result.enabled,
+                                        redeem: res.result.point * response.result.redeemPointRate
+                                    })
+                                },
+                                function (err) {
+                                    console.log(err)
+                                });
+                        })
                     },
                     function (err) {
                         console.log(err)
                     });
 
-                //API GetCurrentLoyaltyPointInfo
-                setTimeout(function () {
-                    app.request.get(window.config.url +
-                        'api/services/app/Preorder/GetCurrentLoyaltyPointInfo',
-                        function (suc) {
-                            let response = JSON.parse(suc)
-                            console.log(response.result)
-                            self.$setState({
-                                isEnabledPoint: response.result.enabled,
-                                redeem: response.result.point * self.ratePoint.redeemPointRate
-                            })
-                        },
-                        function (err) {
-                            console.log(err)
-                        }, 500);
-                })
+
             },
             initializeTimepicker24: function () {
                 var self = this;
@@ -429,8 +430,8 @@
                 var self = this;
                 var tempGrandTotal = 0;
                 var tempAvailableNumbers = 0;
-                console.log(self.updateCartList);
-                console.log(id);
+                //console.log(self.updateCartList);
+                //console.log(id);
                 for (let i = 0; i < self.updateCartList.items.length; i++) {
                     if (self.updateCartList.items[i].indexProduct == indexProduct) {
                         self.updateCartList.quantity = self.updateCartList.quantity - self.updateCartList.items[i]
@@ -440,7 +441,7 @@
                         tempGrandTotal = self.grandTotal - self.updateCartList.items[i].price * self.updateCartList
                             .items[i].orderQuantity;
                         tempAvailableNumbers = self.updateCartList.items[i].orderQuantity;
-                        console.log('tempAvailableNumbers', tempAvailableNumbers);
+                        //console.log('tempAvailableNumbers', tempAvailableNumbers);
                         self.updateCartList.items.splice(i, 1);
                     }
                 }
@@ -469,11 +470,11 @@
                 for (let i = 0; i < self.updateCartList.items.length; i++) {
                     if (self.updateCartList.items[i].id == id) {
                         self.updateCartList.items[i].availableNumbers += tempAvailableNumbers;
-                        console.log('self.updateCartList.items[i].availableNumbers', self.updateCartList.items[i]
-                            .availableNumbers);
+                        // console.log('self.updateCartList.items[i].availableNumbers', self.updateCartList.items[i]
+                        //     .availableNumbers);
                     }
                 }
-                console.log(self.updateCartList);
+                //console.log(self.updateCartList);
                 localStorage.setItem('cartItems', JSON.stringify(self.updateCartList));
                 let cartTemp = JSON.parse(localStorage.getItem('cartItems'));
                 self.$setState({
@@ -486,11 +487,11 @@
             },
             clearProduct: function (indexProduct) {
                 var self = this;
-                console.log(self.updateCartList);
+                //console.log(self.updateCartList);
                 self.updateCartList.items.splice(0, self.updateCartList.items.length);
                 self.updateCartList.quantity = 0;
                 self.updateCartList.total = 0;
-                console.log(self.updateCartList);
+                //console.log(self.updateCartList);
                 self.updateCartList.listOrderDate = null;
                 self.updateCartList.listOrderSession.name = null;
                 self.updateCartList.listOrderSession.startTime = '';
@@ -522,7 +523,7 @@
                 //         det = self.productList[i];
                 //     }
                 // }
-                console.log(det)
+                //console.log(det)
                 det.editornew = true;
                 localStorage.setItem('isEdit', isEdit);
                 localStorage.setItem('editProduct', JSON.stringify(det));
@@ -543,12 +544,17 @@
             },
             validate: function () {
                 var self = this;
-                self.validateOk = true;
-                console.log(self.$('input[id=timepicker-24]').val())
-                let arrTime = self.$('input[id=timepicker-24]').val().split(':')
-                self.checkCollectionTime(arrTime)
-                if (self.validateOk == true)
-                    self.checkout();
+                if (self.busyBtn) {
+                    self.busyBtn = false;
+                    //console.log("true");
+                    self.validateOk = true;
+                    //console.log(self.$('input[id=timepicker-24]').val())
+                    let arrTime = self.$('input[id=timepicker-24]').val().split(':')
+                    self.checkCollectionTime(arrTime)
+                    if (self.validateOk == true)
+                        self.checkout();
+                }
+                else console.log("disable checkout")
                 //console.log(self.paymentMethodId)
             },
             checkout: function () {
@@ -571,8 +577,8 @@
                 //     alert('def');
                 // }
                 if (cartTemp != null) {
-                    console.log(self.listOrderSession, self.listOrderDate)
-                    console.log(cartTemp)
+                    //console.log(self.listOrderSession, self.listOrderDate)
+                    //console.log(cartTemp)
 
                     let today = new Date();
                     var offset = -(today.getTimezoneOffset() / 60);
@@ -637,11 +643,12 @@
                         paymentMethodId: self.paymentMethodId
                     },
                         function (suc) {
-                            console.log('suc', suc)
+                            //console.log('suc', suc)
                             localStorage.removeItem('cartItems');
                             localStorage.removeItem('listOrderSession');
                             localStorage.removeItem('listOrderDate');
                             app.views.current.router.navigate('/orders-finish?order=' + suc.result.orderNumber);
+                            self.busyBtn = true;
                         },
                         function (err) {
                             console.log('err', err)
@@ -662,6 +669,7 @@
                                 }]
                             });
                             dialog.open();
+                            self.busyBtn = true;
                         })
                 }
             },
@@ -692,15 +700,15 @@
                     // dateTimeDefaultExtend = new Date(dateTimeDefaultExtend);
                     today = dateTimeDefault;
                 }
-                console.log('today', today);
+                //console.log('today', today);
                 // Het doan compare
 
                 today.setTime(today.getTime() + (sessionTemp.preparationTime * 60 * 1000) + (sessionTemp
                     .bufferTime * 60 * 1000));
-                console.log('today', today);
+                //console.log('today', today);
                 today = new Date(today);
-                console.log('today.getHours()', today.getHours());
-                console.log('+self.hourStart', +self.hourStart);
+                //console.log('today.getHours()', today.getHours());
+                //console.log('+self.hourStart', +self.hourStart);
                 var pickerInline = app.picker.create({
                     //containerEl: '#demo-picker-date-container',
                     inputEl: '#timepicker-24',
@@ -750,7 +758,7 @@
                             // if (values[0]==self.hourStart) minStart = self.minStart;
                         },
                         close: function (picker) {
-                            console.log('picker', picker);
+                            //console.log('picker', picker);
                             self.checkCollectionTime(picker.value);
                             self.$setState({
                                 disableCloseButton: false,
@@ -817,12 +825,12 @@
                 // Gan ngay lay tu session voi startime
                 let startDateTime = sessionDate + ' ' + sessionTemp.startTime;
                 startDateTime = new Date(startDateTime);
-                console.log('Chan lai startDateTime', startDateTime, startDateTime.getHours());
-                console.log('sessionTemp', sessionTemp);
+                //console.log('Chan lai startDateTime', startDateTime, startDateTime.getHours());
+                //console.log('sessionTemp', sessionTemp);
                 startDateTimeExtend.setTime(startDateTime.getTime() + (sessionTemp.preparationTime * 60 * 1000) + (
                     sessionTemp.bufferTime * 60 * 1000));
                 startDateTimeExtend = new Date(startDateTimeExtend);
-                console.log('Chan lai startDateTimeExtend', startDateTimeExtend);
+                //console.log('Chan lai startDateTimeExtend', startDateTimeExtend);
                 // Gan ngay lay tu session voi endtime
                 let endDateTime = sessionDate + ' ' + sessionTemp.endTime;
                 endDateTime = new Date(endDateTime);
@@ -837,8 +845,8 @@
                 dateTimeNowExtend.setTime(tempDateTimeNow.getTime());
                 dateTimeNowExtend = new Date(dateTimeNowExtend);
 
-                console.log(startDateTimeExtend, dateTimeNowPlus, self.compareDate(startDateTimeExtend,
-                    dateTimeNowPlus))
+                // console.log(startDateTimeExtend, dateTimeNowPlus, self.compareDate(startDateTimeExtend,
+                //     dateTimeNowPlus))
                 // if (startDateTimeExtend > dateTimeNowPlus) 
                 if (self.compareDate(startDateTimeExtend, dateTimeNowPlus)) {
                     self.messageTime = startDateTimeExtend.getHours() + ':' + (startDateTimeExtend.getMinutes() <
@@ -907,11 +915,11 @@
                                 dateTimeNowExtend.getMinutes()));
                 }
 
-                console.log('startDateTime', startDateTime);
-                console.log('endDateTime', endDateTime);
-                console.log('pickerDateTime', pickerDateTime);
-                console.log('startDateTimeExtend', startDateTimeExtend);
-                console.log('dateTimeNowPlus', dateTimeNowPlus);
+                // console.log('startDateTime', startDateTime);
+                // console.log('endDateTime', endDateTime);
+                // console.log('pickerDateTime', pickerDateTime);
+                // console.log('startDateTimeExtend', startDateTimeExtend);
+                // console.log('dateTimeNowPlus', dateTimeNowPlus);
             },
             openPopOver: function () {
                 var dynamicPopover = app.popover.create({
@@ -928,10 +936,10 @@
                     // Events
                     on: {
                         open: function (popover) {
-                            console.log('Popover mo');
+                            //console.log('Popover mo');
                         },
                         opened: function (popover) {
-                            console.log('Popover da mo');
+                            //console.log('Popover da mo');
                         },
                     }
                 });
@@ -942,7 +950,7 @@
                 app.request.get(window.config.url + 'api/services/app/Session/GetCurrentLoginInformations',
                     function (suc) {
                         let response = JSON.parse(suc)
-                        console.log(response.result.user)
+                        //console.log(response.result.user)
                         if (response.result.user == null || response.result.user == 'null') {
                             app.utils.custom.removeCookie();
                             app.views.current.router.navigate('/signin');
@@ -978,19 +986,19 @@
                 //loaf list card
                 app.request.get(window.config.url + 'api/services/app/Card/GetAllCards',
                     function (suc) {
-                        console.log('list card success');
+                        //console.log('list card success');
                         if (suc) {
                             let response = JSON.parse(suc);
-                            console.log(response);
+                            //console.log(response);
                             if (response.result.items) {
                                 self.$setState({
                                     listCard: response.result.items
                                 });
-                                let card = response.result.items.find((el)=>{
+                                let card = response.result.items.find((el) => {
                                     if (el.isDefault) return el;
                                     else return null;
                                 });
-                                self.paymentMethodId = card==null? 0: card.id
+                                self.paymentMethodId = card == null ? 0 : card.id
                             }
                         }
                     },
@@ -1002,7 +1010,7 @@
             },
             clickHandle: function (id, isDefault) {
                 var self = this;
-                console.log(id, isDefault)
+                //console.log(id, isDefault)
                 if (!isDefault) {
                     //uncheck others checkbox
                     $('input[type="checkbox"]').on('change', function () {
@@ -1023,7 +1031,7 @@
                     app.request.post(window.config.url + 'api/services/app/Card/SetDefault?id=' + id,
                         function (suc) {
                             let response = JSON.parse(suc);
-                            console.log(response)
+                            //console.log(response)
                         },
                         function (err) {
                             let response = JSON.parse(err.response);
@@ -1065,8 +1073,8 @@
                         disableCheckout: true,
                     })
                 }
-                console.log('disableCheckout', disableCheckout);
-                console.log('cartTemp:', cartTemp);
+                //console.log('disableCheckout', disableCheckout);
+                //console.log('cartTemp:', cartTemp);
                 let tempString = [];
                 if (cartTemp != null)
                     for (let i = 0; i < cartTemp.items.length; i++) {
@@ -1094,18 +1102,18 @@
                                 .total * (1 + Number(self.gst) / 100)
                         })
                     }
-                    console.log(self.checkToggle)
+                    //console.log(self.checkToggle)
                 })
                 self.$('input[type=radio]').change(function () {
-                    console.log($(this).val())
+                    //console.log($(this).val())
                     self.newOrder.type = $(this).val();
                 });
 
                 let sessionTemp = JSON.parse(localStorage.getItem('listOrderSession'));
                 let orderDateTemp = JSON.parse(localStorage.getItem('listOrderDate'));
-                console.log('sessionTemp', sessionTemp);
-                console.log('orderDateTemp', orderDateTemp);
-                console.log('orderDateTemp convert', new Date(orderDateTemp));
+                // console.log('sessionTemp', sessionTemp);
+                // console.log('orderDateTemp', orderDateTemp);
+                // console.log('orderDateTemp convert', new Date(orderDateTemp));
 
 
 
@@ -1140,7 +1148,7 @@
                         minuteEnd: arrEndTime[1]
                     })
                 }
-                console.log(cartTemp.items)
+                //console.log(cartTemp.items)
 
                 if (self.gstType == 'inclusive') {
                     let temp = cartTemp.items;
@@ -1153,7 +1161,7 @@
                 } else self.$setState({
                     productList: cartTemp.items
                 })
-                console.log('productList', self.productList, self.total, self.grandTotal);
+                //console.log('productList', self.productList, self.total, self.grandTotal);
                 self.showTimePicker();
 
                 $(document).ready(function () {
