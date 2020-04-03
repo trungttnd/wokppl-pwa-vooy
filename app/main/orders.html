@@ -78,9 +78,7 @@
 							</div>
 							{{else}}
 							<div class="item-media"><a href="#" @click="selectOption('{{this.id}}')"
-									class="item-link"><img
-										src="{{this.imageFileNameDisplay}}"
-										width="80" /></a>
+									class="item-link"><img src="{{this.imageFileNameDisplay}}" width="80" /></a>
 							</div>
 							{{/if}}
 							<div class="item-inner">
@@ -205,8 +203,8 @@
 				sessChoose: null,
 				isNoProduct: false,
 				yearNow: null,
-				uploadUrl: window.config.upload, 
-                logo: localStorage.getItem('WOKPPL_logoUrl') 
+				uploadUrl: window.config.upload,
+				logo: localStorage.getItem('WOKPPL_logoUrl')
 			}
 		},
 		methods: {
@@ -345,7 +343,7 @@
 				//console.log('orderDate', orderDate);
 				//console.log('orderSession', orderSession);
 				if ((self.cartItems.quantity == 0) || (orderDate == self.cartItems.listOrderDate && orderSession ==
-						self.cartItems.listOrderSession.id)) {
+					self.cartItems.listOrderSession.id)) {
 					if (det.isAvailable) {
 						if (det.quantity != null && det.quantity > 0) {
 							localStorage.setItem('listOrderDate', JSON.stringify(self.listOrderDate));
@@ -440,11 +438,11 @@
 				//console.log('query', date, sessionId, categoryId)
 				if (sessionId == "undefined") sessionId = undefined;
 				app.request.get(window.config.url + 'api/services/app/Preorder/GetProductMenuBrowsingList', {
-						Date: date,
-						SessionId: sessionId,
-						CategoryId: categoryId,
-						MaxResultCount: 5000
-					},
+					Date: date,
+					SessionId: sessionId,
+					CategoryId: categoryId,
+					MaxResultCount: 5000
+				},
 					function (suc) {
 						//console.log('suc', JSON.parse(suc))
 						let response = JSON.parse(suc)
@@ -519,15 +517,25 @@
 					newDate = changeDate;
 				}
 				//console.log('newDate', newDate);
+				//(sessionTemp.preparationTime * 60 * 1000) + (sessionTemp.bufferTime * 60 * 1000)
 				self.session = [];
 				let arr = [];
 				for (let i = 0; i < listSession.length; i++) {
 					listSession[i].startTime = self.convertIsoDateToHourMin(listSession[i].startTimeDisplay);
 					listSession[i].endTime = self.convertIsoDateToHourMin(listSession[i].endTimeDisplay);
-					if (Date.parse(newDate + ' ' + listSession[i].startTime) < Date.parse(dateInput + ' ' + timeNow) &&
-						Date.parse(dateInput + ' ' + timeNow) > Date.parse(newDate + ' ' + listSession[i].endTime)) {
+					let extraTime = listSession[i].preparationTime * 60 * 1000 + listSession[i].bufferTime * 60 * 1000;
+					
+					//console.log(Date.parse(dateInput + ' ' + timeNow), Date.parse(newDate + ' ' + listSession[i].endTime), Date.parse(newDate + ' ' + listSession[i].endTime) - extraTime, extraTime)
+					// if (Date.parse(newDate + ' ' + listSession[i].startTime) < Date.parse(dateInput + ' ' + timeNow) &&
+					// 	Date.parse(dateInput + ' ' + timeNow) > Date.parse(newDate + ' ' + listSession[i].endTime)) {
+					// 	count++;
+					// } else {
+					// 	arr.push(listSession[i])
+					// }
+					if (Date.parse(dateInput + ' ' + timeNow) > Date.parse(newDate + ' ' + listSession[i].endTime) - extraTime) {
 						count++;
-					} else {
+					}
+					else {
 						arr.push(listSession[i])
 					}
 				}
@@ -553,25 +561,25 @@
 						'" width="84" alt="" /><p><b>Your cart has a product from a different session!</b></p><p>Clear cart and add product from this session?</p></div>',
 					verticalButtons: true,
 					buttons: [{
-							text: 'Yes!',
-							bold: true,
-							color: 'green',
-							onClick: function () {
-								self.clearCartWhenSessionExpired();
-								localStorage.setItem('listOrderDate', JSON.stringify(self
-									.listOrderDate));
-								localStorage.setItem('listOrderSession', JSON.stringify(self
-									.listOrderSession));
-								app.views.current.router.navigate('/orders-options');
-							}
-						},
-						{
-							text: 'No!',
-							color: 'gray',
-							onClick: function () {
-								app.views.current.router.refreshPage()
-							}
+						text: 'Yes!',
+						bold: true,
+						color: 'green',
+						onClick: function () {
+							self.clearCartWhenSessionExpired();
+							localStorage.setItem('listOrderDate', JSON.stringify(self
+								.listOrderDate));
+							localStorage.setItem('listOrderSession', JSON.stringify(self
+								.listOrderSession));
+							app.views.current.router.navigate('/orders-options');
 						}
+					},
+					{
+						text: 'No!',
+						color: 'gray',
+						onClick: function () {
+							app.views.current.router.refreshPage()
+						}
+					}
 					]
 				});
 				return dialog;
@@ -585,22 +593,22 @@
 						'" width="84" alt="" /><p><b>Over time!</b></p><p>Please empty your cart before continue!.</p></div>',
 					verticalButtons: true,
 					buttons: [{
-							text: 'Empty cart!',
-							bold: true,
-							color: 'green',
-							onClick: function () {
-								self.clearCartWhenSessionExpired();
-								app.views.current.router.refreshPage()
-							}
-						},
-						{
-							text: 'Go to home page!',
-							bold: true,
-							color: 'gray',
-							onClick: function () {
-								app.views.current.router.navigate('/');
-							}
+						text: 'Empty cart!',
+						bold: true,
+						color: 'green',
+						onClick: function () {
+							self.clearCartWhenSessionExpired();
+							app.views.current.router.refreshPage()
 						}
+					},
+					{
+						text: 'Go to home page!',
+						bold: true,
+						color: 'gray',
+						onClick: function () {
+							app.views.current.router.navigate('/');
+						}
+					}
 					]
 				});
 				return dialog;
@@ -674,15 +682,33 @@
 				categories: JSON.parse(localStorage.getItem('categories'))
 			});
 
-			if (orderDateTemp == null) {
-				firstLoadDay = '';
-			} else {
+			// if (orderDateTemp == null) {
+			// 	firstLoadDay = '';
+			// } else {
+			// 	console.log(orderDateTemp)
+			// 	let arrFirstDay = orderDateTemp.split('/');
+			// 	firstLoadDay = arrFirstDay[1] + '/' + arrFirstDay[0] + '/' + arrFirstDay[2];
+			// 	console.log('Ngay session', firstLoadDay + ' ' + sessionTemp.endTime);
+			// 	console.log('Ngay hien tai', dateInput + ' ' + timeNow);
+			// 	if (Date.parse(firstLoadDay + ' ' + sessionTemp.endTime) < Date.parse(dateInput + ' ' + timeNow)) {
+
+			// 		localStorage.setItem('disableCheckout', JSON.stringify('true'))
+			// 		if (self.cartItems.quantity > 0) self.goCartDialog().open();
+			// 		else {
+			// 			self.clearCartWhenSessionExpired();
+			// 			app.views.current.router.refreshPage()
+			// 		}
+			// 	}
+			// }
+
+			//console.log(sessionTemp)
+			if (sessionTemp == null) {
+				firstLoad = '';
+			}
+			else {
 				let arrFirstDay = orderDateTemp.split('/');
 				firstLoadDay = arrFirstDay[1] + '/' + arrFirstDay[0] + '/' + arrFirstDay[2];
-				//console.log('Ngay session', firstLoadDay + ' ' + sessionTemp.endTime);
-				//console.log('Ngay hien tai', dateInput + ' ' + timeNow);
-				if (Date.parse(firstLoadDay + ' ' + sessionTemp.endTime) < Date.parse(dateInput + ' ' + timeNow)) {
-					localStorage.setItem('disableCheckout', JSON.stringify('true'))
+				if (new Date(sessionTemp.endTimeDisplay) < new Date()) {
 					if (self.cartItems.quantity > 0) self.goCartDialog().open();
 					else {
 						self.clearCartWhenSessionExpired();

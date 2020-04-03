@@ -205,6 +205,7 @@
                 logo: 'wokppllogo.png',
                 totalSwiperInstances: {},
                 uploadUrl: window.config.upload,
+                sessions: null
             }
         },
         methods: {
@@ -414,6 +415,80 @@
                 }
                 self.initializeNewProductsPhotos(data);
             },
+            selectedProduct: function (product) {
+                var self = this;
+                app.request.get(window.config.url + 'api/services/app/Preorder/GetProductMenuBrowsingList', {
+                    Name: product.id,
+                    MaxResultCount: 5000
+                },
+                    function (suc) {
+                        //console.log('suc', JSON.parse(suc))
+                        let response = JSON.parse(suc)
+                        //console.log(response.result.items[0])
+
+                        if (response.result.items[0].imageFileName == '' || response.result.items[0]
+                            .imageFileName == null) {
+                            response.result.items[0].imageFileName = 'noimage.png';
+                            response.result.items[0].isNoImage = true;
+                        } else {
+                            response.result.items[0].imageFileNameDisplay = window.config.upload + 'thumb_' + response.result.items[0].imageFileName
+                            response.result.items[0].isNoImage = false;
+                        }
+                        let orderDate = JSON.parse(localStorage.getItem('listOrderDate'));
+                        let session = JSON.parse(localStorage.getItem('listOrderSession'));
+                        //console.log(orderDate, moment(new Date()).format('DD/MM/YYYY'))
+                        //console.log(session, product.session)
+                        let productSession = self.sessions.find((el) => {
+                            return el.id == product.session.id;
+                        });
+                        if ((orderDate == null || orderDate == moment(new Date()).format('DD/MM/YYYY')) && (session == null || (productSession != null && session.id == productSession.id))) {
+                            localStorage.setItem('addProduct', JSON.stringify(response.result.items[0]));
+                            localStorage.setItem('listOrderDate', JSON.stringify(moment(new Date()).format('DD/MM/YYYY')));
+                            localStorage.setItem('listOrderSession', JSON.stringify(productSession));
+                            app.views.current.router.navigate('/orders-options');
+                            //console.log('cung session')
+                        }
+                        else {
+                            //console.log('khac session')
+                            var dialog = app.dialog.create({
+                                title: '',
+                                content: '<div class="block no-margin no-padding text-align-center" style="font-size: 14px;"><img src="' +
+                                    window.config.app.logo +
+                                    '" width="84" alt="" /><p><b>Your cart has a product from a different session!</b></p><p>Clear cart and add product from this session?</p></div>',
+                                verticalButtons: true,
+                                buttons: [{
+                                    text: 'Yes!',
+                                    bold: true,
+                                    color: 'green',
+                                    onClick: function () {
+                                        localStorage.removeItem('listOrderSession');
+                                        localStorage.removeItem('listOrderDate');
+                                        localStorage.removeItem('disableCheckout');
+                                        localStorage.removeItem('cartItems');
+
+                                        localStorage.setItem('addProduct', JSON.stringify(response.result.items[0]));
+                                        localStorage.setItem('listOrderDate', JSON.stringify(moment(new Date()).format('DD/MM/YYYY')));
+                                        localStorage.setItem('listOrderSession', JSON.stringify(product.session));
+                                        app.views.current.router.navigate('/orders-options');
+                                    }
+                                },
+                                {
+                                    text: 'No!',
+                                    color: 'gray',
+                                    onClick: function () {
+                                        //app.views.current.router.refreshPage()
+                                    }
+                                }
+                                ]
+                            });
+                            dialog.open();
+                        }
+
+                    },
+                    function (err) {
+                        console.log('get product error', err)
+                    })
+            },
             loadBannerImage: function (imageList) {
                 var self = this;
                 for (let i = 0; i < imageList.length; i++) {
@@ -440,6 +515,7 @@
                         return el.imageFileNameDisplay == this.src;
                     });
                     console.log(productClicked);
+                    self.selectedProduct(productClicked);
                 });
                 //self.updateSwiper(0);
             },
@@ -448,7 +524,7 @@
                 var listImg = [];
                 var tempWidth = 0;
                 var tempHeight = 0;
-                
+
                 $("#newProducts-card").toggle();
                 for (let i = 0; i < data.items.length; i++) {
                     listImg.push(window.config.upload + data.items[i].imageFileName);
@@ -458,6 +534,7 @@
                         return el.imageFileNameDisplay == this.src;
                     });
                     console.log(productClicked);
+                    self.selectedProduct(productClicked);
                 });
             },
             initializeSliderHero: function (imageList) {
@@ -509,9 +586,9 @@
                 app.request.get(window.config.url + 'api/services/app/Preorder/GetSessions',
                     function (suc) {
                         let response = JSON.parse(suc)
-                        // self.$setState({
-                        // 	session: response.result.items
-                        // })
+                        self.$setState({
+                            sessions: response.result.items
+                        })
                         localStorage.setItem('sessions', JSON.stringify(response.result.items))
                     },
                     function (err) {

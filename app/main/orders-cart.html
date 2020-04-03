@@ -92,7 +92,7 @@
                                 {{/if}}
                                 <div class="item-inner">
                                     <div class="item-title-row">
-                                        <div class="item-title">{{this.name}}</div>
+                                        <div class="item-title" style="max-width: 70%;">{{this.name}}</div>
                                         <div class="item-title">
                                             ${{this.price.toFixed(2)}} x {{this.orderQuantity}}
                                         </div>
@@ -561,21 +561,7 @@
                 var self = this;
                 let cartTemp = JSON.parse(localStorage.getItem('cartItems'));
                 let sessionTemp = JSON.parse(localStorage.getItem('listOrderSession'));
-                // de tam day sua sau
-                // let orderDateTemp = JSON.parse(localStorage.getItem('listOrderDate'));
-                // let arrDate = orderDateTemp.split('/');
-                // let sessionDate = arrDate[1] + '/' + arrDate[0] + '/' + arrDate[2];
-                // sessionDate = new Date(sessionDate);
-                // let futureDate = (sessionDate.getMonth() + 1) + '/' + sessionDate.getDate() + '/' + sessionDate.getFullYear();
-                // let dateTimeNow = new Date();
-                // let dateNow = (dateTimeNow.getMonth() + 1) + '/' + dateTimeNow.getDate() + '/' + dateTimeNow.getFullYear();
-                // if (dateNow < futureDate){
-                //     alert('abc');
-                //     self.checkCollectionTime(null);
-                // }
-                // else{
-                //     alert('def');
-                // }
+
                 if (cartTemp != null) {
                     //console.log(self.listOrderSession, self.listOrderDate)
                     //console.log(cartTemp)
@@ -680,33 +666,49 @@
                 let minEnd = 59;
                 let sessionTemp = JSON.parse(localStorage.getItem('listOrderSession'));
                 let orderDateTemp = JSON.parse(localStorage.getItem('listOrderDate'));
+                console.log('listOrderSession', sessionTemp);
+                console.log('listOrderDate', orderDateTemp)
+                console.log('todayDate', moment(today).format('DD/MM/YYYY'))
+
+                let hourDefault = '00';
+                let minuteDefault = '00';
+                let startTimeDisplay = new Date(sessionTemp.startTimeDisplay);
+
+                if (today < startTimeDisplay) {
+                    let orderTime = startTimeDisplay.setTime(startTimeDisplay.getTime() + (sessionTemp.preparationTime * 60 * 1000) + (sessionTemp.bufferTime * 60 * 1000));
+                    let orderDatetime = new Date(orderTime);
+
+                    hourDefault = moment(orderDatetime).format('hh');
+                    minuteDefault = moment(orderDatetime).format('mm');
+                }
+                else {
+                    console.log('hien tai > start Time')
+                    let todayEx = today.setTime(today.getTime() + (sessionTemp.preparationTime * 60 * 1000) + (sessionTemp.bufferTime * 60 * 1000) + 60 * 1000);
+                    todayEx = new Date(todayEx);
+                    hourDefault = moment(todayEx).format('hh');
+                    minuteDefault = moment(todayEx).format('mm');
+                }
 
                 // Doan nay compare ngay hien tai va ngay tuong lai
                 // Hoi loang ngoang
-                let orderDateTempNew = orderDateTemp.split('/');
-                orderDateTempNew = orderDateTempNew[1] + '/' + orderDateTempNew[0] + '/' + orderDateTempNew[2];
-                let orderDateTempDefault = orderDateTempNew
-                orderDateTempNew = new Date(orderDateTempNew);
-                let todayNew = new Date();
-                let todayWithDayOnly = new Date((todayNew.getMonth() + 1) + '/' + todayNew.getDate() + '/' +
-                    todayNew.getFullYear());
-                let orderDateTempWithDayOnly = new Date((orderDateTempNew.getMonth() + 1) + '/' + orderDateTempNew
-                    .getDate() + '/' + orderDateTempNew.getFullYear());
-                if (orderDateTempWithDayOnly > todayWithDayOnly) {
-                    let dateTimeDefault = orderDateTempDefault + ' ' + sessionTemp.startTime;
-                    dateTimeDefault = new Date(dateTimeDefault);
-                    // let dateTimeDefaultExtend = new Date();
-                    // dateTimeDefaultExtend.setTime(dateTimeDefault.getTime() + (sessionTemp.preparationTime * 60 * 1000) + (sessionTemp.bufferTime * 60 * 1000));
-                    // dateTimeDefaultExtend = new Date(dateTimeDefaultExtend);
-                    today = dateTimeDefault;
-                }
-                //console.log('today', today);
-                // Het doan compare
-
-                today.setTime(today.getTime() + (sessionTemp.preparationTime * 60 * 1000) + (sessionTemp
-                    .bufferTime * 60 * 1000));
-                //console.log('today', today);
-                today = new Date(today);
+                // let orderDateTempNew = orderDateTemp.split('/');
+                // orderDateTempNew = orderDateTempNew[1] + '/' + orderDateTempNew[0] + '/' + orderDateTempNew[2];
+                // let orderDateTempDefault = orderDateTempNew
+                // orderDateTempNew = new Date(orderDateTempNew);
+                // let todayNew = new Date();
+                // let todayWithDayOnly = new Date((todayNew.getMonth() + 1) + '/' + todayNew.getDate() + '/' +
+                //     todayNew.getFullYear());
+                // let orderDateTempWithDayOnly = new Date((orderDateTempNew.getMonth() + 1) + '/' + orderDateTempNew
+                //     .getDate() + '/' + orderDateTempNew.getFullYear());
+                // if (orderDateTempWithDayOnly > todayWithDayOnly) {
+                //     let dateTimeDefault = orderDateTempDefault + ' ' + sessionTemp.startTime;
+                //     dateTimeDefault = new Date(dateTimeDefault);
+                //     today = dateTimeDefault;
+                // }
+                // // Het doan compare
+                // today.setTime(today.getTime() + (sessionTemp.preparationTime * 60 * 1000) + (sessionTemp
+                //     .bufferTime * 60 * 1000));
+                // today = new Date(today);
                 //console.log('today.getHours()', today.getHours());
                 //console.log('+self.hourStart', +self.hourStart);
                 var pickerInline = app.picker.create({
@@ -716,10 +718,10 @@
                     rotateEffect: true,
                     url: "/orders-cart",
                     value: [
-                        (today.getHours() >= +self.hourStart && today.getHours() <= +self.hourEnd) ? (
-                            today.getHours() < 10 ? '0' + today.getHours() : today.getHours()) : self
-                                .hourStart,
-                        today.getMinutes() < 10 ? '0' + today.getMinutes() : today.getMinutes()
+                        // (today.getHours() >= +self.hourStart && today.getHours() <= +self.hourEnd) ? (today.getHours() < 10 ? '0' + today.getHours() : today.getHours()) : self
+                        //     .hourStart,
+                        // today.getMinutes() < 10 ? '0' + today.getMinutes() : today.getMinutes()
+                        hourDefault, minuteDefault
                     ],
                     formatValue: function (values) {
                         return values[0] + ':' + values[1];
@@ -1114,8 +1116,6 @@
                 // console.log('sessionTemp', sessionTemp);
                 // console.log('orderDateTemp', orderDateTemp);
                 // console.log('orderDateTemp convert', new Date(orderDateTemp));
-
-
 
                 self.$('input[id=timepicker-24]').click(function () {
                     self.$setState({
