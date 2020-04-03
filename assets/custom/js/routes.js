@@ -128,24 +128,25 @@ window.routes = [
 				path: '/change-password',
 				componentUrl: './app/main/change-password.html'
 			},
-			{
-				path: '/payment-method',
-				componentUrl: './app/main/payment-method.html'
-			},
-			{
-				path: '/payment-method-view',
-				componentUrl: './app/main/payment-method-view.html'
-			},
-			{
-				path: '/payment-method-new',
-				componentUrl: './app/main/payment-method-new.html'
-			},
+			
 			{
 				path: '/setting',
 				componentUrl: './app/main/setting.html'
 			},
 			
 		]
+	},
+	{
+		path: '/payment-method',
+		componentUrl: './app/main/payment-method.html'
+	},
+	{
+		path: '/payment-method-view',
+		componentUrl: './app/main/payment-method-view.html'
+	},
+	{
+		path: '/payment-method-new',
+		componentUrl: './app/main/payment-method-new.html'
 	},
 	{
 		path: '(.*)',

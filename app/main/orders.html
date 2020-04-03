@@ -668,7 +668,7 @@
 			//console.log(timeNow);
 			let sessionTemp = JSON.parse(localStorage.getItem('listOrderSession'));
 			let orderDateTemp = JSON.parse(localStorage.getItem('listOrderDate'));
-			let firstLoad = '';
+			let firstLoadDay = '';
 			self.$setState({
 				today: self.getDayMonthOnly(self.formatDate(date, 'en')),
 				yearNow: self.yearNow(),
@@ -701,9 +701,9 @@
 			// 	}
 			// }
 
-			//console.log(sessionTemp)
+			console.log(sessionTemp)
 			if (sessionTemp == null) {
-				firstLoad = '';
+				firstLoadDay = '';
 			}
 			else {
 				let arrFirstDay = orderDateTemp.split('/');
