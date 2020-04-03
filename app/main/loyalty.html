@@ -117,8 +117,9 @@
                 historyLoyList: [],
                 earnedList: [],
                 usedList: [],
-                uploadUrl: window.config.upload, 
-                logo: localStorage.getItem('WOKPPL_logoUrl') 
+                defaultList: [],
+                uploadUrl: window.config.upload,
+                logo: localStorage.getItem('WOKPPL_logoUrl')
             }
         },
         methods: {
@@ -161,19 +162,30 @@
                     function (suc) {
                         let response = JSON.parse(suc);
                         self.$setState({
-                            usedList: response.result.items.filter((el) => {
-                                return el.usedPoint > 0;
-                            }),
-                            earnedList: response.result.items.filter((el) => {
-                                return el.earnedPoint > 0;
-                            }),
+                            defaultList: response.result.items,
                             historyLoyList: response.result.items.filter((el) => {
                                 let date = new Date(el.date);
-                                el.date = date.toLocaleTimeString() + ', ' + (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + '/' + (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)) + '/' + date.getFullYear();
-                                el.point = el.earnedPoint > 0 ? '+' + el.earnedPoint : '-' + el.usedPoint;
+                                //el.date = date.toLocaleTimeString() + ', ' + (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + '/' + (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)) + '/' + date.getFullYear();
+                                el.date = moment(date).format('DD/MM/YYYY, hh:mm')
+                                el.point = '+' + el.earnedPoint;
                                 return el.earnedPoint > 0;
                             }),
+                            // usedList: response.result.items.filter((el) => {
+                            //     //let date = new Date(el.date);
+                            //     //el.date = moment(date).format('DD/MM/YYYY, hh:mm')
+                            //     //el.date = date.toLocaleTimeString() + ', ' + (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + '/' + (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)) + '/' + date.getFullYear();
+                            //     //el.point = el.usedPoint;
+                            //     return el.usedPoint > 0;
+                            // }),
+                            // earnedList: response.result.items.filter((el) => {
+                            //     //let date = new Date(el.date);
+                            //     //el.date = moment(date).format('DD/MM/YYYY, hh:mm')
+                            //     //el.point = el.earnedPoint;
+                            //     return el.earnedPoint > 0;
+                            // }),
+
                         })
+                        //console.log(self.defaultList)
                     },
                     function (err) {
 
@@ -183,7 +195,7 @@
                 var self = this;
                 let earnArr = [];
                 let useArr = [];
-                //console.log('selected', selected);
+                // console.log('selected', selected);
                 $('a').attr('id', function (i, id) {
                     if (id == selected) {
                         $('a[id=' + id + ']').addClass('tab-link-active');
@@ -194,13 +206,22 @@
                 });
 
                 if (selected == 'earn-points') {
+                    self.earnedList = self.defaultList;
                     self.$setState({
-                        historyLoyList: self.earnedList,
+                        historyLoyList: self.usedList.filter((el) => {
+                            el.point = '+' + el.earnedPoint;
+                            return el.earnedPoint > 0;
+                        }),
                     })
                 }
                 else {
+                    self.usedList = self.defaultList;
+                    console.log(self.usedList)
                     self.$setState({
-                        historyLoyList: self.usedList,
+                        historyLoyList: self.usedList.filter((el) => {
+                            el.point = '-' + el.usedPoint;
+                            return el.usedPoint > 0;
+                        }),
                     })
                 }
             }

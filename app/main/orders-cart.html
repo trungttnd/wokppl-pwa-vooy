@@ -532,7 +532,9 @@
                 app.views.current.router.navigate('/orders-options');
             },
             closeButton: function () {
+                console.log('close')
                 localStorage.removeItem('isEdit');
+                app.dialog.close();
                 app.views.current.router.navigate('/tab-order/');
             },
             compareDate: function (date1, date2) {
@@ -678,14 +680,14 @@
                     let orderTime = startTimeDisplay.setTime(startTimeDisplay.getTime() + (sessionTemp.preparationTime * 60 * 1000) + (sessionTemp.bufferTime * 60 * 1000));
                     let orderDatetime = new Date(orderTime);
 
-                    hourDefault = moment(orderDatetime).format('hh');
+                    hourDefault = moment(orderDatetime).format('HH');
                     minuteDefault = moment(orderDatetime).format('mm');
                 }
                 else {
                     console.log('hien tai > start Time')
                     let todayEx = today.setTime(today.getTime() + (sessionTemp.preparationTime * 60 * 1000) + (sessionTemp.bufferTime * 60 * 1000) + 60 * 1000);
                     todayEx = new Date(todayEx);
-                    hourDefault = moment(todayEx).format('hh');
+                    hourDefault = moment(todayEx).format('HH');
                     minuteDefault = moment(todayEx).format('mm');
                 }
 
