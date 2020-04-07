@@ -23,11 +23,13 @@
 
                 <p>Loyalty points: {{loyalty.point}}</p>
                 <p>Corresponding: ${{displayRedeem.toFixed(2)}}</p>
-                {{#js_if "this.loyalty.expiringPoints.points>'0'"}}
+                <!-- {{#js_if "this.loyalty.expiringPoints.points>'0'"}} -->
+                {{#if this.loyalty.expiringPoints.reminder}}
                 <p> {{loyalty.expiringPoints.points}} points will expire on
                     {{loyalty.expiringPoints.expiryDate.substr(8,2)}}/{{loyalty.expiringPoints.expiryDate.substr(5,2)}}/{{loyalty.expiringPoints.expiryDate.substr(0,4)}}
                 </p>
-                {{/js_if}}
+                {{/if}}
+                <!-- {{/js_if}} -->
             </div>
             <div class="content-block text-align-center">
                 <span class="history-points">History points</span>
@@ -150,7 +152,7 @@
                             earnPointRateDisplay: 1 / response.result.earnPointRate,
                             redeemPointRateDisplay: response.result.redeemPointRate > 0 ? (1 / response.result.redeemPointRate) : 0
                         })
-
+                        console.log(response.result)
                     },
                     function (err) {
                         console.log(err)
