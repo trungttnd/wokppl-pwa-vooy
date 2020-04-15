@@ -34,9 +34,12 @@
                             </li>
                             <li>
                                 <div class="item-content">
-                                    <div class="item-media">Collection Time:<i
-                                            class="icon material-icons text-color-red"
-                                            style="margin-left: 13px;">access_time</i>&nbsp;</div>
+                                    <div class="item-media">Collection Time:
+                                        <a class="link dynamic-popover" href="#">
+                                            <i class="icon material-icons text-color-red"
+                                                style="margin-left: 13px;">access_time</i>&nbsp;
+                                        </a>
+                                    </div>
 
                                     <div class="item-inner" style="margin-left: 0px; width: 120px; padding: unset;">
                                         <div class="item-input">
@@ -45,7 +48,7 @@
                                         </div>
                                     </div>
                                     <div style="width: -webkit-fill-available; margin-top: -30px;margin-left: -30px;">
-                                        <a class="link dynamic-popover" href="#" style="color: black"></a>
+                                        <!-- <a class="link dynamic-popover" href="#" style="color: black"></a> -->
                                     </div>
 
                             </li>
@@ -641,11 +644,15 @@
                         },
                         function (err) {
                             console.log('err', err)
-                            let response = JSON.parse(err.response)
+                            let mess = 'An error occurred, please try again';
+                            if (err != null) {
+                                let response = JSON.parse(err.response)
+                                mess = response != null ? response.error.message : mess;
+                            }
                             self.disableCloseButton = false;
                             var dialog = app.dialog.create({
                                 content: '<div class="block no-margin margin-top text-align-center"><i class="fa-stack fa-3x"><span class="fas fa-stack-2x fa-circle text-color-red"></span><span class="fas fa-stack-1x fa-inverse fa-times"></span></i><p>' +
-                                    response.error.message + '.</p></div>',
+                                    mess + '.</p></div>',
                                 buttons: [{
                                     text: 'Cancel',
                                     bold: true,
@@ -1039,10 +1046,13 @@
                             //console.log(response)
                         },
                         function (err) {
-                            let response = JSON.parse(err.response);
-                            console.log(response);
+                            let mess = 'An error occurred, please try again';
+                            if (err != null) {
+                                let response = JSON.parse(err.response)
+                                mess = response != null ? response.error.message : mess;
+                            }
                             var dialog = app.dialog.create({
-                                content: '<div class="block no-margin margin-top text-align-center"><i class="fa-stack fa-3x"><span class="fas fa-stack-2x fa-circle text-color-red"></span><span class="fas fa-stack-1x fa-inverse fa-times"></span></i><p>' + response.error.message + '.</p></div>',
+                                content: '<div class="block no-margin margin-top text-align-center"><i class="fa-stack fa-3x"><span class="fas fa-stack-2x fa-circle text-color-red"></span><span class="fas fa-stack-1x fa-inverse fa-times"></span></i><p>' + mess + '.</p></div>',
                                 buttons: [
                                     {
                                         text: 'Retry',
@@ -1178,6 +1188,10 @@
                 $('.dynamic-popover').click(function () {
                     self.openPopOver().open();
                 });
+
+                setTimeout(function () {
+                    app.views.current.router.navigate('/');
+                }, 600000);
             }
         }
     }

@@ -23,7 +23,7 @@
 									style="width: 3.5rem; padding-left: 5px;" />
 							</div>
 						</div>
-
+						<a class="link dynamic-popover" href="#"></a>
 						<a href="#" @click="next" class="item-link">
 							<i class="fas fa-caret-right" style="margin-left: 8px"></i>
 						</a>
@@ -523,7 +523,7 @@
 					listSession[i].startTime = self.convertIsoDateToHourMin(listSession[i].startTimeDisplay);
 					listSession[i].endTime = self.convertIsoDateToHourMin(listSession[i].endTimeDisplay);
 					let extraTime = listSession[i].preparationTime * 60 * 1000 + listSession[i].bufferTime * 60 * 1000;
-					
+
 					//console.log(Date.parse(dateInput + ' ' + timeNow), Date.parse(newDate + ' ' + listSession[i].endTime), Date.parse(newDate + ' ' + listSession[i].endTime) - extraTime, extraTime)
 					// if (Date.parse(newDate + ' ' + listSession[i].startTime) < Date.parse(dateInput + ' ' + timeNow) &&
 					// 	Date.parse(dateInput + ' ' + timeNow) > Date.parse(newDate + ' ' + listSession[i].endTime)) {
@@ -634,6 +634,29 @@
 				return (dateTime.getHours() < 10 ? '0' + dateTime.getHours() : dateTime.getHours()) + ':' + (dateTime
 					.getMinutes() < 10 ? '0' + dateTime.getMinutes() : dateTime.getMinutes())
 			},
+			openPopOver: function () {
+				var dynamicPopover = app.popover.create({
+					targetEl: 'a.dynamic-popover',
+					content: '<div class="popover">' +
+						'<div class="popover-inner">' +
+						'<div class="block">' +
+						'<p>Choose the date you want to order!</p>' +
+						'<p style="text-align: center"><a href="#" class="link popover-close">Close</a></p>' +
+						'</div>' +
+						'</div>' +
+						'</div>',
+					// Events
+					on: {
+						open: function (popover) {
+							//console.log('Popover mo');
+						},
+						opened: function (popover) {
+							//console.log('Popover da mo');
+						},
+					}
+				});
+				return dynamicPopover;
+			},
 		},
 
 		mounted() {
@@ -681,25 +704,6 @@
 				categories: JSON.parse(localStorage.getItem('categories'))
 			});
 
-			// if (orderDateTemp == null) {
-			// 	firstLoadDay = '';
-			// } else {
-			// 	console.log(orderDateTemp)
-			// 	let arrFirstDay = orderDateTemp.split('/');
-			// 	firstLoadDay = arrFirstDay[1] + '/' + arrFirstDay[0] + '/' + arrFirstDay[2];
-			// 	console.log('Ngay session', firstLoadDay + ' ' + sessionTemp.endTime);
-			// 	console.log('Ngay hien tai', dateInput + ' ' + timeNow);
-			// 	if (Date.parse(firstLoadDay + ' ' + sessionTemp.endTime) < Date.parse(dateInput + ' ' + timeNow)) {
-
-			// 		localStorage.setItem('disableCheckout', JSON.stringify('true'))
-			// 		if (self.cartItems.quantity > 0) self.goCartDialog().open();
-			// 		else {
-			// 			self.clearCartWhenSessionExpired();
-			// 			app.views.current.router.refreshPage()
-			// 		}
-			// 	}
-			// }
-
 			console.log(sessionTemp)
 			if (sessionTemp == null) {
 				firstLoadDay = '';
@@ -718,7 +722,7 @@
 
 			self.checkListSession(dateInput, timeNow, firstLoadDay);
 
-			console.log('test', self.cartItems)
+			//console.log('test', self.cartItems)
 			let dateNow = new Date();
 			dateNow.setDate(dateNow.getDate() - 1);
 			var calendarDateFormat = app.calendar.create({
@@ -781,8 +785,15 @@
 				self.checkListSession(dateInput, timeNow, changeDate);
 				self.updateProducts();
 			})
+			setTimeout(function () {
+				$(document).ready(function () {
+					self.openPopOver().open();
+				});
+				$('.dynamic-popover').click(function () {
+					self.openPopOver().open();
+				});
+			}, 500);
 
-			//console.log('convert', self.convertIsoDateToHourMin('2020-01-20T02:01:00Z'));
 		},
 		on: {
 			pageInit: function () {

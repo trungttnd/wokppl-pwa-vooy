@@ -17,7 +17,6 @@
             <div class="content-block text-align-left">
                 <span class="title-box">Promotions</span>
             </div>
-            {{#if bannerArr}}
             <div class="slider-hero">
                 <div class="swiper-container">
                     <div class="swiper-wrapper">
@@ -35,19 +34,45 @@
                     <div class="swiper-pagination"></div>
                 </div>
             </div>
-            {{else}}
-            <div class="text-align-center">No promotions available!</div>
-            {{/if}}
-            
-            {{#if noneBestseller}}
-            <div class="content-block text-align-left">
-                <span class="title-box">Best Sellers</span>
-            </div>
-            <div class="text-align-center">No products available!</div>
-            {{/if}}
-            <div class="card" id="newProducts-card">
+            <div class="card" id="bestSellers-card">
                 <div class="card-header justify-content-space-between">
                     <span class="title-card">Best Sellers</span>
+                </div>
+                <div class="card-content card-content-padding">
+                    <div class="slide-gallery">
+                        <div class="swiper-container">
+                            <div class="swiper-wrapper">
+                                {{#if bestSellers}}
+                                {{#each bestSellers}}
+                                <div class="swiper-slide">
+                                    <div class="slide-media">
+                                        <div class="slide-img">
+                                            {{#js_if "this.imageFileName==null"}}
+                                            <img class="img-responsive bestSellersGallery{{this.number}}"
+                                                src="assets/custom/img/noimage.jpg" alt=""
+                                                style="max-height: 145px; min-height: 145px;" />
+                                            {{else}}
+                                            <img class="img-responsive bestSellersGallery{{this.number}}"
+                                                src="{{this.imageFileNameDisplay}}" alt=""
+                                                style="max-height: 145px; min-height: 145px;" />
+                                            {{/js_if}}
+                                        </div>
+                                        <div class="details">
+                                            <h3>{{this.name}}</h3>
+                                            <span>${{this.price}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{/each}}
+                                {{/if}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card" id="newProducts-card">
+                <div class="card-header justify-content-space-between">
+                    <span class="title-card">New Products</span>
                 </div>
                 <div class="card-content card-content-padding">
                     <div class="slide-gallery">
@@ -69,8 +94,8 @@
                                             {{/js_if}}
                                         </div>
                                         <div class="details">
-                                            <h3 style="max-height: 40px; overflow: hidden;">{{this.name}}</h3>
-                                            <span>${{this.price.toFixed(2)}}</span>
+                                            <h3>{{this.name}}</h3>
+                                            <span>${{this.price}}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -81,46 +106,7 @@
                     </div>
                 </div>
             </div>
-            {{#if nonePopular}}
-            <div class="content-block text-align-left">
-                <span class="title-box">Popular products</span>
-            </div>
-            <div class="text-align-center">No products available!</div>
-            {{/if}}
-            <div class="card" id="bestSellers-card">
-                <div class="card-header justify-content-space-between">
-                    <span class="title-card">Popular products</span>
-                </div>
-                <div class="card-content card-content-padding">
-                    <div class="slide-gallery">
-                        <div class="swiper-container">
-                            <div class="swiper-wrapper">
-                                {{#each bestSellers}}
-                                <div class="swiper-slide">
-                                    <div class="slide-media">
-                                        <div class="slide-img">
-                                            {{#js_if "this.imageFileName==null"}}
-                                            <img class="img-responsive bestSellersGallery{{this.number}}"
-                                                src="assets/custom/img/noimage.jpg" alt=""
-                                                style="max-height: 145px; min-height: 145px;" />
-                                            {{else}}
-                                            <img class="img-responsive bestSellersGallery{{this.number}}"
-                                                src="{{this.imageFileNameDisplay}}" alt=""
-                                                style="max-height: 145px; min-height: 145px;" />
-                                            {{/js_if}}
-                                        </div>
-                                        <div class="details">
-                                            <h3 style="max-height: 40px; overflow: hidden;">{{this.name}}</h3>
-                                            <span>${{this.price.toFixed(2)}}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                {{/each}}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
             <div class="block text-align-center">
                 <p class="row">
                     <span></span>
@@ -219,9 +205,6 @@
                 logo: 'wokppllogo.png',
                 totalSwiperInstances: {},
                 uploadUrl: window.config.upload,
-                sessions: null,
-                nonePopular: false,
-                noneBestseller: false
             }
         },
         methods: {
@@ -255,6 +238,21 @@
                                     localStorage.setItem('WOKPPL_gstType', response.result.canteen.tax.type);
                                 }
                             }
+                            else {
+                                app.request.json(
+                                    'assets/custom/dataset/getcurrentlogin.json',
+                                    function (data) {
+                                        if (data) {
+                                            console.log('getcurrentlogin', data);
+                                            self.$setState({
+                                                canteenName: data.result.canteen.name,
+                                                logo: data.result.canteen.logoUrl,
+
+                                            });
+                                        }
+                                    }
+                                );
+                            }
                         }
                     },
                     function (err) {
@@ -266,7 +264,16 @@
                     if (response.result.items.length != 0) {
                         self.loadBannerImage(response.result.items)
                     }
-
+                    else {
+                        app.request.json(
+                            'assets/custom/dataset/banner.json',
+                            function (data) {
+                                if (data) {
+                                    self.loadBannerImage(data.items);
+                                }
+                            }
+                        );
+                    }
                 },
                     function (err) {
                         console.log(err)
@@ -324,15 +331,26 @@
                             });
                             self.$setState({
                                 bestSellers: response.result.items,
-                                nonePopular: false
                             });
+
                             self.createInstantSwiper(0);
                             self.loadBestSellersGalleryImage(response.result);
                         }
-                        else{
-                            self.$setState({
-                                nonePopular: true
-                            });
+                        else {
+                            app.request.json(
+                                'assets/custom/dataset/popular.json',
+                                function (data) {
+                                    if (data) {
+                                        self.$setState({
+                                            uploadUrl: window.config.upload,
+                                            bestSellers: data.result.items,
+
+                                        });
+                                        self.createInstantSwiper(0);
+                                        self.loadBestSellersGalleryImage(data.result);
+                                    }
+                                }
+                            );
                         }
                     },
                     function (err) {
@@ -352,17 +370,27 @@
                             });
                             self.$setState({
                                 newProducts: response.result.items,
-                                noneBestseller: false
                             });
 
                             self.createInstantSwiper(1);
                             self.updateSwiper(1);
                             self.loadNewProductsGalleryImage(response.result);
                         }
-                        else{
-                            self.$setState({
-                                noneBestseller: true
-                            });
+                        else {
+                            app.request.json(
+                                'assets/custom/dataset/newproduct.json',
+                                function (data) {
+                                    if (data) {
+                                        self.$setState({
+                                            newProducts: data.result.items
+                                        });
+
+                                        self.createInstantSwiper(1);
+                                        self.updateSwiper(1);
+                                        self.loadNewProductsGalleryImage(data.result);
+                                    }
+                                }
+                            );
                         }
                     },
                     function (err) {
@@ -386,80 +414,6 @@
                 }
                 self.initializeNewProductsPhotos(data);
             },
-            selectedProduct: function (product) {
-                var self = this;
-                app.request.get(window.config.url + 'api/services/app/Preorder/GetProductMenuBrowsingList', {
-                    Name: product.id,
-                    MaxResultCount: 5000
-                },
-                    function (suc) {
-                        //console.log('suc', JSON.parse(suc))
-                        let response = JSON.parse(suc)
-                        //console.log(response.result.items[0])
-
-                        if (response.result.items[0].imageFileName == '' || response.result.items[0]
-                            .imageFileName == null) {
-                            response.result.items[0].imageFileName = 'noimage.png';
-                            response.result.items[0].isNoImage = true;
-                        } else {
-                            response.result.items[0].imageFileNameDisplay = window.config.upload + 'thumb_' + response.result.items[0].imageFileName
-                            response.result.items[0].isNoImage = false;
-                        }
-                        let orderDate = JSON.parse(localStorage.getItem('listOrderDate'));
-                        let session = JSON.parse(localStorage.getItem('listOrderSession'));
-                        //console.log(orderDate, moment(new Date()).format('DD/MM/YYYY'))
-                        //console.log(session, product.session)
-                        let productSession = self.sessions.find((el) => {
-                            return el.id == product.session.id;
-                        });
-                        if ((orderDate == null || orderDate == moment(new Date()).format('DD/MM/YYYY')) && (session == null || (productSession != null && session.id == productSession.id))) {
-                            localStorage.setItem('addProduct', JSON.stringify(response.result.items[0]));
-                            localStorage.setItem('listOrderDate', JSON.stringify(moment(new Date()).format('DD/MM/YYYY')));
-                            localStorage.setItem('listOrderSession', JSON.stringify(productSession));
-                            app.views.current.router.navigate('/orders-options');
-                            //console.log('cung session')
-                        }
-                        else {
-                            //console.log('khac session')
-                            var dialog = app.dialog.create({
-                                title: '',
-                                content: '<div class="block no-margin no-padding text-align-center" style="font-size: 14px;"><img src="' +
-                                    window.config.app.logo +
-                                    '" width="84" alt="" /><p><b>Your cart has a product from a different session!</b></p><p>Clear cart and add product from this session?</p></div>',
-                                verticalButtons: true,
-                                buttons: [{
-                                    text: 'Yes!',
-                                    bold: true,
-                                    color: 'green',
-                                    onClick: function () {
-                                        localStorage.removeItem('listOrderSession');
-                                        localStorage.removeItem('listOrderDate');
-                                        localStorage.removeItem('disableCheckout');
-                                        localStorage.removeItem('cartItems');
-
-                                        localStorage.setItem('addProduct', JSON.stringify(response.result.items[0]));
-                                        localStorage.setItem('listOrderDate', JSON.stringify(moment(new Date()).format('DD/MM/YYYY')));
-                                        localStorage.setItem('listOrderSession', JSON.stringify(product.session));
-                                        app.views.current.router.navigate('/orders-options');
-                                    }
-                                },
-                                {
-                                    text: 'No!',
-                                    color: 'gray',
-                                    onClick: function () {
-                                        //app.views.current.router.refreshPage()
-                                    }
-                                }
-                                ]
-                            });
-                            dialog.open();
-                        }
-
-                    },
-                    function (err) {
-                        console.log('get product error', err)
-                    })
-            },
             loadBannerImage: function (imageList) {
                 var self = this;
                 for (let i = 0; i < imageList.length; i++) {
@@ -476,8 +430,23 @@
                 var listImg = [];
                 var tempWidth = 0;
                 var tempHeight = 0;
-
+                // for (let i = 0; i < data.items.length; i++) {
+                //     $('.bestSellersGallery' + i).on('load', function (event) {
+                //         // Lay ti le 4:3
+                //         // 133.33 la ti le % cua width va height
+                //         tempWidth = $('.bestSellersGallery' + i).prop('naturalWidth');
+                //         tempHeight = $('.bestSellersGallery' + i).prop('naturalHeight');
+                //         if (tempWidth > $(window).width() || ((tempWidth * 100 / tempHeight).toFixed(2) != 133.33)) {
+                //             //$('.bestSellersGallery' + i).width((($(window).width() - 10) / 3).toFixed(0));
+                //             $('.bestSellersGallery' + i).height((($(window).width() / 2).toFixed(0) * 100 / 133.33).toFixed(0));
+                //         }
+                //     });
+                // }
                 $("#bestSellers-card").toggle();
+                //self.updateSwiper(0);
+                //self.createInstantSwiper(0);
+                //self.totalSwiperInstances[0].update();
+                //$("#bestSellers-card").toggle();
                 for (let i = 0; i < data.items.length; i++) {
                     listImg.push(window.config.upload + data.items[i].imageFileName);
                 }
@@ -485,27 +454,65 @@
                     let productClicked = data.items.find((el) => {
                         return el.imageFileNameDisplay == this.src;
                     });
+                    // var photoBrowser = app.photoBrowser.create({
+                    //     photos: listImg,
+                    //     swiper: {
+                    //         initialSlide: currentSlide
+                    //     },
+                    //     theme: app.utils.theme.getLayout()
+                    // });
+                    // photoBrowser.open();
+                    // localStorage.setItem('addProduct', JSON.stringify(productClicked))
+                    // localStorage.setItem('listOrderDate', JSON.stringify(moment(new Date()).format(
+                    //     'DD/MM/YYYY')));
+                    // localStorage.setItem('listOrderSession', JSON.stringify(productClicked.session));
+                    // app.views.current.router.navigate('/orders-options');
                     console.log(productClicked);
-                    self.selectedProduct(productClicked);
                 });
-                //self.updateSwiper(0);
+                self.updateSwiper(0);
             },
             initializeNewProductsPhotos: function (data) {
                 var self = this;
                 var listImg = [];
                 var tempWidth = 0;
                 var tempHeight = 0;
-
+                // for (let i = 0; i < data.items.length; i++) {
+                //     $('.newProductsGallery' + i).on('load', function (event) {
+                //         // Lay ti le 4:3
+                //         // 133.33 la ti le % cua width va height
+                //         tempWidth = $('.newProductsGallery' + i).prop('naturalWidth');
+                //         tempHeight = $('.newProductsGallery' + i).prop('naturalHeight');
+                //         if (tempWidth > $(window).width() || ((tempWidth * 100 / tempHeight).toFixed(2) != 133.33)) {
+                //             //$('.newProductsGallery' + i).width((($(window).width() - 10) / 3).toFixed(0));
+                //             $('.newProductsGallery' + i).height((($(window).width() / 2).toFixed(0) * 100 / 133.33).toFixed(0));
+                //         }
+                //     });
+                // }
                 $("#newProducts-card").toggle();
+                //self.updateSwiper(1);
+                //self.createInstantSwiper(1);
+                //self.totalSwiperInstances[1].update();
+                //$("#newProducts-card").toggle();
                 for (let i = 0; i < data.items.length; i++) {
                     listImg.push(window.config.upload + data.items[i].imageFileName);
                 }
                 self.$('.instance-1 .slide-media img').on('click', function () {
+                    // var currentSlide = self.$('.instance-1 .slide-media img').parent().parent().parent('.swiper-slide-active').data('swiper-slide-index');
+                    // var photoBrowser = app.photoBrowser.create({
+                    //     photos: listImg,
+                    //     swiper: {
+                    //         initialSlide: currentSlide
+                    //     },
+                    //     theme: app.utils.theme.getLayout()
+                    // });
+                    // photoBrowser.open();
+                    // setTimeout(function () {
+                    //     self.updateSwiper(1);
+                    // }, 2000);
                     let productClicked = data.items.find((el) => {
                         return el.imageFileNameDisplay == this.src;
                     });
                     console.log(productClicked);
-                    self.selectedProduct(productClicked);
                 });
             },
             initializeSliderHero: function (imageList) {
@@ -557,9 +564,9 @@
                 app.request.get(window.config.url + 'api/services/app/Preorder/GetSessions',
                     function (suc) {
                         let response = JSON.parse(suc)
-                        self.$setState({
-                            sessions: response.result.items
-                        })
+                        // self.$setState({
+                        // 	session: response.result.items
+                        // })
                         localStorage.setItem('sessions', JSON.stringify(response.result.items))
                     },
                     function (err) {
@@ -640,20 +647,37 @@
             self.loadSession();
             self.loadCategory();
 
-            // document.addEventListener('scroll', function (event) {
-            //     var hT = $('#bestSellers-card').offset().top,
-            //         hH = $('#bestSellers-card').outerHeight(),
+
+
+            // setTimeout(function() {
+            //     self.updateSwiper();
+            // }, 3000);
+            //self.updateSwiper();
+            document.addEventListener('scroll', function (event) {
+                var hT = $('#bestSellers-card').offset().top,
+                    hH = $('#bestSellers-card').outerHeight(),
+                    wH = $(window).height(),
+                    wS = $(this).scrollTop();
+                if (wS > (hT + hH - wH) && (hT > wS) && (wS + wH > hT + hH)) {
+                    //console.log('den so 1');
+                    self.updateSwiper();
+                } else {
+                    //console.log('den so 2');
+                    self.updateSwiper(0);
+                }
+            }, true /*Capture event*/);
+            // window.scroll(function() {
+            //     console.log('scroll');
+            //     var hT = $('#newProducts-card').offset().top,
+            //         hH = $('#newProducts-card').outerHeight(),
             //         wH = $(window).height(),
             //         wS = $(this).scrollTop();
-            //     if (wS > (hT + hH - wH) && (hT > wS) && (wS + wH > hT + hH)) {
-            //         //console.log('den so 1');
-            //         self.updateSwiper();
+            //     if (wS > (hT+hH-wH) && (hT > wS) && (wS+wH > hT+hH)){
+            //         self.updateSwiper(1);
             //     } else {
-            //         //console.log('den so 2');
             //         self.updateSwiper(0);
             //     }
-            // }, true /*Capture event*/);
-
+            // });
             //subscription user
             swRegistration.pushManager.getSubscription()
                 .then(function (subscription) {

@@ -277,7 +277,7 @@ window.config.theme = {
 // if multiple tenancy enabled, when logging in need to specify tenant Id
 window.config.tenantId = 2;
 //api url
-//window.config.url = 'https://wokppl-api-staging.konbi.cloud/';
+//window.config.url = 'https://wokpplapi.konbi.cloud/';
 //window.config.url = 'http://wokppl.api.ordersystem.konbi.cloud/';
 window.config.url = 'http://localhost:22742/';
 
